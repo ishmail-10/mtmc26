@@ -1,0 +1,51 @@
+[
+  {
+    "day": "MONDAY",
+    "breakfast": ["Suji chilla (onion+chilli+carrots)", "Orange chutney", "Bread Butter/Jam", "Tea/Coffee", "Banana", "Boiled egg / Paneer Bhurji"],
+    "lunch": ["Jeera rice / Plain rice", "Roti", "Masoor Dal", "Dhokar Dalna", "Aloo Pyaz Bhujiya", "Boondi Raita", "Salad / Papad / Pickle"],
+    "hitea": ["Tea / Coffee", "Vada Pav + Green Fried Chilli", "Green Chutney"],
+    "dinner": ["Plain Rice / Roti", "Moong Dal", "Kala Chana Masala", "Crispy Alu Bhaja with Kadhi Patta", "Curd", "Salad / Papad / Pickle"]
+  },
+  {
+    "day": "TUESDAY",
+    "breakfast": ["Sattu Kachori", "Aloo Sabzi", "Bread Butter/Jam", "Tea / Coffee", "Guava"],
+    "lunch": ["Plain Rice", "Roti", "Chana Dal Tadka", "Punjabi Chhole", "Fried Crispy Aloo", "Onion Raita", "Salad / Papad / Pickle"],
+    "hitea": ["Tea / Coffee", "Masala Black Chana Ghugni"],
+    "dinner": ["Plain Rice / Roti", "Yellow Dal", "Rajma Masala", "Veg Jalfrezi", "Curd", "Salad / Papad / Pickle", "Mihi Dana"]
+  },
+  {
+    "day": "WEDNESDAY",
+    "breakfast": ["Idli / Uttapam", "Coconut Chutney + Sambar", "Bread Butter/Jam", "Tea / Coffee", "Papaya"],
+    "lunch": ["Veg Rice / Plain Rice", "Roti", "Yellow Masoor Dal", "Aloo Parwal Masala", "Mix Veg Bhujiya", "Boondi Raita", "Salad / Papad / Pickle"],
+    "hitea": ["Tea / Coffee", "Chilli Potato"],
+    "dinner": ["Plain Rice / Roti", "Lasooni Dal", "Dhaba Egg Curry", "Paneer Handi", "Curd", "Salad / Papad / Pickle"]
+  },
+  {
+    "day": "THURSDAY",
+    "breakfast": ["Aloo Paratha", "Green Chutney + Curd", "Bread Butter/Jam", "Tea / Coffee", "Banana"],
+    "lunch": ["Plain Rice / Fried Rice", "Roti", "Dal Fry", "Veg Manchurian Gravy", "Kundru Bhujiya", "Cucumber Raita", "Salad / Papad / Pickle"],
+    "hitea": ["Tea / Coffee", "Fried Idli + Green Chutney"],
+    "dinner": ["Rice / Ajwain Puri (less oily)", "Moong Dal Fry", "Chhole Masala", "Aloo Bhindi Masala", "Curd", "Salad / Papad / Pickle", "Gud (Jaggery) Kheer"]
+  },
+  {
+    "day": "FRIDAY",
+    "breakfast": ["Poha", "Orange Chutney", "Bread Butter/Jam", "Tea / Coffee", "Banana", "Masala Omelette / Paneer Bhurji"],
+    "lunch": ["Tomato Rice / Plain Rice", "Roti", "Dal Fry", "Kadhi Badi", "Black Chana Masala Dry", "Masala Raita", "Salad / Papad / Pickle"],
+    "hitea": ["Tea / Coffee", "Pani Puri (6+2)", "Aloo + Chutney + Imli Water"],
+    "dinner": ["Roti", "Toor Dal Fry", "Chicken Biryani with Salan", "Paneer Hyderabadi Biryani", "Onion Raita", "Salad / Papad / Pickle"]
+  },
+  {
+    "day": "SATURDAY",
+    "breakfast": ["Dal Paratha", "Aloo Mirch Sabji", "Bread Butter/Jam", "Tea / Coffee", "Papaya"],
+    "lunch": ["Veg Khichdi / Plain Rice", "Roti", "Dal Fry", "Rajma Masala", "Aloo Chokha", "Raita + Lijjat Papad", "Salad / Pickle"],
+    "hitea": ["Tea / Coffee", "Papdi Chaat"],
+    "dinner": ["Plain Rice", "Dal Panchmel", "Lauki Chana Dal", "Aloo Kasuri Methi", "Curd", "Salad / Papad / Pickle"]
+  },
+  {
+    "day": "SUNDAY",
+    "breakfast": ["Chole Bhature", "Onions + Lemon", "Bread Butter/Jam", "Tea / Coffee", "Guava"],
+    "lunch": ["Plain Rice", "Roti", "Lasooni Dal", "Masala Chole", "Dry Sarso Aloo Bhindi", "Salad / Papad / Pickle, Curd", "Gulab Jamun (1)"],
+    "hitea": ["Tea / Coffee", "Chura Badam Fry", "Chopped Onions and Chilli"],
+    "dinner": ["Veg Pulao / Plain Rice", "Arhar Dal", "Kadhai Paneer / Malai Kofta", "Kadhai Chicken", "Curd", "Salad / Papad / Pickle"]
+  }
+]

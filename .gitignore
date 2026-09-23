@@ -1,0 +1,4 @@
+# Local project logbook (Never track or commit to GitHub)
+PROJECT_LOGBOOK.md
+*.log
+.DS_Store
