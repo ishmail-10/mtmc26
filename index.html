@@ -3783,16 +3783,26 @@ ${escapeHtml(c.text || '')}
       const u = allUsers[uid] || {};
       if (!confirm(`Promote @${u.username || 'student'} to Batch Moderator?`)) return;
 
-      await db.ref('users/' + uid).update({ role: 'moderator', pendingProfileUpdate: null });
-      const priv = allUserPrivate[uid] || {};
-      const phone = priv.phone || u.phone || '';
-      await db.ref('publicModerators/' + uid).set({
-        name: u.fullName || u.username,
-        username: u.username,
-        phone: phone,
-        role: 'Batch Moderator'
-      });
-      renderRosterList();
+      const prevRole = u.role;
+      try {
+        if (allUsers[uid]) allUsers[uid].role = 'moderator';
+        renderRosterList();
+        await db.ref('users/' + uid).update({ role: 'moderator', pendingProfileUpdate: null });
+        const priv = allUserPrivate[uid] || {};
+        const phone = priv.phone || u.phone || '';
+        await db.ref('publicModerators/' + uid).set({
+          name: u.fullName || u.username,
+          username: u.username,
+          phone: phone,
+          role: 'Batch Moderator'
+        }).catch(() => {});
+        renderRosterList();
+      } catch (err) {
+        if (allUsers[uid]) allUsers[uid].role = prevRole;
+        renderRosterList();
+        console.error('Promotion error:', err);
+        alert('Failed to promote to Batch Moderator: ' + (err.message || err));
+      }
     }
 
     async function handleAdminMakeSuperMod(uid, username) {
@@ -3804,17 +3814,27 @@ ${escapeHtml(c.text || '')}
       }
       if (!confirm(`Promote @${username} to Super Moderator (CR)? They will have the authority to appoint moderators and co-approve demotions.`)) return;
 
-      await db.ref('users/' + uid).update({ role: 'supermod', pendingProfileUpdate: null });
-      const u = allUsers[uid] || {};
-      const priv = allUserPrivate[uid] || {};
-      const phone = priv.phone || u.phone || '';
-      await db.ref('publicModerators/' + uid).set({
-        name: u.fullName || u.username,
-        username: u.username,
-        phone: phone,
-        role: 'Head Moderator (CR)'
-      });
-      renderRosterList();
+      const prevRole = allUsers[uid]?.role || 'moderator';
+      try {
+        if (allUsers[uid]) allUsers[uid].role = 'supermod';
+        renderRosterList();
+        await db.ref('users/' + uid).update({ role: 'supermod', pendingProfileUpdate: null });
+        const u = allUsers[uid] || {};
+        const priv = allUserPrivate[uid] || {};
+        const phone = priv.phone || u.phone || '';
+        await db.ref('publicModerators/' + uid).set({
+          name: u.fullName || u.username,
+          username: u.username,
+          phone: phone,
+          role: 'Head Moderator (CR)'
+        }).catch(() => {});
+        renderRosterList();
+      } catch (err) {
+        if (allUsers[uid]) allUsers[uid].role = prevRole;
+        renderRosterList();
+        console.error('Promotion to Super Mod error:', err);
+        alert('Failed to promote to Super Moderator: ' + (err.message || err));
+      }
     }
 
     async function handleAdminDemoteSuperMod(uid, username) {
@@ -3823,29 +3843,49 @@ ${escapeHtml(c.text || '')}
       if (!choice) return;
       const newRole = choice.trim().toLowerCase() === 'student' ? 'student' : 'moderator';
 
-      await db.ref('users/' + uid).update({ role: newRole, pendingProfileUpdate: null });
-      const u = allUsers[uid] || {};
-      const priv = allUserPrivate[uid] || {};
-      const phone = priv.phone || u.phone || '';
-      if (newRole === 'moderator') {
-        await db.ref('publicModerators/' + uid).set({
-          name: u.fullName || u.username,
-          username: u.username,
-          phone: phone,
-          role: 'Batch Moderator'
-        });
-      } else {
-        await db.ref('publicModerators/' + uid).remove().catch(() => {});
+      const prevRole = allUsers[uid]?.role || 'supermod';
+      try {
+        if (allUsers[uid]) allUsers[uid].role = newRole;
+        renderRosterList();
+        await db.ref('users/' + uid).update({ role: newRole, pendingProfileUpdate: null });
+        const u = allUsers[uid] || {};
+        const priv = allUserPrivate[uid] || {};
+        const phone = priv.phone || u.phone || '';
+        if (newRole === 'moderator') {
+          await db.ref('publicModerators/' + uid).set({
+            name: u.fullName || u.username,
+            username: u.username,
+            phone: phone,
+            role: 'Batch Moderator'
+          }).catch(() => {});
+        } else {
+          await db.ref('publicModerators/' + uid).remove().catch(() => {});
+        }
+        renderRosterList();
+      } catch (err) {
+        if (allUsers[uid]) allUsers[uid].role = prevRole;
+        renderRosterList();
+        console.error('Demote Super Mod error:', err);
+        alert('Failed to demote Super Moderator: ' + (err.message || err));
       }
-      renderRosterList();
     }
 
     async function handleAdminDemoteMod(uid, username) {
       if (!db || currentUserSession?.role !== 'admin') return;
       if (!confirm(`Demote moderator @${username} back to regular student?`)) return;
-      await db.ref('users/' + uid).update({ role: 'student', pendingProfileUpdate: null });
-      await db.ref('publicModerators/' + uid).remove().catch(() => {});
-      renderRosterList();
+      const prevRole = allUsers[uid]?.role || 'moderator';
+      try {
+        if (allUsers[uid]) allUsers[uid].role = 'student';
+        renderRosterList();
+        await db.ref('users/' + uid).update({ role: 'student', pendingProfileUpdate: null });
+        await db.ref('publicModerators/' + uid).remove().catch(() => {});
+        renderRosterList();
+      } catch (err) {
+        if (allUsers[uid]) allUsers[uid].role = prevRole;
+        renderRosterList();
+        console.error('Demote Mod error:', err);
+        alert('Failed to demote Moderator: ' + (err.message || err));
+      }
     }
 
     async function handleSuperModInitiateDemote(uid, username) {

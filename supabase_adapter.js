@@ -384,7 +384,7 @@ const db = {
           if (root === 'users') {
             if (parts.length === 2) {
               const uid = parts[1];
-              await sb.from('profiles').upsert({
+              const { error } = await sb.from('profiles').upsert({
                 id: uid,
                 username: val.username,
                 full_name: val.fullName || val.username,
@@ -393,11 +393,19 @@ const db = {
                 terms_accepted: Boolean(val.termsAccepted),
                 terms_version: val.termsVersion || '2.0'
               });
+              if (error) {
+                console.error('db.ref(users).set error:', error);
+                throw new Error(error.message || 'Database write failed');
+              }
               triggerTableChange('profiles');
               return;
             }
             if (parts.length === 3 && parts[2] === 'pendingProfileUpdate') {
-              await sb.from('profiles').update({ pending_profile_update: val }).eq('id', parts[1]);
+              const { error } = await sb.from('profiles').update({ pending_profile_update: val }).eq('id', parts[1]);
+              if (error) {
+                console.error('db.ref(users/pendingProfileUpdate).set error:', error);
+                throw new Error(error.message || 'Database write failed');
+              }
               triggerTableChange('profiles');
               return;
             }
@@ -467,6 +475,7 @@ const db = {
           }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').set error:`, err);
+          throw err;
         }
       },
 
@@ -518,12 +527,17 @@ const db = {
             if ('restoreDeadline' in obj) sqlUpdate.restore_deadline = obj.restoreDeadline ? new Date(obj.restoreDeadline).toISOString() : null;
             if ('pendingProfileUpdate' in obj) sqlUpdate.pending_profile_update = obj.pendingProfileUpdate;
 
-            await sb.from('profiles').update(sqlUpdate).eq('id', uid);
+            const { error } = await sb.from('profiles').update(sqlUpdate).eq('id', uid);
+            if (error) {
+              console.error('db.ref(users).update error:', error);
+              throw new Error(error.message || 'Database update failed');
+            }
             triggerTableChange('profiles');
             return;
           }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').update error:`, err);
+          throw err;
         }
       },
 
