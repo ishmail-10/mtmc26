@@ -97,12 +97,15 @@
 
   function renderFoundationCourseWidget() {
     const card = document.getElementById('fc-widget-card');
-    if (!card) return;
+    const mobileCard = document.getElementById('mobile-fc-widget-card');
+    if (!card && !mobileCard) return;
 
     const data = courseScheduleState.data;
     if (!data || !data.days) {
-      const content = document.getElementById('fc-widget-content');
-      if (content) content.innerHTML = '<p class="text-slate-400 italic text-[10px]">Loading schedule...</p>';
+      ['fc-widget-content', 'mobile-fc-widget-content'].forEach(id => {
+        const content = document.getElementById(id);
+        if (content) content.innerHTML = '<p class="text-slate-400 italic text-[10px]">Loading schedule...</p>';
+      });
       return;
     }
 
@@ -110,140 +113,154 @@
     const curWeek = courseScheduleState.widgetWeek;
     const curDayIdx = courseScheduleState.widgetDayIndex;
 
-    // Update Week toggle buttons
-    const btnW1 = document.getElementById('fc-w1-btn');
-    const btnW2 = document.getElementById('fc-w2-btn');
-    const weekLabel = document.getElementById('fc-widget-week-label');
+    // Update Week toggle buttons on both desktop and mobile
+    const w1Cls = curWeek === 1
+      ? 'px-2 py-0.5 rounded-md font-bold bg-indigo-600 text-white transition text-[9px]'
+      : 'px-2 py-0.5 rounded-md font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]';
+    const w2Cls = curWeek === 2
+      ? 'px-2 py-0.5 rounded-md font-bold bg-indigo-600 text-white transition text-[9px]'
+      : 'px-2 py-0.5 rounded-md font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]';
+    const weekLabelText = curWeek === 1 ? 'Week 1 (28 Sep – 3 Oct)' : 'Week 2 (5 Oct – 10 Oct)';
 
-    if (btnW1) {
-      btnW1.className = curWeek === 1
-        ? 'px-2 py-0.5 rounded-md font-bold bg-indigo-600 text-white transition text-[9px]'
-        : 'px-2 py-0.5 rounded-md font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]';
-    }
-    if (btnW2) {
-      btnW2.className = curWeek === 2
-        ? 'px-2 py-0.5 rounded-md font-bold bg-indigo-600 text-white transition text-[9px]'
-        : 'px-2 py-0.5 rounded-md font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]';
-    }
-    if (weekLabel) {
-      weekLabel.textContent = curWeek === 1 ? 'Week 1 (28 Sep – 3 Oct)' : 'Week 2 (5 Oct – 10 Oct)';
-    }
+    ['fc-w1-btn', 'mobile-fc-w1-btn'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.className = w1Cls;
+    });
+    ['fc-w2-btn', 'mobile-fc-w2-btn'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.className = w2Cls;
+    });
+    ['fc-widget-week-label', 'mobile-fc-widget-week-label'].forEach(id => {
+      const label = document.getElementById(id);
+      if (label) label.textContent = weekLabelText;
+    });
 
     // Render chips for active week
-    const chipsContainer = document.getElementById('fc-widget-day-chips');
     const autoIdx = getAutoSelectedDayIndex(days);
     const daysUntil = getDaysUntilCommencement();
 
-    if (chipsContainer) {
-      const startIndex = curWeek === 1 ? 0 : 6;
-      const endIndex = curWeek === 1 ? 6 : 12;
-      let chipsHtml = '';
+    const startIndex = curWeek === 1 ? 0 : 6;
+    const endIndex = curWeek === 1 ? 6 : 12;
+    let chipsHtml = '';
 
-      for (let i = startIndex; i < endIndex && i < days.length; i++) {
-        const d = days[i];
-        const dateParts = d.date.split('-');
-        const dayNum = dateParts[0];
-        const shortLetter = d.day.charAt(0);
-        const isActive = (i === curDayIdx);
-        const isHol = d.holiday;
-        const isToday = (autoIdx >= 0 && i === autoIdx);
+    for (let i = startIndex; i < endIndex && i < days.length; i++) {
+      const d = days[i];
+      const dateParts = d.date.split('-');
+      const dayNum = dateParts[0];
+      const shortLetter = d.day.charAt(0);
+      const isActive = (i === curDayIdx);
+      const isHol = d.holiday;
+      const isToday = (autoIdx >= 0 && i === autoIdx);
 
-        let chipClass = '';
-        if (isActive) {
-          chipClass = isHol
-            ? 'bg-rose-600 text-white shadow-sm font-extrabold ring-2 ring-rose-400/50'
-            : 'bg-indigo-600 text-white shadow-sm font-extrabold';
-        } else if (isToday) {
-          chipClass = 'bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/40 font-bold';
-        } else if (isHol) {
-          chipClass = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-bold hover:bg-rose-500/20';
-        } else {
-          chipClass = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
-        }
-
-        chipsHtml += `
-          <button type="button" onclick="selectFcWidgetDay(${i})" class="py-1.5 rounded-xl transition text-[10px] flex flex-col items-center justify-center ${chipClass}" title="${d.day} ${d.date}${isHol ? ' (National Holiday - Campus Closed)' : ''}">
-            <div class="leading-none text-[11px] font-extrabold">${dayNum}${isHol ? '<span class="text-[8px] text-rose-500 ml-0.5">●</span>' : ''}</div>
-            <div class="leading-none text-[9px] opacity-75 mt-0.5 uppercase">${shortLetter}</div>
-          </button>
-        `;
+      let chipClass = '';
+      if (isActive) {
+        chipClass = isHol
+          ? 'bg-rose-600 text-white shadow-sm font-extrabold ring-2 ring-rose-400/50'
+          : 'bg-indigo-600 text-white shadow-sm font-extrabold';
+      } else if (isToday) {
+        chipClass = 'bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/40 font-bold';
+      } else if (isHol) {
+        chipClass = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-bold hover:bg-rose-500/20';
+      } else {
+        chipClass = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
       }
-      chipsContainer.innerHTML = chipsHtml;
+
+      chipsHtml += `
+        <button type="button" onclick="selectFcWidgetDay(${i})" class="py-1.5 rounded-xl transition text-[10px] flex flex-col items-center justify-center ${chipClass}" title="${d.day} ${d.date}${isHol ? ' (National Holiday - Campus Closed)' : ''}">
+          <div class="leading-none text-[11px] font-extrabold">${dayNum}${isHol ? '<span class="text-[8px] text-rose-500 ml-0.5">●</span>' : ''}</div>
+          <div class="leading-none text-[9px] opacity-75 mt-0.5 uppercase">${shortLetter}</div>
+        </button>
+      `;
     }
 
-    // Render Sessions preview
-    const contentContainer = document.getElementById('fc-widget-content');
-    const badge = document.getElementById('fc-widget-day-badge');
+    ['fc-widget-day-chips', 'mobile-fc-widget-day-chips'].forEach(id => {
+      const container = document.getElementById(id);
+      if (container) container.innerHTML = chipsHtml;
+    });
 
+    // Render Sessions preview
     if (days[curDayIdx]) {
       const currentDay = days[curDayIdx];
-      if (badge) {
-        if (autoIdx === -1 && daysUntil > 0) {
-          badge.textContent = `🗓️ Starts in ${daysUntil}d`;
-          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20';
-        } else if (autoIdx >= 0 && curDayIdx === autoIdx) {
-          badge.textContent = `🔴 Today · ${currentDay.dayShort}`;
-          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-600 text-white shadow-sm';
-        } else if (currentDay.holiday) {
-          badge.textContent = `🇮🇳 Holiday · ${currentDay.date}`;
-          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
-        } else {
-          badge.textContent = `${currentDay.dayShort}, ${currentDay.date}`;
-          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20';
-        }
+      let badgeText = '';
+      let badgeClass = '';
+
+      if (autoIdx === -1 && daysUntil > 0) {
+        badgeText = `🗓️ Starts in ${daysUntil}d`;
+        badgeClass = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20';
+      } else if (autoIdx >= 0 && curDayIdx === autoIdx) {
+        badgeText = `🔴 Today · ${currentDay.dayShort}`;
+        badgeClass = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-600 text-white shadow-sm';
+      } else if (currentDay.holiday) {
+        badgeText = `🇮🇳 Holiday · ${currentDay.date}`;
+        badgeClass = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+      } else {
+        badgeText = `${currentDay.dayShort}, ${currentDay.date}`;
+        badgeClass = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20';
       }
 
-      if (contentContainer) {
-        let preCommenceHtml = '';
-        if (autoIdx === -1 && daysUntil > 0) {
-          preCommenceHtml = `
-            <div class="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[10px] flex items-center justify-between">
-              <span class="flex items-center gap-1.5 font-bold">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500 shrink-0"></i>
-                <span>Commences Mon, 28 Sep</span>
-              </span>
-              <span class="font-extrabold px-1.5 py-0.5 rounded bg-indigo-500/20 text-[9px]">${daysUntil} days left</span>
+      ['fc-widget-day-badge', 'mobile-fc-widget-day-badge'].forEach(id => {
+        const badgeEl = document.getElementById(id);
+        if (badgeEl) {
+          badgeEl.textContent = badgeText;
+          badgeEl.className = badgeClass;
+        }
+      });
+
+      let preCommenceHtml = '';
+      if (autoIdx === -1 && daysUntil > 0) {
+        preCommenceHtml = `
+          <div class="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[10px] flex items-center justify-between">
+            <span class="flex items-center gap-1.5 font-bold">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500 shrink-0"></i>
+              <span>Commences Mon, 28 Sep</span>
+            </span>
+            <span class="font-extrabold px-1.5 py-0.5 rounded bg-indigo-500/20 text-[9px]">${daysUntil} days left</span>
+          </div>
+        `;
+      }
+
+      let contentHtml = '';
+      if (currentDay.holiday) {
+        contentHtml = `
+          ${preCommenceHtml}
+          <div class="bg-rose-50 dark:bg-rose-950/40 p-3 rounded-xl border border-rose-200 dark:border-rose-800/60 space-y-1 text-center">
+            <span class="text-lg">🇮🇳</span>
+            <p class="font-bold text-rose-700 dark:text-rose-400 text-xs">${esc(currentDay.holidayTitle || 'Holiday')}</p>
+            <p class="text-[10px] text-rose-600/80 dark:text-rose-400/80">National Holiday · No academic sessions</p>
+          </div>
+        `;
+      } else {
+        const nonBreakSessions = currentDay.sessions.filter(s => s.slot !== 'Break');
+        const previewSessions = nonBreakSessions.slice(0, 3);
+        const remainingCount = nonBreakSessions.length - previewSessions.length;
+
+        let sessionsHtml = previewSessions.map(s => `
+          <div class="bg-slate-50 dark:bg-slate-950/70 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60 space-y-0.5">
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="font-bold text-indigo-600 dark:text-indigo-400">${esc(s.time.split('-')[0].trim())}</span>
+              <span class="text-slate-400 text-[9px] truncate max-w-[110px]">${esc(s.slot)}</span>
+            </div>
+            <p class="text-slate-900 dark:text-slate-100 font-semibold text-[11px] leading-snug line-clamp-1">${esc(s.topic)}</p>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${esc(s.faculty)}</p>
+          </div>
+        `).join('');
+
+        if (remainingCount > 0) {
+          sessionsHtml += `
+            <div class="text-center pt-0.5">
+              <span class="text-[10px] font-semibold text-slate-400">+ ${remainingCount} more sessions ${autoIdx >= 0 && curDayIdx === autoIdx ? 'today' : 'on this date'}</span>
             </div>
           `;
         }
-
-        if (currentDay.holiday) {
-          contentContainer.innerHTML = `
-            ${preCommenceHtml}
-            <div class="bg-rose-50 dark:bg-rose-950/40 p-3 rounded-xl border border-rose-200 dark:border-rose-800/60 space-y-1 text-center">
-              <span class="text-lg">🇮🇳</span>
-              <p class="font-bold text-rose-700 dark:text-rose-400 text-xs">${esc(currentDay.holidayTitle || 'Holiday')}</p>
-              <p class="text-[10px] text-rose-600/80 dark:text-rose-400/80">National Holiday · No academic sessions</p>
-            </div>
-          `;
-        } else {
-          const nonBreakSessions = currentDay.sessions.filter(s => s.slot !== 'Break');
-          const previewSessions = nonBreakSessions.slice(0, 3);
-          const remainingCount = nonBreakSessions.length - previewSessions.length;
-
-          let sessionsHtml = previewSessions.map(s => `
-            <div class="bg-slate-50 dark:bg-slate-950/70 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60 space-y-0.5">
-              <div class="flex items-center justify-between text-[10px]">
-                <span class="font-bold text-indigo-600 dark:text-indigo-400">${esc(s.time.split('-')[0].trim())}</span>
-                <span class="text-slate-400 text-[9px] truncate max-w-[110px]">${esc(s.slot)}</span>
-              </div>
-              <p class="text-slate-900 dark:text-slate-100 font-semibold text-[11px] leading-snug line-clamp-1">${esc(s.topic)}</p>
-              <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${esc(s.faculty)}</p>
-            </div>
-          `).join('');
-
-          if (remainingCount > 0) {
-            sessionsHtml += `
-              <div class="text-center pt-0.5">
-                <span class="text-[10px] font-semibold text-slate-400">+ ${remainingCount} more sessions ${autoIdx >= 0 && curDayIdx === autoIdx ? 'today' : 'on this date'}</span>
-              </div>
-            `;
-          }
-
-          contentContainer.innerHTML = preCommenceHtml + sessionsHtml;
-        }
-        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+        contentHtml = preCommenceHtml + sessionsHtml;
       }
+
+      ['fc-widget-content', 'mobile-fc-widget-content'].forEach(id => {
+        const container = document.getElementById(id);
+        if (container) container.innerHTML = contentHtml;
+      });
+
+      if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
     }
   }
 
