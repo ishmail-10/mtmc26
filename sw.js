@@ -1,7 +1,8 @@
-const CACHE_NAME = 'mtmc26-bbs-v13';
+const CACHE_NAME = 'mtmc26-bbs-v14';
 const ASSETS = [
   './',
   './index.html',
+  './supabase_adapter.js',
   './events.json',
   './mess_menu.json',
   './course_schedule.json',
@@ -13,7 +14,8 @@ const ASSETS = [
   './icon-192.png',
   './icon-512.png',
   'https://cdn.tailwindcss.com',
-  'https://unpkg.com/lucide@latest'
+  'https://unpkg.com/lucide@latest',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
 ];
 
 self.addEventListener('install', (event) => {

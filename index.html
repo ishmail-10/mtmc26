@@ -52,10 +52,10 @@
   </script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Firebase App, Realtime Database & Auth SDKs (Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <!-- Supabase JS Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase Backend Adapter (RLS PostgreSQL & Realtime Engine) -->
+  <script src="./supabase_adapter.js"></script>
   <!-- Academic Course & Timetable Engine (Standalone) -->
   <script src="./schedule.js"></script>
   <style>
@@ -1565,30 +1565,8 @@
       });
     }
 
-    // FIREBASE REALTIME DATABASE CONFIGURATION (Ishmail Project)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBdxdRLRMfXejD5QP5PY2GW_Wmx6lXJpus",
-      authDomain: "mtmc26-7212d.firebaseapp.com",
-      databaseURL: "https://mtmc26-7212d-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "mtmc26-7212d",
-      storageBucket: "mtmc26-7212d.firebasestorage.app",
-      messagingSenderId: "430171914319",
-      appId: "1:430171914319:web:224fee53a13a3f11526a3a"
-    };
-
-    let db = null;
-    let auth = null;
-    try {
-      if (typeof firebase !== 'undefined') {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        if (firebase.auth) {
-          auth = firebase.auth();
-        }
-      }
-    } catch (e) {
-      console.warn("Firebase initialization:", e);
-    }
+    // SUPABASE BACKEND (PostgreSQL ap-south-1 · Isolated RLS Engine)
+    // 'db' and 'auth' engines are initialized via ./supabase_adapter.js
 
     // Helper: Map student username to internal @mtmc26.org auth email ($0 / Spark Plan)
     function getAuthEmail(username) {
@@ -2681,40 +2659,24 @@
         ? auth.currentUser.email
         : getAuthEmail(currentUserSession.username);
 
-      // Verify current password with Firebase Auth directly
-      if (auth && auth.currentUser) {
-        try {
-          const cred = firebase.auth.EmailAuthProvider.credential(authEmail, curPass);
-          await auth.currentUser.reauthenticateWithCredential(cred);
-        } catch (authErr) {
+      // Verify current password with Supabase Auth directly
+      if (sb) {
+        const { error: verifyErr } = await sb.auth.signInWithPassword({
+          email: authEmail,
+          password: curPass
+        });
+        if (verifyErr) {
           errBox.textContent = 'Incorrect current password. Please try again.';
           errBox.classList.remove('hidden');
           return;
         }
-      } else if (auth) {
-        try {
-          await auth.signInWithEmailAndPassword(authEmail, curPass);
-        } catch (authErr) {
-          errBox.textContent = 'Incorrect current password. Please try again.';
-          errBox.classList.remove('hidden');
-          return;
-        }
-      } else if (currentUserSession.passwordHash) {
-        const curHash = await hashPassword(curPass);
-        if (curHash !== currentUserSession.passwordHash) {
-          errBox.textContent = 'Incorrect current password. Please try again.';
-          errBox.classList.remove('hidden');
-          return;
-        }
-      }
 
-      // Synchronize with Firebase Auth
-      if (auth && auth.currentUser) {
-        try {
-          await auth.currentUser.updatePassword(newPass);
-        } catch (authErr) {
-          console.error("Firebase Auth password update:", authErr);
-          errBox.textContent = authErr.message || 'Failed to update password in Firebase Auth.';
+        const { error: updateErr } = await sb.auth.updateUser({
+          password: newPass
+        });
+        if (updateErr) {
+          console.error("Supabase password update error:", updateErr);
+          errBox.textContent = updateErr.message || 'Failed to update password in Supabase.';
           errBox.classList.remove('hidden');
           return;
         }
