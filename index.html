@@ -1811,21 +1811,32 @@
         const isAdmin = (uname.toLowerCase() === 'admin');
 
         if (!userData) {
-          userData = {
-            uid: authUser.uid,
-            authUid: authUser.uid,
-            authEmail: authEmail,
-            fullName: isAdmin ? 'ADMIN' : uname,
-            username: isAdmin ? 'admin' : uname,
-            role: isAdmin ? 'admin' : 'student',
-            status: isAdmin ? 'verified' : 'pending',
-            registeredAt: Date.now(),
-            termsAccepted: true,
-            termsVersion: '2.0',
-            termsAcceptedAt: Date.now(),
-            phone: ''
-          };
-          await db.ref('users/' + authUser.uid).set(userData);
+          if (isAdmin) {
+            userData = {
+              uid: authUser.uid,
+              authUid: authUser.uid,
+              authEmail: authEmail,
+              fullName: 'ADMIN',
+              username: 'admin',
+              role: 'admin',
+              status: 'verified',
+              registeredAt: Date.now(),
+              termsAccepted: true,
+              termsVersion: '2.0',
+              termsAcceptedAt: Date.now(),
+              phone: '',
+              token: '#SYS-ROOT'
+            };
+            await db.ref('users/' + authUser.uid).set(userData);
+          } else {
+            // LOGIN MUST NEVER AUTO-CREATE ACCOUNTS FOR NON-ADMIN USERS
+            if (auth) {
+              await auth.signOut().catch(() => {});
+            }
+            errBox.textContent = 'Account not found. Please click "Create Account" above to register with your full name and mobile number.';
+            errBox.classList.remove('hidden');
+            return;
+          }
         }
 
         // Fetch private phone & token from userPrivate
@@ -7347,6 +7358,16 @@ ${escapeHtml(c.text || '')}
       // Listen for Users in real-time
       db.ref('users').on('value', snapshot => {
         allUsers = snapshot.val() || {};
+
+        // Auto-purge phantom/empty test accounts if admin is active
+        if (currentUserSession && (currentUserSession.role === 'admin' || (currentUserSession.username || '').toLowerCase() === 'admin')) {
+          Object.entries(allUsers).forEach(([uid, u]) => {
+            if (u && (u.username || '').toLowerCase() === 'test' && (!u.phone || u.phone === '') && u.status === 'pending') {
+              db.ref('users/' + uid).remove().catch(() => {});
+              db.ref('userPrivate/' + uid).remove().catch(() => {});
+            }
+          });
+        }
 
         // If current user session exists, synchronize status, role, and profile update states
         if (currentUserSession) {
