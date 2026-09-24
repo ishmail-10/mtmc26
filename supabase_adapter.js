@@ -37,9 +37,7 @@ const auth = {
     const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
     if (error) {
       const err = new Error(error.message);
-      err.code = (error.message.includes('Invalid login credentials') || error.status === 400)
-        ? 'auth/wrong-password'
-        : 'auth/user-not-found';
+      err.code = 'auth/invalid-credential';
       throw err;
     }
     currentSupabaseUser = data.user ? { uid: data.user.id, email: data.user.email } : null;

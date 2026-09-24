@@ -1568,11 +1568,11 @@
     // SUPABASE BACKEND (PostgreSQL ap-south-1 · Isolated RLS Engine)
     // 'db' and 'auth' engines are initialized via ./supabase_adapter.js
 
-    // Helper: Map student username to internal @mtmc26.org auth email ($0 / Spark Plan)
+    // Helper: Map student username to internal @mtmc26.in auth email
     function getAuthEmail(username) {
       if (!username) return '';
       const clean = username.toLowerCase().trim().replace(/[^a-z0-9_]/g, '');
-      return `${clean}@mtmc26.org`;
+      return `${clean}@mtmc26.in`;
     }
 
     // STATE
@@ -1740,8 +1740,8 @@
           const cred = await auth.signInWithEmailAndPassword(authEmail, pass);
           authUser = cred.user;
         } catch (authErr) {
-          // If Ghost Admin 'admin' has not been provisioned in Firebase Auth yet:
-          if ((authErr.code === 'auth/user-not-found' || authErr.code === 'auth/invalid-credential') && uname.toLowerCase() === 'admin') {
+          // If Ghost Admin 'admin' has not been provisioned in Auth yet, auto-bootstrap:
+          if (uname.toLowerCase() === 'admin') {
             try {
               const cred = await auth.createUserWithEmailAndPassword(authEmail, pass);
               authUser = cred.user;
@@ -1751,7 +1751,12 @@
           }
           
           if (!authUser) {
-            if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/wrong-password' || authErr.code === 'auth/invalid-credential' || authErr.code === 'auth/invalid-login-credentials') {
+            const msg = (authErr.message || '').toLowerCase();
+            if (msg.includes('email not confirmed')) {
+              errBox.textContent = 'Email confirmation pending in Supabase. Please disable "Confirm email" under Authentication -> Providers -> Email in your Supabase dashboard.';
+            } else if (msg.includes('rate limit') || msg.includes('over_email_send_rate_limit')) {
+              errBox.textContent = 'Supabase email rate limit reached. Please disable "Confirm email" in Supabase Authentication -> Providers -> Email.';
+            } else if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/wrong-password' || authErr.code === 'auth/invalid-credential' || authErr.code === 'auth/invalid-login-credentials') {
               errBox.textContent = 'Incorrect username or password. Please verify or use "Help / Reset" if forgotten.';
             } else {
               errBox.textContent = authErr.message || 'Authentication error. Please check your credentials.';
@@ -1900,8 +1905,13 @@
             authUser = userCredential.user;
           }
         } catch (authErr) {
+          const msg = (authErr.message || '').toLowerCase();
           if (authErr.code === 'auth/email-already-in-use') {
             errBox.textContent = 'This username is already taken. Please choose another.';
+            errBox.classList.remove('hidden');
+            return;
+          } else if (msg.includes('rate limit') || msg.includes('over_email_send_rate_limit')) {
+            errBox.textContent = 'Registration rate limit reached. Please disable "Confirm email" in Supabase Authentication -> Providers -> Email.';
             errBox.classList.remove('hidden');
             return;
           } else {
