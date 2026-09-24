@@ -181,7 +181,7 @@ const db = {
             if (error || !data) return { val: () => ({}), exists: () => false };
             const modsMap = {};
             data.forEach(m => {
-              modsMap[m.id] = { id: m.id, username: m.username, name: m.full_name, fullName: m.full_name, phone: m.phone };
+              modsMap[m.id] = { id: m.id, username: m.username, name: m.full_name, fullName: m.full_name, phone: m.phone, role: m.role };
             });
             return { val: () => modsMap, exists: () => Object.keys(modsMap).length > 0 };
           }
