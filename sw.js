@@ -1,9 +1,12 @@
-const CACHE_NAME = 'mtmc26-bbs-v10';
+const CACHE_NAME = 'mtmc26-bbs-v11';
 const ASSETS = [
   './',
   './index.html',
   './events.json',
   './mess_menu.json',
+  './course_schedule.json',
+  './schedule.js',
+  './foundation_course_schedule_2026.pdf',
   './manifest.json',
   './logo/logo.png',
   './favicon.png',

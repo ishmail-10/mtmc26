@@ -56,6 +56,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <!-- Academic Course & Timetable Engine (Standalone) -->
+  <script src="./schedule.js"></script>
   <style>
     html, body {
       overflow-x: hidden;
@@ -364,10 +366,23 @@
         </div>
 
         <div class="space-y-2.5">
-          <a id="gate-pending-wa-btn" href="#" target="_blank" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center justify-center gap-2">
+          <button type="button" onclick="togglePendingModeratorsList()" id="btn-toggle-pending-mods" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center justify-center gap-2">
             <i data-lucide="message-circle" class="w-4 h-4"></i>
-            <span>Send Handshake via WhatsApp</span>
-          </a>
+            <span>Contact Moderator</span>
+            <i data-lucide="chevron-down" id="pending-mods-chevron" class="w-3.5 h-3.5 transition-transform duration-200"></i>
+          </button>
+
+          <!-- Collapsible Active Batch Moderators List -->
+          <div id="pending-moderators-container" class="hidden space-y-2 text-left pt-1">
+            <div class="flex items-center justify-between text-[11px] px-1 text-slate-500">
+              <span class="font-semibold">Batch Moderators on Duty:</span>
+              <span class="text-[10px] text-slate-400">Tap to message</span>
+            </div>
+            <div id="pending-moderators-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
+              <!-- Dynamically populated from publicModerators -->
+            </div>
+          </div>
+
           <button onclick="handleLogout()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 text-xs font-semibold transition">
             Sign Out / Switch Account
           </button>
@@ -485,6 +500,47 @@
         <p class="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
           Posts on the Anonymous Wall hide your identity completely. Perfect for asking questions you feel shy to ask in official groups or sharing genuine exam worries.
         </p>
+      </div>
+
+      <!-- FOUNDATION COURSE SCHEDULE WIDGET -->
+      <div id="fc-widget-card" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-xs space-y-3 transition-colors duration-200 shadow-sm">
+        <div class="flex items-center justify-between">
+          <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-4 h-4 text-indigo-500"></i>
+            <span>Foundation Course</span>
+          </h4>
+          <span id="fc-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">28 Sep – 10 Oct</span>
+        </div>
+
+        <!-- Week 1 / Week 2 Quick Switcher & Day Selector -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-[10px] font-semibold text-slate-500 dark:text-slate-400 px-0.5">
+            <span id="fc-widget-week-label">Week 1 (28 Sep – 3 Oct)</span>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="setFcWidgetWeek(1)" id="fc-w1-btn" class="px-2 py-0.5 rounded-md font-bold bg-indigo-600 text-white transition text-[9px]">W1</button>
+              <button type="button" onclick="setFcWidgetWeek(2)" id="fc-w2-btn" class="px-2 py-0.5 rounded-md font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]">W2</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-6 gap-1 text-center font-bold text-[10px]" id="fc-widget-day-chips">
+            <!-- Populated dynamically with the 6 days of current week -->
+          </div>
+        </div>
+
+        <!-- Sessions Preview Container -->
+        <div id="fc-widget-content" class="space-y-1.5 text-[11px] pt-1">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <button type="button" onclick="openThread('post-mtmc-foundation-course')" class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1">
+            <span>Full Timetable</span>
+            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          </button>
+          <a href="./foundation_course_schedule_2026.pdf" target="_blank" download="Foundation_Course_Schedule_2026_Batch.pdf" class="text-[10px] font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 inline-flex items-center gap-1">
+            <i data-lucide="file-text" class="w-3 h-3"></i>
+            <span>Original PDF</span>
+          </a>
+        </div>
       </div>
 
       <!-- DAILY HOSTEL MESS MENU WIDGET (LIVE GOOGLE DRIVE SYNC) -->
@@ -1586,13 +1642,25 @@
       {
         id: 'post-mtmc-mess',
         board: 'resources',
-        title: '🍲 Official MTMC Hostel Weekly Mess Menu (Breakfast, Lunch, Hi-Tea, Dinner)',
-        content: `Official weekly hostel mess schedule for MTMC MBBS Batch 2026 residents. View the complete timetable for Breakfast, Lunch, Hi-Tea, and Dinner in the interactive spreadsheet below.`,
-        author: 'Hostel & Mess Committee',
+        title: '🍲 Weekly Hostel Mess Menu (Breakfast, Lunch, Hi-Tea, Dinner)',
+        content: `Weekly hostel mess schedule for Batch 2026 residents. View the complete timetable for Breakfast, Lunch, Hi-Tea, and Dinner in the interactive schedule below.`,
+        author: 'Batch Resource',
         isAnon: false,
         upvotes: 0,
-        createdAt: 'Pinned Guide',
+        createdAt: 'Batch Guide',
         timestamp: 1727000000000,
+        comments: []
+      },
+      {
+        id: 'post-mtmc-foundation-course',
+        board: 'resources',
+        title: '🗓️ Foundation Course Schedule (28 Sep – 10 Oct 2026)',
+        content: `Foundation Course timetable for Batch 2026. Daily session timings, subject orientations (Anatomy, Physiology, Biochemistry, Community Medicine), AETCOM modules, campus guidelines, and documentation schedule. View by day or see the full 2-week timetable below.`,
+        author: 'Batch Resource',
+        isAnon: false,
+        upvotes: 0,
+        createdAt: 'Batch Guide',
+        timestamp: 1727100000000,
         comments: []
       }
     ];
@@ -1943,11 +2011,65 @@
       if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     }
 
+    function togglePendingModeratorsList() {
+      const container = document.getElementById('pending-moderators-container');
+      const chevron = document.getElementById('pending-mods-chevron');
+      if (!container) return;
+      const isHidden = container.classList.contains('hidden');
+      if (isHidden) {
+        container.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+        renderPendingModeratorsList();
+      } else {
+        container.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    }
+
+    function renderPendingModeratorsList() {
+      const container = document.getElementById('pending-moderators-list');
+      if (!container) return;
+
+      const mods = Object.values(allPublicModerators || {}).filter(m => 
+        (m.username || '').toLowerCase() !== 'admin' && m.phone
+      );
+
+      if (mods.length === 0) {
+        container.innerHTML = `
+          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+            <p class="font-semibold text-slate-700 dark:text-slate-300">No batch moderators currently listed.</p>
+            <p class="text-[11px]">Please reach out to your Class Representative (CR) on WhatsApp to verify your account.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = mods.map(m => {
+        const displayName = m.name || m.fullName || m.username;
+        const phone = (m.phone || '').replace(/[^0-9]/g, '');
+        const formattedPhone = phone.length === 10 ? `+91 ${phone.slice(0, 5)} ${phone.slice(5)}` : `+91 ${phone}`;
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-2 shadow-sm">
+            <div class="min-w-0">
+              <div class="font-bold text-slate-900 dark:text-white text-xs truncate">${escapeHtml(displayName)}</div>
+              <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400">${formattedPhone}</div>
+            </div>
+            <a href="https://wa.me/91${phone}" target="_blank" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-sm flex items-center gap-1 text-xs">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+              <span>Message</span>
+            </a>
+          </div>
+        `;
+      }).join('');
+      if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
     function initPublicModeratorsListener() {
       if (!db) return;
       db.ref('publicModerators').on('value', snap => {
         allPublicModerators = snap.val() || {};
         renderForgotModeratorsList();
+        renderPendingModeratorsList();
       });
     }
 
@@ -2041,14 +2163,9 @@
         if (pendingUserEl) pendingUserEl.textContent = '@' + currentUserSession.username;
         if (pendingCardNameEl) pendingCardNameEl.textContent = currentUserSession.fullName || '—';
         if (pendingCardUnameEl) pendingCardUnameEl.textContent = '@' + currentUserSession.username;
-        if (pendingPhoneEl) pendingPhoneEl.textContent = '+91 ' + currentUserSession.phone;
-        if (pendingTokenEl) pendingTokenEl.textContent = currentUserSession.token;
-
-        const waMsg = encodeURIComponent(
-          `Hi Moderator, verifying my MTMC MBBS Batch 2026 account:\n• Name: ${currentUserSession.fullName || 'Student'}\n• Username: @${currentUserSession.username}\n• Token: ${currentUserSession.token}\n• Registered Mobile: +91 ${currentUserSession.phone}`
-        );
-        const waBtn = document.getElementById('gate-pending-wa-btn');
-        if (waBtn) waBtn.href = `https://wa.me/?text=${waMsg}`;
+        if (pendingPhoneEl) pendingPhoneEl.textContent = currentUserSession.phone ? '+91 ' + currentUserSession.phone : '—';
+        if (pendingTokenEl) pendingTokenEl.textContent = currentUserSession.token || '—';
+        renderPendingModeratorsList();
 
         if (searchWrapper) { searchWrapper.classList.add('hidden'); searchWrapper.classList.remove('md:block'); }
         const mobileSearchBtnPending = document.getElementById('mobile-search-toggle-btn');
@@ -6008,11 +6125,16 @@ ${escapeHtml(c.text || '')}
     }
 
     function recordPostView(postId) {
+      // GHOST ADMIN SHIELD: Admin account must be completely invisible and never leave view footprints or increment counts
+      if (!currentUserSession || currentUserSession.role === 'admin' || (currentUserSession.username || '').toLowerCase() === 'admin') {
+        return;
+      }
+
       const post = allPosts.find(p => p.id === postId);
       if (!post) return;
       if (!post.viewedBy) post.viewedBy = {};
 
-      const viewerId = currentUserSession ? currentUserSession.uid : null;
+      const viewerId = currentUserSession.uid;
       if (!viewerId) return;
 
       // Unique View Guard: Do not register duplicate views if already counted for this student
@@ -6379,7 +6501,7 @@ ${escapeHtml(c.text || '')}
 
           <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">${post.title}</h2>
           
-          ${post.id === 'post-mtmc-mess' ? renderMessTimetableThreadHTML() : `
+          ${post.id === 'post-mtmc-mess' ? renderMessTimetableThreadHTML() : post.id === 'post-mtmc-foundation-course' ? renderFoundationCourseThreadHTML() : `
             <div id="thread-content-body" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line border-b border-slate-100 dark:border-slate-800/80 pb-4">
               ${post.content}
             </div>
@@ -7402,7 +7524,7 @@ ${escapeHtml(c.text || '')}
               </div>
               <div>
                 <h4 class="text-xs font-bold text-slate-900 dark:text-white">Hostel Mess Weekly Timetable</h4>
-                <p class="text-[10px] text-slate-400">Official MTMC Hostel Menu · Local & Offline Cached</p>
+                <p class="text-[10px] text-slate-400">Hostel Mess Timetable · Local & Offline Cached</p>
               </div>
             </div>
             <button type="button" onclick="syncLiveMessMenu(true)" id="btn-sync-mess-data" class="px-2.5 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition inline-flex items-center gap-1.5 shadow-sm">
@@ -7618,7 +7740,7 @@ ${escapeHtml(c.text || '')}
         openAuthModal('login');
         return;
       }
-      if (currentUserSession.status !== 'verified') {
+      if (currentUserSession.status !== 'verified' || currentUserSession.role === 'admin' || (currentUserSession.username || '').toLowerCase() === 'admin') {
         alert('Please log in with a verified student account to rate today’s mess food.');
         return;
       }

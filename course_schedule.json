@@ -1,0 +1,688 @@
+{
+  "id": "mtmc26-foundation-course",
+  "title": "Foundation Course Schedule (Batch 2026)",
+  "subtitle": "Batch 2026 Timetable · 28 Sep – 10 Oct 2026",
+  "batch": "MBBS Batch 2026",
+  "dateRange": "28 Sep – 10 Oct 2026",
+  "pdfUrl": "./foundation_course_schedule_2026.pdf",
+  "pdfName": "Foundation_Course_Schedule_2026_Batch.pdf",
+  "days": [
+    {
+      "week": 1,
+      "date": "28-Sep-26",
+      "day": "Monday",
+      "dayShort": "Mon",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "History of Medicine and alternate systems",
+          "faculty": "Dr Praveen Lakiena",
+          "category": "Academics & Medicine",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "10:30 - 11:15 AM",
+          "slot": "Morning 2",
+          "topic": "IMG and its global relevance",
+          "faculty": "Dr Oindrila Chakraborty",
+          "category": "Curriculum & Global Health",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Competency-Based Education - Student's perspective",
+          "faculty": "Dr Shilpa",
+          "category": "CBME & Pedagogy",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "How to seek help: Gender sensitivity, ICC (POSH)",
+          "faculty": "Dr Jarina Begum",
+          "category": "Campus Safety & POSH",
+          "badgeColor": "rose"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Time Management",
+          "faculty": "Dr Nadia Ahmad",
+          "category": "Soft Skills & Habits",
+          "badgeColor": "emerald"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Photo, Biometric and Documentation",
+          "faculty": "Mr Ranjeet Singh, Ms Gurbir, Mr Ankur, Ms Sandhya",
+          "category": "Administration & Enrollment",
+          "badgeColor": "cyan"
+        }
+      ]
+    },
+    {
+      "week": 1,
+      "date": "29-Sep-26",
+      "day": "Tuesday",
+      "dayShort": "Tue",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Working in a health care team - Group Dynamics",
+          "faculty": "Dr Sameer Wooly",
+          "category": "Teamwork & Clinical Skills",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "10:30 - 11:15 AM",
+          "slot": "Morning 2",
+          "topic": "Principles of Primary Care",
+          "faculty": "Dr Anushka Priya Sharan",
+          "category": "Community & Primary Care",
+          "badgeColor": "emerald"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Documentation in medical practice",
+          "faculty": "Dr Jyotish Guria",
+          "category": "Clinical Records & Ethics",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "National Health goals and policies",
+          "faculty": "Dr Syed Irfan Ali",
+          "category": "Public Health & National Policy",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Anti-Ragging Directives & Guidelines",
+          "faculty": "Dr Abhishek Kumar",
+          "category": "Campus Discipline & Zero Tolerance",
+          "badgeColor": "rose"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Photo, Biometric and Documentation",
+          "faculty": "Mr Ranjeet Singh, Ms Gurbir, Mr Ankur, Ms Sandhya",
+          "category": "Administration & Enrollment",
+          "badgeColor": "cyan"
+        }
+      ]
+    },
+    {
+      "week": 1,
+      "date": "30-Sep-26",
+      "day": "Wednesday",
+      "dayShort": "Wed",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Medical Profession & Role of a physician in society",
+          "faculty": "Dr Sunita Hota",
+          "category": "Ethics & Role of Physician",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "10:30 - 11:15 AM",
+          "slot": "Morning 2",
+          "topic": "Healthcare as a system",
+          "faculty": "Dr Padmanabh Inamdar",
+          "category": "Healthcare Systems",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Security Guidelines & Campus Safety",
+          "faculty": "Mr BK Singh & Team",
+          "category": "Campus Security",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "Code of Conduct & Student Discipline",
+          "faculty": "Mr Kamal Kishore",
+          "category": "Conduct & Rules",
+          "badgeColor": "rose"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Mentor-Mentee Scheme Orientation",
+          "faculty": "Dr Kavita Rasalkar",
+          "category": "Mentorship & Student Support",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Photo, Biometric and Documentation",
+          "faculty": "Mr Ranjeet Singh, Ms Gurbir, Mr Ankur, Ms Sandhya",
+          "category": "Administration & Enrollment",
+          "badgeColor": "cyan"
+        }
+      ]
+    },
+    {
+      "week": 1,
+      "date": "1-Oct-26",
+      "day": "Thursday",
+      "dayShort": "Thu",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Universal Precautions & Vaccination",
+          "faculty": "Dr Sophia Mukherjee",
+          "category": "Clinical Safety & Immunization",
+          "badgeColor": "emerald"
+        },
+        {
+          "time": "10:30 - 11:15 AM",
+          "slot": "Morning 2",
+          "topic": "Patient Safety and Biohazard Management",
+          "faculty": "Dr Dhanshree Inamdar",
+          "category": "Patient Safety & Biohazards",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Concept of Professionalism and Ethics",
+          "faculty": "Dr Khushboo Juneja",
+          "category": "Professionalism & Bioethics",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "How to use Library effectively",
+          "faculty": "Mr Ranjit Hegde & Team",
+          "category": "Library & Research Resources",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Sources of Medical Literature",
+          "faculty": "Dr Ayan Roy",
+          "category": "Literature & Evidence-Based Medicine",
+          "badgeColor": "cyan"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Photo, Biometric and Documentation",
+          "faculty": "Mr Ranjeet Singh, Ms Gurbir, Mr Ankur, Ms Sandhya",
+          "category": "Administration & Enrollment",
+          "badgeColor": "cyan"
+        }
+      ]
+    },
+    {
+      "week": 1,
+      "date": "2-Oct-26",
+      "day": "Friday",
+      "dayShort": "Fri",
+      "holiday": true,
+      "holidayTitle": "Gandhi Jayanti",
+      "sessions": [
+        {
+          "time": "Full Day",
+          "slot": "Holiday",
+          "topic": "Gandhi Jayanti - National Holiday (No classes scheduled)",
+          "faculty": "Campus Closed",
+          "category": "Holiday",
+          "badgeColor": "amber"
+        }
+      ]
+    },
+    {
+      "week": 1,
+      "date": "3-Oct-26",
+      "day": "Saturday",
+      "dayShort": "Sat",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Integrated Learning approach to medicine",
+          "faculty": "Dr Swati Shikha",
+          "category": "Integrative Pedagogy",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "10:30 - 11:15 AM",
+          "slot": "Morning 2",
+          "topic": "Interacting in a Small Group",
+          "faculty": "Dr Durga Rao Yalla",
+          "category": "Group Dynamics & Discussions",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Self-Directed Learning (SDL)",
+          "faculty": "Dr Anuja Sinha",
+          "category": "Study Skills & SDL",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "Rights of Persons with disabilities",
+          "faculty": "Dr Sachin Kumar Patil",
+          "category": "Inclusion & Disability Rights",
+          "badgeColor": "emerald"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Interpersonal Relationship and creating an academic ambience",
+          "faculty": "Dr Chinmaya Dash",
+          "category": "Interpersonal Relations & Atmosphere",
+          "badgeColor": "rose"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Photo, Biometric and Documentation",
+          "faculty": "Mr Ranjeet Singh, Ms Gurbir, Mr Ankur, Ms Sandhya",
+          "category": "Administration & Enrollment",
+          "badgeColor": "cyan"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "date": "5-Oct-26",
+      "day": "Monday",
+      "dayShort": "Mon",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Reflective Writing for self-improvement",
+          "faculty": "Dr Shruti P Hegde",
+          "category": "Reflective Practice",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "10:30 - 11:15 AM",
+          "slot": "Morning 2",
+          "topic": "Learning styles and practical application",
+          "faculty": "Dr Sulekha Sinha",
+          "category": "Cognitive Styles & Study Methods",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Information Technology, MS Teams & Impartus in the Curriculum",
+          "faculty": "Mr Ranjeet Singh",
+          "category": "Digital Tech & LMS",
+          "badgeColor": "cyan"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "Health Insurance & Coverage Essentials",
+          "faculty": "Mr Sumesh & Mr Rajeev",
+          "category": "Student Welfare & Health Insurance",
+          "badgeColor": "emerald"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Take care of your health: Medical & Well-being Advice",
+          "faculty": "Dr Sreeshma Pavithran",
+          "category": "Student Health & Wellness",
+          "badgeColor": "rose"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Interaction with Student Council",
+          "faculty": "Dr Nadia Ahmad (with Ms Sezal, Mr Suryendu, Ms Sneha & Ms Disha)",
+          "category": "Student Governance & Batch Support",
+          "badgeColor": "indigo"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "date": "6-Oct-26",
+      "day": "Tuesday",
+      "dayShort": "Tue",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Introduction to Anatomy",
+          "faculty": "Dr Abhilasha & Team",
+          "category": "Anatomy Department",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "10:30 - 11:15 AM",
+          "slot": "Morning 2",
+          "topic": "Doctor as a Researcher",
+          "faculty": "Dr Sanjay Jaiswal",
+          "category": "Research & Inquiry",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Formative Assessments Overview & Exam Strategy",
+          "faculty": "Dr Abhilasha Priya",
+          "category": "Assessments & Evaluations",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "ECO PARADIGM: Green Campus Initiative",
+          "faculty": "Team Ecoclub",
+          "category": "Campus Ecology & Sustainability",
+          "badgeColor": "emerald"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Student Finance & Fee Accounts",
+          "faculty": "Mrs Neelima Singhal",
+          "category": "Finance & Administrative Accounts",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Interaction with Cultural & Literary Club",
+          "faculty": "Dr Kavita Rasalkar (with Ms Shruti Choudhary & Ms Kshitija Prasad)",
+          "category": "Campus Life & Clubs",
+          "badgeColor": "rose"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "date": "7-Oct-26",
+      "day": "Wednesday",
+      "dayShort": "Wed",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Introduction to Physiology",
+          "faculty": "Dr Sindhu R & Team",
+          "category": "Physiology Department",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "10:30 - 12:15 PM",
+          "slot": "Morning 2 & 3",
+          "topic": "AETCOM 1.5 - Foundational Ethics & Communication",
+          "faculty": "All Faculty Anatomy",
+          "category": "AETCOM Module",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "Adaptability and coping with change",
+          "faculty": "Ms Swagata De",
+          "category": "Mental Resilience & Adaptation",
+          "badgeColor": "rose"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Understanding and respect of cultural Diversities",
+          "faculty": "Dr Angelin Priya",
+          "category": "Cultural Diversity & Empathy",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Interaction with Sports Club & NCC",
+          "faculty": "Mr Ramkishore Sharma (with Mr Surjo Bose & Ms Mahi Roy)",
+          "category": "Sports & NCC Extracurriculars",
+          "badgeColor": "emerald"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "date": "8-Oct-26",
+      "day": "Thursday",
+      "dayShort": "Thu",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Introduction to Biochemistry",
+          "faculty": "Dr Sulekha Sinha & Team",
+          "category": "Biochemistry Department",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "10:30 - 12:15 PM",
+          "slot": "Morning 2 & 3",
+          "topic": "AETCOM 1.1 - Foundational Ethics & Communication",
+          "faculty": "All Faculty Biochemistry",
+          "category": "AETCOM Module",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "SLCM 2.0 - Student Life Cycle Management Portal Training",
+          "faculty": "Dr Vinay A V",
+          "category": "SLCM & Academic Portal",
+          "badgeColor": "cyan"
+        },
+        {
+          "time": "03:00 - 04:45 PM",
+          "slot": "Afternoon 2 & 3",
+          "topic": "Interaction with VSO & NSS Team",
+          "faculty": "Dr Vinay A V & Dr Sachin Kumar Patil (with Ms Shivani Naidu & team)",
+          "category": "Community Service & Volunteerism",
+          "badgeColor": "emerald"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "date": "9-Oct-26",
+      "day": "Friday",
+      "dayShort": "Fri",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 10:15 AM",
+          "slot": "Morning 1",
+          "topic": "Introduction to Community Medicine",
+          "faculty": "Dr Khushboo Juneja & Team",
+          "category": "Community Medicine Department",
+          "badgeColor": "indigo"
+        },
+        {
+          "time": "10:30 - 12:15 PM",
+          "slot": "Morning 2 & 3",
+          "topic": "AETCOM 1.2 - Foundational Ethics & Communication",
+          "faculty": "All Faculty Physiology",
+          "category": "AETCOM Module",
+          "badgeColor": "purple"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 02:45 PM",
+          "slot": "Afternoon 1",
+          "topic": "Utility of Bright Space Learning Management System",
+          "faculty": "Dr Sindhu R",
+          "category": "Brightspace LMS & Online Learning",
+          "badgeColor": "cyan"
+        },
+        {
+          "time": "03:00 - 03:45 PM",
+          "slot": "Afternoon 2",
+          "topic": "Fire Safety Drills & Disaster Response",
+          "faculty": "Mr DN Singh & Team",
+          "category": "Disaster Management & Fire Drills",
+          "badgeColor": "rose"
+        },
+        {
+          "time": "04:00 - 04:45 PM",
+          "slot": "Afternoon 3",
+          "topic": "Interaction with Student Research Forum (SRF)",
+          "faculty": "Dr Jyotish Guria (with Ms Shreya Jayadeep Asuri & team)",
+          "category": "Research & ICMR STS Guidance",
+          "badgeColor": "blue"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "date": "10-Oct-26",
+      "day": "Saturday",
+      "dayShort": "Sat",
+      "holiday": false,
+      "sessions": [
+        {
+          "time": "09:30 - 11:15 AM",
+          "slot": "Morning 1 & 2",
+          "topic": "Career Pathways in Medicine",
+          "faculty": "Dr Vijay Kautilya",
+          "category": "Medical Careers & Specialization",
+          "badgeColor": "blue"
+        },
+        {
+          "time": "11:30 - 12:15 PM",
+          "slot": "Morning 3",
+          "topic": "Family Adoption Program (FAP) Launch",
+          "faculty": "Dr Sachin Kumar Patil",
+          "category": "NMC Community Outreach (FAP)",
+          "badgeColor": "emerald"
+        },
+        {
+          "time": "12:30 - 02:00 PM",
+          "slot": "Break",
+          "topic": "LUNCH BREAK",
+          "faculty": "Hostel Dining",
+          "category": "Break",
+          "badgeColor": "amber"
+        },
+        {
+          "time": "02:00 - 04:45 PM",
+          "slot": "Afternoon 1, 2 & 3",
+          "topic": "Final Photo, Biometric and Documentation Wrap-up",
+          "faculty": "Mr Ranjeet Singh, Ms Gurbir, Mr Ankur, Ms Sandhya",
+          "category": "Administration & Enrollment",
+          "badgeColor": "cyan"
+        }
+      ]
+    }
+  ]
+}
