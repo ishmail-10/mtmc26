@@ -1853,6 +1853,9 @@
           userData.token = priv.token || userData.token || ('#MTMC-' + Math.floor(1000 + Math.random() * 9000));
         }
 
+        const passHash = await hashPassword(pass);
+        userData.passwordHash = passHash;
+
         currentUserSession = userData;
         localStorage.setItem('mtmc_session_v2', JSON.stringify(userData));
 
@@ -2656,14 +2659,6 @@
         return;
       }
 
-      // Verify current password hash
-      const curHash = await hashPassword(curPass);
-      if (curHash !== currentUserSession.passwordHash) {
-        errBox.textContent = 'Incorrect current password. Please try again.';
-        errBox.classList.remove('hidden');
-        return;
-      }
-
       if (!newPass || newPass.length < 6) {
         errBox.textContent = 'New password must be at least 6 characters.';
         errBox.classList.remove('hidden');
@@ -2676,24 +2671,58 @@
         return;
       }
 
-      const newHash = await hashPassword(newPass);
-      if (newHash === currentUserSession.passwordHash) {
+      if (curPass === newPass) {
         errBox.textContent = 'New password cannot be the same as your current password.';
         errBox.classList.remove('hidden');
         return;
       }
 
-      if (db) {
-        await db.ref('users/' + currentUserSession.uid + '/passwordHash').set(newHash);
+      const authEmail = (auth && auth.currentUser && auth.currentUser.email)
+        ? auth.currentUser.email
+        : getAuthEmail(currentUserSession.username);
+
+      // Verify current password with Firebase Auth directly
+      if (auth && auth.currentUser) {
+        try {
+          const cred = firebase.auth.EmailAuthProvider.credential(authEmail, curPass);
+          await auth.currentUser.reauthenticateWithCredential(cred);
+        } catch (authErr) {
+          errBox.textContent = 'Incorrect current password. Please try again.';
+          errBox.classList.remove('hidden');
+          return;
+        }
+      } else if (auth) {
+        try {
+          await auth.signInWithEmailAndPassword(authEmail, curPass);
+        } catch (authErr) {
+          errBox.textContent = 'Incorrect current password. Please try again.';
+          errBox.classList.remove('hidden');
+          return;
+        }
+      } else if (currentUserSession.passwordHash) {
+        const curHash = await hashPassword(curPass);
+        if (curHash !== currentUserSession.passwordHash) {
+          errBox.textContent = 'Incorrect current password. Please try again.';
+          errBox.classList.remove('hidden');
+          return;
+        }
       }
 
-      // Synchronize with Firebase Auth if user is authenticated
+      // Synchronize with Firebase Auth
       if (auth && auth.currentUser) {
         try {
           await auth.currentUser.updatePassword(newPass);
         } catch (authErr) {
-          console.warn("Firebase Auth password update:", authErr);
+          console.error("Firebase Auth password update:", authErr);
+          errBox.textContent = authErr.message || 'Failed to update password in Firebase Auth.';
+          errBox.classList.remove('hidden');
+          return;
         }
+      }
+
+      const newHash = await hashPassword(newPass);
+      if (db && currentUserSession.uid) {
+        await db.ref('userPrivate/' + currentUserSession.uid + '/passwordHash').set(newHash).catch(() => {});
       }
 
       currentUserSession.passwordHash = newHash;
