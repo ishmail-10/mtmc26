@@ -128,6 +128,12 @@
           <span id="notif-badge" class="hidden absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-brand-orange text-white text-[9px] font-black flex items-center justify-center shadow">0</span>
         </button>
 
+        <!-- COMMUNITY FEEDBACK / SUGGESTION TRIGGER (Only visible to verified members) -->
+        <button onclick="openFeedbackModal()" id="header-feedback-btn" class="hidden items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-xs font-bold text-amber-600 dark:text-amber-400 transition shadow-sm" title="Suggest Feature / Send Feedback">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i>
+          <span class="hidden md:inline">Feedback</span>
+        </button>
+
         <!-- MODERATOR SHIELD TRIGGER (Only visible to moderators and admin) -->
         <button onclick="openAdminModal()" id="admin-shield-btn" class="hidden items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 text-xs font-bold transition shadow-sm" title="Batch Moderator Panel">
           <i data-lucide="shield" class="w-4 h-4 text-purple-500"></i>
@@ -948,22 +954,40 @@
         </div>
       </div>
 
-      <!-- Main Viewer Area: Embedded Google Drive 4K Folder Grid -->
-      <div class="relative w-full flex-1 min-h-[480px] sm:min-h-[580px] rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-950 shadow-2xl">
-        <iframe id="viewer-drive-iframe" src="" class="w-full h-full min-h-[480px] sm:min-h-[580px] border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-
-      <!-- Direct 4K Photo Thumbnails Grid (Populated when Drive API is available) -->
-      <div id="viewer-direct-photos-section" class="hidden space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-        <div class="flex items-center justify-between text-xs">
-          <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-            <i data-lucide="images" class="w-3.5 h-3.5 text-cyan-400"></i>
-            <span>Direct 4K Photo Gallery (<span id="viewer-direct-photos-count">0</span>)</span>
+      <!-- Main Viewer Area: Responsive Photo Collage Grid (Default) or Embedded Drive Folder -->
+      <div class="relative w-full flex-1 min-h-[480px] sm:min-h-[580px] rounded-2xl border border-slate-700/80 bg-slate-950 shadow-2xl flex flex-col overflow-hidden">
+        <!-- Top Toolbar with View Mode Toggles -->
+        <div class="flex items-center justify-between p-3 bg-slate-900/90 border-b border-slate-800/80 shrink-0 text-xs flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <button type="button" id="viewer-mode-collage-btn" onclick="setEventViewMode('collage')" class="px-3 py-1.5 rounded-lg font-bold bg-cyan-600 text-white transition flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span>Photo Collage (<span id="viewer-collage-count">0</span>)</span>
+            </button>
+            <button type="button" id="viewer-mode-drive-btn" onclick="setEventViewMode('drive')" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5">
+              <i data-lucide="folder" class="w-3.5 h-3.5"></i>
+              <span>Google Drive View</span>
+            </button>
+          </div>
+          <span class="text-[11px] text-slate-400 hidden sm:inline-flex items-center gap-1">
+            <i data-lucide="zoom-in" class="w-3 h-3 text-cyan-400"></i> Tap photo to zoom & pan in 4K
           </span>
-          <span class="text-[11px] text-slate-400">Tap photo to Zoom & Pan (4K)</span>
         </div>
-        <div id="viewer-direct-photos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-60 overflow-y-auto pr-1">
-          <!-- Injected via JS -->
+
+        <!-- Mode 1: Photo Collage Grid (Primary) -->
+        <div id="viewer-collage-container" class="flex-1 p-3 sm:p-4 overflow-y-auto max-h-[520px]">
+          <div id="viewer-direct-photos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3">
+            <!-- Injected via JS -->
+          </div>
+          <div id="viewer-collage-empty" class="hidden py-16 text-center text-slate-400 space-y-2">
+            <i data-lucide="images" class="w-8 h-8 mx-auto text-slate-600"></i>
+            <p class="font-bold text-xs">Loading photos or Google Drive permission restricted</p>
+            <p class="text-[11px] text-slate-500">Switch to Google Drive View above or verify folder has "Anyone with link can view".</p>
+          </div>
+        </div>
+
+        <!-- Mode 2: Embedded Google Drive Folder Iframe -->
+        <div id="viewer-drive-container" class="hidden flex-1 w-full h-full min-h-[480px]">
+          <iframe id="viewer-drive-iframe" src="" class="w-full h-full min-h-[480px] sm:min-h-[520px] border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
 
@@ -971,7 +995,7 @@
       <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between gap-2">
         <span class="flex items-center gap-1.5">
           <i data-lucide="info" class="w-3.5 h-3.5 text-cyan-500 shrink-0"></i>
-          <span>Not seeing images in the grid? The Google Drive folder link must have permission set to <strong>"Anyone with the link can view"</strong>.</span>
+          <span>Photos stream live from Google Drive. Folder link must be set to <strong>"Anyone with the link can view"</strong>.</span>
         </span>
         <button type="button" onclick="closeEventViewer()" class="text-xs font-bold text-cyan-500 hover:underline shrink-0">Done</button>
       </div>
@@ -1150,6 +1174,14 @@
           <span id="admin-tab-deletions-badge" class="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
         </button>
         <button onclick="switchAdminTab('roster')" id="tab-admin-roster" class="flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition shrink-0">Roster</button>
+        <button onclick="switchAdminTab('frozen')" id="tab-admin-frozen" class="hidden flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
+          <span>❄️ Frozen</span>
+          <span id="admin-tab-frozen-badge" class="px-1.5 py-0.2 rounded-full bg-cyan-500 text-white text-[10px] font-extrabold hidden">0</span>
+        </button>
+        <button onclick="switchAdminTab('feedback')" id="tab-admin-feedback" class="hidden flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
+          <span>💡 Feedback</span>
+          <span id="admin-tab-feedback-badge" class="px-1.5 py-0.2 rounded-full bg-amber-500 text-white text-[10px] font-extrabold hidden">0</span>
+        </button>
       </div>
 
       <!-- Tab: Pending Verifications -->
@@ -1186,6 +1218,52 @@
           <input type="text" id="roster-search-input" oninput="renderRosterList()" placeholder="Search by student full name, username, or phone..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
         </div>
         <div id="batch-roster-list" class="space-y-2">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Tab: Frozen Usernames (Ghost Admin Exclusive) -->
+      <div id="admin-section-frozen" class="hidden space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+        <div class="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
+              <i data-lucide="snowflake" class="w-3.5 h-3.5"></i>
+              <span>Frozen Handles Vault (Ghost Admin Tool)</span>
+            </span>
+            <button onclick="loadFrozenUsernamesList()" class="text-[10px] font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1">
+              <i data-lucide="rotate-cw" class="w-3 h-3"></i> Refresh
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            Usernames locked in the authentication vault without an active profile, or soft-deleted/rejected. Unfreezing wipes the lock from the database and immediately frees the handle for registration.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="frozen-search-input" oninput="filterFrozenList()" placeholder="Filter frozen handles..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
+        </div>
+        <div id="admin-frozen-list" class="space-y-2">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Tab: Feedback & Feature Requests (Ghost Admin Exclusive) -->
+      <div id="admin-section-feedback" class="hidden space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+              <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+              <span>Community Feedback & Feature Inbox (Admin Exclusive)</span>
+            </span>
+            <span id="admin-feedback-count-text" class="text-[10px] text-slate-400 font-mono">0 items</span>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            Feature suggestions, bug reports, and campus feedback submitted by batchmates. Completely hidden from moderators. Mark items done or clear them when addressed.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="feedback-search-input" oninput="renderFeedbackList()" placeholder="Filter feedback by title, category, or author..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div id="admin-feedback-list" class="space-y-2">
           <!-- Injected via JavaScript -->
         </div>
       </div>
@@ -1361,6 +1439,14 @@
         </div>
       </div>
 
+      <!-- Community Feedback Trigger in Profile -->
+      <div class="pt-1">
+        <button type="button" onclick="closeProfileModal(); openFeedbackModal();" class="w-full py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold transition flex items-center justify-center gap-2">
+          <i data-lucide="lightbulb" class="w-4 h-4"></i>
+          <span>Suggest a Feature / Give Feedback</span>
+        </button>
+      </div>
+
       <!-- Footer Actions -->
       <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
         <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold transition flex items-center gap-1.5">
@@ -1372,6 +1458,71 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- MODAL: COMMUNITY FEEDBACK & FEATURE SUGGESTIONS -->
+  <div id="feedback-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4" onclick="handleFeedbackBackdropClick(event)">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl transition-colors max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center font-bold">
+            <i data-lucide="lightbulb" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Suggest a Feature / Give Feedback</h3>
+            <p class="text-[10px] text-slate-400">Directly reviewed by the portal developer (Ghost Admin)</p>
+          </div>
+        </div>
+        <button onclick="closeFeedbackModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <!-- Feedback Form Body -->
+      <div class="space-y-3.5 text-xs overflow-y-auto pr-1">
+        <!-- Category Selector -->
+        <div class="space-y-1">
+          <label class="block font-bold text-slate-700 dark:text-slate-300">Category</label>
+          <select id="feedback-category-input" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
+            <option value="Feature Idea">💡 Feature Idea / Improvement</option>
+            <option value="Bug Report">🐛 Bug Report / Broken Function</option>
+            <option value="Design / UI Tweak">🎨 Design / UI Tweak</option>
+            <option value="Mess / Campus Utility">🍽️ Mess / Campus Utility</option>
+            <option value="Academic Tool">📚 Academic Resource / Tool</option>
+            <option value="Other">📝 General Feedback</option>
+          </select>
+        </div>
+
+        <!-- Title -->
+        <div class="space-y-1">
+          <label class="block font-bold text-slate-700 dark:text-slate-300">Short Summary / Title</label>
+          <input type="text" id="feedback-title-input" placeholder="e.g. Dark mode timetable export, or custom note sharing..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500" maxlength="120">
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-1">
+          <label class="block font-bold text-slate-700 dark:text-slate-300">Details & Thoughts</label>
+          <textarea id="feedback-desc-input" rows="4" placeholder="Describe the feature or problem clearly. Share how it will benefit our batch..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"></textarea>
+        </div>
+
+        <!-- Anonymous Option -->
+        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer select-none">
+          <input type="checkbox" id="feedback-anon-checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900">
+          <div class="text-[11px] leading-tight">
+            <span class="font-bold text-slate-800 dark:text-slate-200">Submit Anonymously</span>
+            <span class="block text-slate-400 text-[10px]">Your name and handle will not be shown to the admin.</span>
+          </div>
+        </label>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2 shrink-0">
+        <button type="button" onclick="closeFeedbackModal()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition">Cancel</button>
+        <button type="button" id="feedback-submit-btn" onclick="submitCommunityFeedback()" class="px-4 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span>Send to Developer</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2136,11 +2287,13 @@
         db.ref('users').off();
         db.ref('userPrivate').off();
         db.ref('deletionRequests').off();
+        db.ref('feedback').off();
         if (currentUserSession) {
           db.ref('notifications/' + currentUserSession.uid).off();
         }
       }
       currentUserSession = null;
+      allCommunityFeedback = {};
       localStorage.removeItem('mtmc_session_v2');
       closeProfileModal();
       updateGateState();
@@ -2158,6 +2311,7 @@
       const newPostBtn = document.getElementById('header-new-post-btn');
       const userBtn = document.getElementById('user-profile-btn');
       const adminShieldBtn = document.getElementById('admin-shield-btn');
+      const feedbackBtn = document.getElementById('header-feedback-btn');
 
       if (!currentUserSession) {
         // Visitor is not logged in: Lock the forum, show Auth Gate
@@ -2175,6 +2329,7 @@
         if (newPostBtn) { newPostBtn.classList.add('hidden'); newPostBtn.classList.remove('flex'); }
         if (userBtn) { userBtn.classList.add('hidden'); userBtn.classList.remove('flex'); }
         if (adminShieldBtn) { adminShieldBtn.classList.add('hidden'); adminShieldBtn.classList.remove('flex'); }
+        if (feedbackBtn) { feedbackBtn.classList.add('hidden'); feedbackBtn.classList.remove('flex'); }
         const notifBtn = document.getElementById('notif-bell-btn');
         if (notifBtn) { notifBtn.classList.add('hidden'); notifBtn.classList.remove('flex'); }
       } else if (currentUserSession.status === 'pending') {
@@ -2208,6 +2363,7 @@
         if (newPostBtn) { newPostBtn.classList.add('hidden'); newPostBtn.classList.remove('flex'); }
         if (userBtn) { userBtn.classList.add('hidden'); userBtn.classList.remove('flex'); }
         if (adminShieldBtn) { adminShieldBtn.classList.add('hidden'); adminShieldBtn.classList.remove('flex'); }
+        if (feedbackBtn) { feedbackBtn.classList.add('hidden'); feedbackBtn.classList.remove('flex'); }
         const notifBtnPending = document.getElementById('notif-bell-btn');
         if (notifBtnPending) { notifBtnPending.classList.add('hidden'); notifBtnPending.classList.remove('flex'); }
       } else if (currentUserSession.status === 'rejected' || currentUserSession.status === 'suspended' || currentUserSession.status === 'deleted') {
@@ -2238,6 +2394,7 @@
         if (newPostBtn) { newPostBtn.classList.add('hidden'); newPostBtn.classList.remove('flex'); }
         if (userBtn) { userBtn.classList.add('hidden'); userBtn.classList.remove('flex'); }
         if (adminShieldBtn) { adminShieldBtn.classList.add('hidden'); adminShieldBtn.classList.remove('flex'); }
+        if (feedbackBtn) { feedbackBtn.classList.add('hidden'); feedbackBtn.classList.remove('flex'); }
         const notifBtnRej = document.getElementById('notif-bell-btn');
         if (notifBtnRej) { notifBtnRej.classList.add('hidden'); notifBtnRej.classList.remove('flex'); }
       } else {
@@ -2250,9 +2407,14 @@
         if (mobileSearchBtn) { mobileSearchBtn.classList.remove('hidden'); mobileSearchBtn.classList.add('flex'); }
         if (newPostBtn) { newPostBtn.classList.remove('hidden'); newPostBtn.classList.add('flex'); }
         if (userBtn) { userBtn.classList.remove('hidden'); userBtn.classList.add('flex'); }
+        if (feedbackBtn) { feedbackBtn.classList.remove('hidden'); feedbackBtn.classList.add('flex'); }
         const notifBtn = document.getElementById('notif-bell-btn');
         if (notifBtn) { notifBtn.classList.remove('hidden'); notifBtn.classList.add('flex'); }
         initNotificationsListener();
+
+        if (currentUserSession.role === 'admin') {
+          initFeedbackListener();
+        }
 
         const displayName = document.getElementById('user-display-name');
         const avatar = document.getElementById('user-avatar');
@@ -2411,10 +2573,29 @@
       }
 
       const phoneEl = document.getElementById('profile-modal-phone');
-      if (phoneEl) phoneEl.textContent = '+91 ' + (currentUserSession.phone || '—');
+      const curPhone = currentUserSession.phone || (allUserPrivate[currentUserSession.uid]?.phone);
+      if (phoneEl) phoneEl.textContent = curPhone ? ('+91 ' + curPhone) : '—';
 
       const tokenEl = document.getElementById('profile-modal-token');
-      if (tokenEl) tokenEl.textContent = currentUserSession.token || '—';
+      const curToken = currentUserSession.token || (allUserPrivate[currentUserSession.uid]?.token);
+      if (tokenEl) tokenEl.textContent = curToken || '—';
+
+      // Eagerly restore private vault credentials if missing
+      if ((!curPhone || !curToken) && db && currentUserSession.uid) {
+        db.ref('userPrivate/' + currentUserSession.uid).once('value').then(snap => {
+          const priv = snap.val() || {};
+          if (priv.phone) {
+            currentUserSession.phone = priv.phone;
+            if (phoneEl) phoneEl.textContent = '+91 ' + priv.phone;
+            localStorage.setItem('mtmc_session_v2', JSON.stringify(currentUserSession));
+          }
+          if (priv.token) {
+            currentUserSession.token = priv.token;
+            if (tokenEl) tokenEl.textContent = priv.token;
+            localStorage.setItem('mtmc_session_v2', JSON.stringify(currentUserSession));
+          }
+        }).catch(() => {});
+      }
 
       // Pre-fill Identity Form inputs
       const nameInput = document.getElementById('profile-edit-fullname');
@@ -2927,14 +3108,34 @@
         roleBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
       }
 
-      // Joined date
+      // Joined date & Authorized Mobile Phone
       const joinedEl = document.getElementById('pub-joined');
+      let joinedText = '';
       if (user.registeredAt) {
         const d = new Date(user.registeredAt);
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        joinedEl.innerHTML = `<i data-lucide="calendar" class="w-3 h-3 inline"></i> Joined ${monthNames[d.getMonth()]} ${d.getFullYear()} · MTMC Batch 2026`;
+        joinedText = `Joined ${monthNames[d.getMonth()]} ${d.getFullYear()} · MTMC Batch 2026`;
       } else {
-        joinedEl.innerHTML = `<i data-lucide="calendar" class="w-3 h-3 inline"></i> MTMC MBBS Batch 2026`;
+        joinedText = `MTMC MBBS Batch 2026`;
+      }
+
+      // Check if viewer has authority to view phone (Admin, Super Mod, Mod, or Owner)
+      const isViewerAuthorized = currentUserSession && (isModOrAbove(currentUserSession.role) || currentUserSession.uid === uid);
+      const priv = allUserPrivate[uid] || {};
+      const targetPhone = priv.phone || (currentUserSession?.uid === uid ? currentUserSession.phone : '') || '';
+
+      if (isViewerAuthorized && targetPhone) {
+        joinedEl.innerHTML = `
+          <div class="flex items-center gap-2 flex-wrap text-slate-500">
+            <span><i data-lucide="calendar" class="w-3 h-3 inline"></i> ${joinedText}</span>
+            <span>•</span>
+            <span class="inline-flex items-center gap-1 font-mono text-slate-700 dark:text-slate-300 font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-[10px]">
+              <i data-lucide="phone" class="w-3 h-3 text-cyan-500"></i> +91 ${targetPhone}
+            </span>
+          </div>
+        `;
+      } else {
+        joinedEl.innerHTML = `<i data-lucide="calendar" class="w-3 h-3 inline"></i> ${joinedText}`;
       }
 
       // 2. Query Non-Anonymous Posts authored by this student (Strict Anonymous Wall Exception)
@@ -3084,6 +3285,33 @@
       const roleTitle = currentUserSession.role === 'supermod' ? 'Super Moderator (CR)' : (currentUserSession.role === 'admin' ? 'Admin' : 'Batch Moderator');
       const namePart = currentUserSession.fullName ? `${currentUserSession.fullName} (@${currentUserSession.username})` : `@${currentUserSession.username}`;
       document.getElementById('admin-panel-role-subtitle').textContent = `Signed in as ${roleTitle}: ${namePart}`;
+
+      // GHOST ADMIN EXCLUSIVE: Show Frozen Handles tab only to Admin
+      const frozenTabBtn = document.getElementById('tab-admin-frozen');
+      if (frozenTabBtn) {
+        if (currentUserSession.role === 'admin') {
+          frozenTabBtn.classList.remove('hidden');
+          frozenTabBtn.classList.add('flex');
+        } else {
+          frozenTabBtn.classList.add('hidden');
+          frozenTabBtn.classList.remove('flex');
+          if (currentAdminTab === 'frozen') currentAdminTab = 'pending';
+        }
+      }
+
+      // GHOST ADMIN EXCLUSIVE: Show Feedback & Suggestions tab only to Admin
+      const feedbackTabBtn = document.getElementById('tab-admin-feedback');
+      if (feedbackTabBtn) {
+        if (currentUserSession.role === 'admin') {
+          feedbackTabBtn.classList.remove('hidden');
+          feedbackTabBtn.classList.add('flex');
+        } else {
+          feedbackTabBtn.classList.add('hidden');
+          feedbackTabBtn.classList.remove('flex');
+          if (currentAdminTab === 'feedback') currentAdminTab = 'pending';
+        }
+      }
+
       switchAdminTab(currentAdminTab);
       document.getElementById('admin-modal').classList.remove('hidden');
       lucide.createIcons();
@@ -3100,26 +3328,36 @@
       const tabProfile = document.getElementById('tab-admin-profile-requests');
       const tabDeletions = document.getElementById('tab-admin-deletions');
       const tabRoster = document.getElementById('tab-admin-roster');
+      const tabFrozen = document.getElementById('tab-admin-frozen');
+      const tabFeedback = document.getElementById('tab-admin-feedback');
       const secPending = document.getElementById('admin-section-pending');
       const secReview = document.getElementById('admin-section-review-queue');
       const secProfile = document.getElementById('admin-section-profile-requests');
       const secDeletions = document.getElementById('admin-section-deletions');
       const secRoster = document.getElementById('admin-section-roster');
+      const secFrozen = document.getElementById('admin-section-frozen');
+      const secFeedback = document.getElementById('admin-section-feedback');
 
       const inactiveClass = 'flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0';
       const activeClass = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-brand-orange text-white flex items-center justify-center gap-1 shrink-0';
+      const activeCyanClass = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-cyan-600 text-white flex items-center justify-center gap-1 shrink-0';
+      const activeAmberClass = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-amber-600 text-white flex items-center justify-center gap-1 shrink-0';
 
       if (tabPending) tabPending.className = inactiveClass;
       if (tabReview) tabReview.className = inactiveClass;
       if (tabProfile) tabProfile.className = inactiveClass;
       if (tabDeletions) tabDeletions.className = inactiveClass;
       if (tabRoster) tabRoster.className = 'flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center shrink-0';
+      if (tabFrozen) tabFrozen.className = inactiveClass;
+      if (tabFeedback) tabFeedback.className = inactiveClass;
 
       if (secPending) secPending.classList.add('hidden');
       if (secReview) secReview.classList.add('hidden');
       if (secProfile) secProfile.classList.add('hidden');
       if (secDeletions) secDeletions.classList.add('hidden');
       if (secRoster) secRoster.classList.add('hidden');
+      if (secFrozen) secFrozen.classList.add('hidden');
+      if (secFeedback) secFeedback.classList.add('hidden');
 
       if (tab === 'roster') {
         if (tabRoster) tabRoster.className = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-brand-orange text-white text-center shrink-0';
@@ -3137,12 +3375,357 @@
         if (tabDeletions) tabDeletions.className = activeClass;
         if (secDeletions) secDeletions.classList.remove('hidden');
         renderDeletionRequestsList();
+      } else if (tab === 'frozen') {
+        if (tabFrozen) tabFrozen.className = activeCyanClass;
+        if (secFrozen) secFrozen.classList.remove('hidden');
+        loadFrozenUsernamesList();
+      } else if (tab === 'feedback') {
+        if (tabFeedback) tabFeedback.className = activeAmberClass;
+        if (secFeedback) secFeedback.classList.remove('hidden');
+        renderFeedbackList();
       } else {
         if (tabPending) tabPending.className = activeClass;
         if (secPending) secPending.classList.remove('hidden');
         renderPendingList();
       }
       lucide.createIcons();
+    }
+
+    // ================= GHOST ADMIN: FROZEN HANDLES MANAGER =================
+    let allFrozenHandles = [];
+    async function loadFrozenUsernamesList() {
+      const container = document.getElementById('admin-frozen-list');
+      const badge = document.getElementById('admin-tab-frozen-badge');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="py-8 text-center text-slate-400 text-xs">
+          <i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto mb-2 text-cyan-500"></i>
+          Scanning database for frozen handles...
+        </div>
+      `;
+      lucide.createIcons();
+
+      try {
+        if (typeof getFrozenUsernames === 'function') {
+          allFrozenHandles = await getFrozenUsernames();
+        } else {
+          allFrozenHandles = [];
+        }
+
+        if (badge) {
+          if (allFrozenHandles.length > 0) {
+            badge.textContent = allFrozenHandles.length;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
+        }
+
+        renderFrozenHandlesList(allFrozenHandles);
+      } catch (err) {
+        console.error('Failed to load frozen usernames:', err);
+        container.innerHTML = `
+          <div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs text-center space-y-1">
+            <p class="font-bold">Unable to load frozen handles</p>
+            <p class="text-[11px] text-slate-400">${escapeHtml(err.message || 'Error executing RPC')}</p>
+          </div>
+        `;
+      }
+    }
+
+    function filterFrozenList() {
+      const q = (document.getElementById('frozen-search-input')?.value || '').toLowerCase().trim();
+      const filtered = q
+        ? allFrozenHandles.filter(u => (u.username || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q))
+        : allFrozenHandles;
+      renderFrozenHandlesList(filtered);
+    }
+
+    function renderFrozenHandlesList(list) {
+      const container = document.getElementById('admin-frozen-list');
+      if (!container) return;
+
+      if (!list || list.length === 0) {
+        container.innerHTML = `
+          <div class="py-10 text-center text-slate-400 space-y-2">
+            <div class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mx-auto text-lg font-bold">
+              ✓
+            </div>
+            <p class="font-bold text-slate-700 dark:text-slate-300 text-xs">No Frozen Handles Found</p>
+            <p class="text-[11px] text-slate-400 max-w-xs mx-auto">All usernames and authentication credentials in the database are active, clean, and in sync!</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
+          <div class="min-w-0 flex-1 space-y-1">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="font-bold text-slate-900 dark:text-white font-mono">@${escapeHtml(item.username)}</span>
+              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">
+                ${escapeHtml(item.lock_status || 'Frozen')}
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-mono">
+              <span class="text-slate-400">Auth Email:</span> ${escapeHtml(item.email)}
+              · <span class="text-slate-400">Created:</span> ${new Date(item.created_at || Date.now()).toLocaleDateString()}
+            </p>
+          </div>
+          <div class="shrink-0">
+            <button onclick="handleUnfreezeHandle('${item.user_id}', '${escapeHtml(item.username)}')" class="px-2.5 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white text-xs font-bold transition shadow-sm flex items-center gap-1">
+              <i data-lucide="unlock" class="w-3.5 h-3.5"></i>
+              <span>Unfreeze</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    async function handleUnfreezeHandle(userId, username) {
+      if (!confirm(`Unfreeze and release handle @${username}?\n\nThis will completely wipe the lock from auth.users and allow @${username} to be freshly registered by anyone.`)) {
+        return;
+      }
+
+      try {
+        if (typeof adminUnfreezeUser === 'function') {
+          await adminUnfreezeUser(userId);
+        }
+        allFrozenHandles = allFrozenHandles.filter(h => h.user_id !== userId);
+        const badge = document.getElementById('admin-tab-frozen-badge');
+        if (badge) {
+          if (allFrozenHandles.length > 0) {
+            badge.textContent = allFrozenHandles.length;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
+        }
+        renderFrozenHandlesList(allFrozenHandles);
+        alert(`Handle @${username} has been unfrozen and is now 100% available for registration! 🔓`);
+      } catch (err) {
+        console.error('Unfreeze error:', err);
+        alert('Failed to unfreeze handle: ' + (err.message || err));
+      }
+    }
+
+    // =============================================================
+    // COMMUNITY FEEDBACK & FEATURE SUGGESTIONS (GHOST ADMIN EXCLUSIVE)
+    // =============================================================
+    let allCommunityFeedback = {};
+
+    function initFeedbackListener() {
+      if (!db || !currentUserSession || currentUserSession.role !== 'admin') return;
+      db.ref('feedback').on('value', snapshot => {
+        allCommunityFeedback = snapshot.val() || {};
+        updateAdminBadges();
+        if (currentAdminTab === 'feedback') {
+          renderFeedbackList();
+        }
+      });
+    }
+
+    function openFeedbackModal() {
+      if (!currentUserSession) {
+        alert('Please sign in to send feedback.');
+        return;
+      }
+      document.getElementById('feedback-title-input').value = '';
+      document.getElementById('feedback-desc-input').value = '';
+      document.getElementById('feedback-category-input').value = 'Feature Idea';
+      document.getElementById('feedback-anon-checkbox').checked = false;
+      document.getElementById('feedback-modal').classList.remove('hidden');
+      if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    function closeFeedbackModal() {
+      document.getElementById('feedback-modal').classList.add('hidden');
+    }
+
+    function handleFeedbackBackdropClick(e) {
+      if (e.target.id === 'feedback-modal') {
+        closeFeedbackModal();
+      }
+    }
+
+    async function submitCommunityFeedback() {
+      if (!currentUserSession) return;
+      const title = document.getElementById('feedback-title-input').value.trim();
+      const desc = document.getElementById('feedback-desc-input').value.trim();
+      const category = document.getElementById('feedback-category-input').value;
+      const isAnon = document.getElementById('feedback-anon-checkbox').checked;
+
+      if (!title) {
+        alert('Please provide a short summary or title for your feedback.');
+        return;
+      }
+      if (!desc) {
+        alert('Please describe your feature idea or feedback in the details box.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('feedback-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Submitting...';
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+      }
+
+      try {
+        const feedbackPayload = {
+          category: category,
+          title: title,
+          description: desc,
+          authorName: isAnon ? 'Anonymous Student' : (currentUserSession.fullName || currentUserSession.username),
+          authorHandle: isAnon ? null : currentUserSession.username,
+          authorUid: isAnon ? null : currentUserSession.uid,
+          isAnon: isAnon,
+          status: 'pending'
+        };
+
+        if (db) {
+          await db.ref('feedback').push(feedbackPayload);
+        }
+
+        alert('🎉 Thank you! Your feedback has been sent directly to the developer (Ghost Admin).');
+        closeFeedbackModal();
+      } catch (err) {
+        console.error('submitCommunityFeedback error:', err);
+        alert('Failed to submit feedback: ' + (err.message || 'Please check your connection and try again.'));
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i data-lucide="send" class="w-3.5 h-3.5"></i> <span>Send to Developer</span>';
+          if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+        }
+      }
+    }
+
+    function renderFeedbackList() {
+      const container = document.getElementById('admin-feedback-list');
+      const countText = document.getElementById('admin-feedback-count-text');
+      if (!container) return;
+
+      if (!currentUserSession || currentUserSession.role !== 'admin') {
+        container.innerHTML = '<p class="text-xs text-slate-400 p-4">Admin exclusive section.</p>';
+        return;
+      }
+
+      const searchVal = (document.getElementById('feedback-search-input')?.value || '').toLowerCase().trim();
+      let list = Object.values(allCommunityFeedback || {}).sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      if (searchVal) {
+        list = list.filter(f => 
+          (f.title || '').toLowerCase().includes(searchVal) ||
+          (f.description || '').toLowerCase().includes(searchVal) ||
+          (f.category || '').toLowerCase().includes(searchVal) ||
+          (f.authorName || '').toLowerCase().includes(searchVal) ||
+          (f.authorHandle || '').toLowerCase().includes(searchVal)
+        );
+      }
+
+      if (countText) countText.textContent = `${list.length} item${list.length === 1 ? '' : 's'}`;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-slate-400 space-y-2">
+            <i data-lucide="inbox" class="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600"></i>
+            <p class="font-semibold text-slate-600 dark:text-slate-400 text-xs">No feedback or suggestions in queue.</p>
+            <p class="text-[11px] text-slate-400">When batchmates suggest features or report bugs, they appear exclusively here for you!</p>
+          </div>
+        `;
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = list.map(item => {
+        const isDone = item.status === 'completed';
+        const timeAgo = formatTimeAgo(item.timestamp);
+        const authorText = item.isAnon 
+          ? '<span class="font-bold text-slate-500">🎭 Anonymous Batchmate</span>' 
+          : `<span class="font-bold text-slate-900 dark:text-white">${escapeHtml(item.authorName)}</span> <span class="font-mono text-slate-400">(@${escapeHtml(item.authorHandle || 'user')})</span>`;
+
+        const categoryColors = {
+          'Feature Idea': 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
+          'Bug Report': 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+          'Design / UI Tweak': 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30',
+          'Mess / Campus Utility': 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+          'Academic Tool': 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30',
+          'Other': 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30'
+        };
+        const catBadgeClass = categoryColors[item.category] || categoryColors['Other'];
+
+        return `
+          <div class="p-3.5 rounded-2xl border ${isDone ? 'bg-slate-50/50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 opacity-70' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm'} space-y-2.5 transition">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${catBadgeClass}">
+                  ${escapeHtml(item.category)}
+                </span>
+                <span class="text-[10px] text-slate-400 font-mono">${timeAgo}</span>
+                ${isDone ? '<span class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">✅ Completed</span>' : '<span class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20">🟡 Pending</span>'}
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                ${!isDone ? `
+                  <button type="button" onclick="markFeedbackDone('${item.id}')" class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition flex items-center gap-1 shadow-xs" title="Mark this suggestion as completed">
+                    <i data-lucide="check" class="w-3 h-3"></i> Mark Done
+                  </button>
+                ` : ''}
+                <button type="button" onclick="clearFeedbackItem('${item.id}')" class="p-1 rounded-lg hover:bg-rose-500/10 text-slate-400 hover:text-rose-500 transition" title="Clear / Delete Feedback">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-xs text-slate-900 dark:text-white">${escapeHtml(item.title)}</h4>
+              <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed whitespace-pre-line">${escapeHtml(item.description)}</p>
+            </div>
+
+            <div class="pt-1.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px]">
+              <div>${authorText}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    async function markFeedbackDone(id) {
+      if (!currentUserSession || currentUserSession.role !== 'admin') return;
+      try {
+        if (db) {
+          await db.ref(`feedback/${id}`).update({ status: 'completed' });
+        }
+        if (allCommunityFeedback[id]) {
+          allCommunityFeedback[id].status = 'completed';
+        }
+        renderFeedbackList();
+        updateAdminBadges();
+      } catch (err) {
+        console.error('markFeedbackDone error:', err);
+        alert('Failed to update status: ' + err.message);
+      }
+    }
+
+    async function clearFeedbackItem(id) {
+      if (!currentUserSession || currentUserSession.role !== 'admin') return;
+      if (!confirm('Clear and remove this feedback item permanently?')) return;
+      try {
+        if (db) {
+          await db.ref(`feedback/${id}`).remove();
+        }
+        delete allCommunityFeedback[id];
+        renderFeedbackList();
+        updateAdminBadges();
+      } catch (err) {
+        console.error('clearFeedbackItem error:', err);
+        alert('Failed to clear feedback: ' + err.message);
+      }
     }
 
     function renderReviewQueueList() {
@@ -4049,6 +4632,19 @@ ${escapeHtml(c.text || '')}
           deletionsBadge.classList.remove('hidden');
         } else {
           deletionsBadge.classList.add('hidden');
+        }
+      }
+
+      if (currentUserSession && currentUserSession.role === 'admin') {
+        const pendingFeedbackCount = Object.values(allCommunityFeedback || {}).filter(f => f.status !== 'completed').length;
+        const feedbackBadge = document.getElementById('admin-tab-feedback-badge');
+        if (feedbackBadge) {
+          if (pendingFeedbackCount > 0) {
+            feedbackBadge.textContent = pendingFeedbackCount;
+            feedbackBadge.classList.remove('hidden');
+          } else {
+            feedbackBadge.classList.add('hidden');
+          }
         }
       }
     }
@@ -6018,6 +6614,130 @@ ${escapeHtml(c.text || '')}
       }
     }
 
+    // =============================================================
+    // WHATSAPP-STYLE EMOJI REACTIONS (ZERO NAME EXPOSURE)
+    // =============================================================
+    function renderReactionsHtml(post) {
+      const reactions = post.reactions || {};
+      const emojiKeys = Object.keys(reactions);
+      const uid = currentUserSession?.uid;
+
+      const chipsHtml = emojiKeys.map(emoji => {
+        const count = Object.keys(reactions[emoji] || {}).length;
+        if (count === 0) return '';
+        const hasReacted = Boolean(uid && reactions[emoji]?.[uid]);
+        return `
+          <button type="button" onclick="event.stopPropagation(); togglePostReaction('${post.id}', '${escapeHtml(emoji)}')" 
+            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs transition select-none ${hasReacted ? 'bg-cyan-500/15 border border-cyan-500/50 text-cyan-700 dark:text-cyan-300 font-bold shadow-xs ring-1 ring-cyan-500/20' : 'bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'}"
+            title="${escapeHtml(emoji)} (${count})">
+            <span class="text-sm leading-none">${escapeHtml(emoji)}</span>
+            <span class="text-[11px] font-mono">${count}</span>
+          </button>
+        `;
+      }).filter(Boolean).join('');
+
+      return `
+        <div class="flex items-center gap-1.5 flex-wrap pt-2" onclick="event.stopPropagation()">
+          ${chipsHtml}
+          <div class="relative inline-block">
+            <button type="button" onclick="event.stopPropagation(); toggleReactionPicker('${post.id}')" class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-700 transition" title="React with emoji">
+              <i data-lucide="smile-plus" class="w-3.5 h-3.5"></i>
+            </button>
+            <div id="reaction-picker-${post.id}" class="hidden absolute left-0 bottom-full mb-1.5 z-30 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xl items-center gap-1 backdrop-blur-md">
+              <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '👍')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Thumbs Up">👍</button>
+              <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '❤️')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Heart">❤️</button>
+              <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '😂')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Joy">😂</button>
+              <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '🔥')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Fire">🔥</button>
+              <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '🩺')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Stethoscope">🩺</button>
+              <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '🙏')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Namaste / Thanks">🙏</button>
+              <div class="relative ml-0.5 border-l border-slate-200 dark:border-slate-700 pl-1 flex items-center">
+                <input type="text" id="custom-emoji-input-${post.id}" oninput="handleCustomEmojiInput('${post.id}', this)" placeholder="➕" maxlength="4" class="w-8 h-8 text-center text-sm font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-dashed border-slate-300 dark:border-slate-600 rounded-xl cursor-pointer text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-orange" title="Tap to choose any emoji from your keyboard">
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function togglePostReaction(postId, emoji, forceAdd = false) {
+      if (!currentUserSession || currentUserSession.status !== 'verified') {
+        alert('Please sign in with a verified student account to react.');
+        return;
+      }
+      const post = (allPosts || []).find(p => p.id === postId);
+      if (!post) return;
+      if (!post.reactions) post.reactions = {};
+      if (!post.reactions[emoji]) post.reactions[emoji] = {};
+
+      const uid = currentUserSession.uid;
+      const alreadyReacted = Boolean(post.reactions[emoji][uid]);
+
+      if (alreadyReacted && !forceAdd) {
+        delete post.reactions[emoji][uid];
+        if (Object.keys(post.reactions[emoji]).length === 0) {
+          delete post.reactions[emoji];
+        }
+        if (db) {
+          db.ref(`posts/${postId}/reactions/${emoji}/${uid}`).remove().catch(err => console.warn(err));
+        }
+      } else {
+        post.reactions[emoji][uid] = true;
+        if (db) {
+          db.ref(`posts/${postId}/reactions/${emoji}/${uid}`).set(true).catch(err => console.warn(err));
+        }
+      }
+
+      if (activeThreadId === postId) {
+        renderThreadDetail(postId);
+      } else {
+        renderFeed();
+      }
+    }
+
+    function addQuickReaction(postId, emoji) {
+      togglePostReaction(postId, emoji, true);
+      closeAllReactionPickers();
+    }
+
+    function toggleReactionPicker(postId) {
+      const picker = document.getElementById(`reaction-picker-${postId}`);
+      if (!picker) return;
+      const wasHidden = picker.classList.contains('hidden');
+      closeAllReactionPickers();
+      if (wasHidden) {
+        picker.classList.remove('hidden');
+        picker.classList.add('flex');
+        const customInput = document.getElementById(`custom-emoji-input-${postId}`);
+        if (customInput) {
+          setTimeout(() => customInput.focus(), 60);
+        }
+      }
+    }
+
+    function closeAllReactionPickers() {
+      document.querySelectorAll('[id^="reaction-picker-"]').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('[id^="reaction-picker-"]') && !e.target.closest('button[onclick*="toggleReactionPicker"]')) {
+        closeAllReactionPickers();
+      }
+    });
+
+    function handleCustomEmojiInput(postId, inputEl) {
+      const val = (inputEl.value || '').trim();
+      if (!val) return;
+      const match = val.match(/\p{Extended_Pictographic}|\p{Emoji}/u) || [val.charAt(0)];
+      const emoji = match[0] || val;
+      if (emoji) {
+        addQuickReaction(postId, emoji);
+      }
+      inputEl.value = '';
+    }
+
     async function deletePost(postId) {
       if (!currentUserSession) return;
       const post = allPosts.find(p => p.id === postId);
@@ -6378,6 +7098,9 @@ ${escapeHtml(c.text || '')}
                 `}
               </div>
             </div>
+
+            <!-- Emoji Reactions Row (WhatsApp-Style) -->
+            ${renderReactionsHtml(post)}
 
             <!-- Footer -->
             <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
@@ -6798,7 +7521,10 @@ ${escapeHtml(c.text || '')}
             ` : ''}
           `}
 
-          <div class="flex items-center justify-between pt-1">
+          <!-- Emoji Reactions Row (WhatsApp-Style) -->
+          ${renderReactionsHtml(post)}
+
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80">
             <button onclick="upvotePost(event, '${post.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold transition shadow-sm ${isUpvoted ? 'bg-orange-500/10 border-orange-500/30 text-brand-orange hover:bg-orange-500/15' : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'}" title="${isUpvoted ? 'Click to revoke upvote' : 'Click to upvote'}">
               <i data-lucide="arrow-big-up" class="w-4 h-4 ${isUpvoted ? 'fill-orange-500 text-orange-500' : 'text-slate-400 dark:text-slate-500'}"></i>
               <span>${isUpvoted ? 'Upvoted' : 'Upvote'} (${post.upvotes || 0})</span>
@@ -7248,7 +7974,10 @@ ${escapeHtml(c.text || '')}
         }
       }
 
-      // Check if Google Drive API is enabled for thumbnail extraction into Lightbox
+      // Set initial view mode to collage
+      setEventViewMode('collage');
+
+      // Fetch folder photos into responsive photo collage
       if (folderId) {
         fetchDriveFolderPhotos(folderId);
       }
@@ -7258,6 +7987,33 @@ ${escapeHtml(c.text || '')}
         modal.classList.add('flex');
       }
       if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    function setEventViewMode(mode) {
+      const collageContainer = document.getElementById('viewer-collage-container');
+      const driveContainer = document.getElementById('viewer-drive-container');
+      const collageBtn = document.getElementById('viewer-mode-collage-btn');
+      const driveBtn = document.getElementById('viewer-mode-drive-btn');
+
+      if (mode === 'collage') {
+        if (collageContainer) collageContainer.classList.remove('hidden');
+        if (driveContainer) driveContainer.classList.add('hidden');
+        if (collageBtn) {
+          collageBtn.className = 'px-3 py-1.5 rounded-lg font-bold bg-cyan-600 text-white transition flex items-center gap-1.5 shadow-sm';
+        }
+        if (driveBtn) {
+          driveBtn.className = 'px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5';
+        }
+      } else {
+        if (collageContainer) collageContainer.classList.add('hidden');
+        if (driveContainer) driveContainer.classList.remove('hidden');
+        if (driveBtn) {
+          driveBtn.className = 'px-3 py-1.5 rounded-lg font-bold bg-cyan-600 text-white transition flex items-center gap-1.5 shadow-sm';
+        }
+        if (collageBtn) {
+          collageBtn.className = 'px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5';
+        }
+      }
     }
 
     function closeEventViewer() {
@@ -7306,21 +8062,33 @@ ${escapeHtml(c.text || '')}
       alert('Event removed from the batch gallery.');
     }
 
-    // DIRECT 4K PHOTO FETCHER VIA GOOGLE DRIVE API (IF ENABLED IN GOOGLE CLOUD)
+    // DIRECT 4K PHOTO COLLAGE FETCHER VIA GOOGLE DRIVE API & CONTENT STREAMING
     async function fetchDriveFolderPhotos(folderId) {
-      const section = document.getElementById('viewer-direct-photos-section');
       const grid = document.getElementById('viewer-direct-photos-grid');
-      const countEl = document.getElementById('viewer-direct-photos-count');
-      if (!section || !grid) return;
+      const countEl = document.getElementById('viewer-collage-count');
+      const emptyEl = document.getElementById('viewer-collage-empty');
+      if (!grid) return;
+
+      if (countEl) countEl.textContent = '...';
+      grid.innerHTML = `
+        <div class="col-span-full py-16 text-center text-slate-400 text-xs">
+          <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2 text-cyan-400"></i>
+          Loading photo collage from Google Drive...
+        </div>
+      `;
+      if (window.lucide && window.lucide.createIcons) lucide.createIcons();
 
       try {
-        const apiKey = firebaseConfig.apiKey;
+        const apiKey = "AIzaSyBdxdRLRMfXejD5QP5PY2GW_Wmx6lXJpus";
         const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
         const url = `https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,mimeType,thumbnailLink,webContentLink)&key=${apiKey}`;
 
         const res = await fetch(url);
         if (!res.ok) {
-          section.classList.add('hidden');
+          grid.innerHTML = '';
+          if (countEl) countEl.textContent = '0';
+          if (emptyEl) emptyEl.classList.remove('hidden');
+          setEventViewMode('drive');
           return;
         }
 
@@ -7328,21 +8096,25 @@ ${escapeHtml(c.text || '')}
         const files = (data.files || []).filter(f => (f.mimeType || '').startsWith('image/'));
 
         if (files.length === 0) {
-          section.classList.add('hidden');
+          grid.innerHTML = '';
+          if (countEl) countEl.textContent = '0';
+          if (emptyEl) emptyEl.classList.remove('hidden');
+          setEventViewMode('drive');
           return;
         }
 
         if (countEl) countEl.textContent = files.length;
+        if (emptyEl) emptyEl.classList.add('hidden');
         grid.innerHTML = files.map(f => {
           // Direct 4K Ultra-HD URL using Google content delivery
           const direct4kUrl = `https://lh3.googleusercontent.com/d/${f.id}=w3840`;
           const thumbUrl = `https://lh3.googleusercontent.com/d/${f.id}=w600`;
 
           return `
-            <div class="relative group aspect-square rounded-xl overflow-hidden bg-slate-900 border border-slate-700/80 hover:border-cyan-400 cursor-pointer transition shadow" onclick="openLightbox('${direct4kUrl}', '${escapeHtml(f.name)}', '📸 4K Ultra-HD · Google Drive')">
+            <div class="relative group aspect-square rounded-xl overflow-hidden bg-slate-900 border border-slate-700/80 hover:border-cyan-400 cursor-pointer transition shadow hover:shadow-cyan-500/20" onclick="openLightbox('${direct4kUrl}', '${escapeHtml(f.name)}', '📸 4K Ultra-HD · Google Drive')">
               <img src="${thumbUrl}" alt="${escapeHtml(f.name)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
               <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span class="text-[10px] font-bold text-white px-2 py-1 rounded bg-black/60 border border-white/20 flex items-center gap-1">
+                <span class="text-[10px] font-bold text-white px-2 py-1 rounded-lg bg-black/70 backdrop-blur-sm border border-white/20 flex items-center gap-1 shadow">
                   <i data-lucide="zoom-in" class="w-3 h-3 text-cyan-400"></i> Zoom 4K
                 </span>
               </div>
@@ -7350,10 +8122,14 @@ ${escapeHtml(c.text || '')}
           `;
         }).join('');
 
-        section.classList.remove('hidden');
+        setEventViewMode('collage');
         if (window.lucide && window.lucide.createIcons) lucide.createIcons();
       } catch (err) {
-        section.classList.add('hidden');
+        console.warn('fetchDriveFolderPhotos error:', err);
+        grid.innerHTML = '';
+        if (countEl) countEl.textContent = '0';
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        setEventViewMode('drive');
       }
     }
 
@@ -7649,8 +8425,15 @@ ${escapeHtml(c.text || '')}
             const oldFullName = currentUserSession.fullName || currentUserSession.username;
             const oldUsername = currentUserSession.username;
 
-            currentUserSession = fresh;
-            localStorage.setItem('mtmc_session_v2', JSON.stringify(fresh));
+            const preservedPhone = currentUserSession.phone || (allUserPrivate[currentUserSession.uid]?.phone) || fresh.phone || '';
+            const preservedToken = currentUserSession.token || (allUserPrivate[currentUserSession.uid]?.token) || fresh.token || '';
+
+            currentUserSession = {
+              ...fresh,
+              phone: preservedPhone,
+              token: preservedToken
+            };
+            localStorage.setItem('mtmc_session_v2', JSON.stringify(currentUserSession));
 
             if (oldStatus === 'pending' && fresh.status === 'verified') {
               alert('🎉 Congratulations! Your account has been verified by the Batch Moderator. Full forum access unlocked!');

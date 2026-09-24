@@ -305,6 +305,49 @@ const db = {
             (data || []).forEach(r => { votesMap[r.user_id] = r.vote; });
             callback({ val: () => ({ votes: votesMap }), exists: () => (data || []).length > 0 });
           });
+        } else if (root === 'feedback' && parts.length === 1) {
+          registerRealtimeListener('community_feedback', async () => {
+            try {
+              const { data } = await sb.from('community_feedback').select('*').order('created_at', { ascending: false });
+              const feedbackMap = {};
+              (data || []).forEach(f => {
+                feedbackMap[f.id] = {
+                  id: f.id,
+                  category: f.category,
+                  title: f.title,
+                  description: f.description,
+                  authorName: f.author_name,
+                  authorHandle: f.author_handle,
+                  authorUid: f.author_uid,
+                  isAnon: Boolean(f.is_anon),
+                  status: f.status,
+                  timestamp: new Date(f.created_at).getTime()
+                };
+              });
+              callback({ val: () => feedbackMap, exists: () => Object.keys(feedbackMap).length > 0 });
+            } catch (err) {
+              console.warn('Feedback listener error:', err);
+            }
+          });
+          sb.from('community_feedback').select('*').order('created_at', { ascending: false }).then(({ data, error }) => {
+            if (error) return;
+            const feedbackMap = {};
+            (data || []).forEach(f => {
+              feedbackMap[f.id] = {
+                id: f.id,
+                category: f.category,
+                title: f.title,
+                description: f.description,
+                authorName: f.author_name,
+                authorHandle: f.author_handle,
+                authorUid: f.author_uid,
+                isAnon: Boolean(f.is_anon),
+                status: f.status,
+                timestamp: new Date(f.created_at).getTime()
+              };
+            });
+            callback({ val: () => feedbackMap, exists: () => Object.keys(feedbackMap).length > 0 });
+          }).catch(() => {});
         }
       },
 
@@ -371,11 +414,20 @@ const db = {
               await sb.from('post_views').upsert({ post_id: postId, user_id: userId });
               return;
             }
-            if (parts.length === 5 && parts[2] === 'comments' && parts[4] === 'upvotedBy') {
-              const commentId = parts[3];
-              const userId = parts[5];
-              await sb.from('comment_upvotes').upsert({ comment_id: commentId, user_id: userId });
-              triggerTableChange('posts');
+            if (parts.length === 5 && parts[2] === 'reactions') {
+              const postId = parts[1];
+              const emoji = parts[3];
+              const userId = parts[4];
+              try {
+                const { data } = await sb.from('posts').select('reactions').eq('id', postId).maybeSingle();
+                const reactions = data?.reactions || {};
+                if (!reactions[emoji]) reactions[emoji] = {};
+                reactions[emoji][userId] = true;
+                await sb.from('posts').update({ reactions }).eq('id', postId);
+                triggerTableChange('posts');
+              } catch (err) {
+                console.warn('Reactions set warning:', err);
+              }
               return;
             }
           }
@@ -473,6 +525,24 @@ const db = {
             triggerTableChange('mess_ratings');
             return;
           }
+
+          // 7. Community Feedback writes
+          if (root === 'feedback' && parts.length === 2) {
+            const feedbackId = parts[1];
+            await sb.from('community_feedback').upsert({
+              id: feedbackId,
+              category: val.category || 'Feature Idea',
+              title: val.title,
+              description: val.description,
+              author_name: val.authorName || 'Student',
+              author_handle: val.authorHandle || null,
+              author_uid: val.authorUid || currentSupabaseUser?.uid,
+              is_anon: Boolean(val.isAnon),
+              status: val.status || 'pending'
+            });
+            triggerTableChange('community_feedback');
+            return;
+          }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').set error:`, err);
           throw err;
@@ -535,6 +605,15 @@ const db = {
             triggerTableChange('profiles');
             return;
           }
+
+          if (root === 'feedback' && parts.length === 2) {
+            const feedbackId = parts[1];
+            const sqlUpdate = {};
+            if ('status' in obj) sqlUpdate.status = obj.status;
+            await sb.from('community_feedback').update(sqlUpdate).eq('id', feedbackId);
+            triggerTableChange('community_feedback');
+            return;
+          }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').update error:`, err);
           throw err;
@@ -567,6 +646,26 @@ const db = {
             if (parts.length === 5 && parts[2] === 'comments' && parts[4] === 'upvotedBy') {
               await sb.from('comment_upvotes').delete().match({ comment_id: parts[3], user_id: parts[5] });
               triggerTableChange('posts');
+              return;
+            }
+            if (parts.length === 5 && parts[2] === 'reactions') {
+              const postId = parts[1];
+              const emoji = parts[3];
+              const userId = parts[4];
+              try {
+                const { data } = await sb.from('posts').select('reactions').eq('id', postId).maybeSingle();
+                const reactions = data?.reactions || {};
+                if (reactions[emoji] && reactions[emoji][userId]) {
+                  delete reactions[emoji][userId];
+                  if (Object.keys(reactions[emoji]).length === 0) {
+                    delete reactions[emoji];
+                  }
+                  await sb.from('posts').update({ reactions }).eq('id', postId);
+                  triggerTableChange('posts');
+                }
+              } catch (err) {
+                console.warn('Reactions remove warning:', err);
+              }
               return;
             }
           }
@@ -606,6 +705,12 @@ const db = {
               triggerTableChange('deletion_requests');
               return;
             }
+          }
+
+          if (root === 'feedback' && parts.length === 2) {
+            await sb.from('community_feedback').delete().eq('id', parts[1]);
+            triggerTableChange('community_feedback');
+            return;
           }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').remove error:`, err);
@@ -651,6 +756,23 @@ const db = {
             });
             triggerTableChange('notifications');
             return { key: nid };
+          }
+
+          if (root === 'feedback' && parts.length === 1) {
+            const fid = 'fb_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+            await sb.from('community_feedback').insert({
+              id: fid,
+              category: val.category || 'Feature Idea',
+              title: val.title,
+              description: val.description,
+              author_name: val.authorName || 'Student',
+              author_handle: val.authorHandle || null,
+              author_uid: val.authorUid || currentSupabaseUser?.uid,
+              is_anon: Boolean(val.isAnon),
+              status: val.status || 'pending'
+            });
+            triggerTableChange('community_feedback');
+            return { key: fid };
           }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').push error:`, err);
@@ -750,6 +872,7 @@ function transformPostRow(row) {
     upvotedBy: upvotedByMap,
     viewedBy: viewedByMap,
     viewsCount: Object.keys(viewedByMap).length,
+    reactions: row.reactions || {},
     comments: commentsArr
   };
 }
@@ -784,3 +907,40 @@ function formatTimeAgo(ts) {
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
 }
+
+// -------------------------------------------------------------
+// GHOST ADMIN RPC HELPER METHODS (FROZEN HANDLES MANAGER)
+// -------------------------------------------------------------
+async function getFrozenUsernames() {
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb.rpc('get_frozen_usernames');
+    if (error) {
+      console.error('get_frozen_usernames error:', error);
+      throw new Error(error.message || 'Failed to fetch frozen handles');
+    }
+    return data || [];
+  } catch (err) {
+    console.error('getFrozenUsernames exception:', err);
+    throw err;
+  }
+}
+
+async function adminUnfreezeUser(targetUserId) {
+  if (!sb) return;
+  try {
+    const { error } = await sb.rpc('admin_unfreeze_user', { target_user_id: targetUserId });
+    if (error) {
+      console.error('admin_unfreeze_user error:', error);
+      throw new Error(error.message || 'Failed to unfreeze handle');
+    }
+    triggerTableChange('profiles');
+  } catch (err) {
+    console.error('adminUnfreezeUser exception:', err);
+    throw err;
+  }
+}
+
+window.getFrozenUsernames = getFrozenUsernames;
+window.adminUnfreezeUser = adminUnfreezeUser;
+

@@ -31,7 +31,7 @@
 
   // Determine current day index based on system date
   function getAutoSelectedDayIndex(days) {
-    if (!days || !days.length) return 0;
+    if (!days || !days.length) return -1;
     const now = new Date();
     const curYear = now.getFullYear();
     const curMonth = now.getMonth(); // 0-indexed
@@ -51,8 +51,16 @@
         }
       }
     }
-    // Default to day 0 (Sep 28)
-    return 0;
+    // Return -1 when today is outside the course schedule (e.g. pre-commencement)
+    return -1;
+  }
+
+  function getDaysUntilCommencement() {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const start = new Date(2026, 8, 28); // 28 Sep 2026
+    const diff = start.getTime() - today.getTime();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
   }
 
   // Get Category Badge Style
@@ -123,6 +131,9 @@
 
     // Render chips for active week
     const chipsContainer = document.getElementById('fc-widget-day-chips');
+    const autoIdx = getAutoSelectedDayIndex(days);
+    const daysUntil = getDaysUntilCommencement();
+
     if (chipsContainer) {
       const startIndex = curWeek === 1 ? 0 : 6;
       const endIndex = curWeek === 1 ? 6 : 12;
@@ -135,20 +146,25 @@
         const shortLetter = d.day.charAt(0);
         const isActive = (i === curDayIdx);
         const isHol = d.holiday;
+        const isToday = (autoIdx >= 0 && i === autoIdx);
 
         let chipClass = '';
         if (isActive) {
-          chipClass = 'bg-indigo-600 text-white shadow-sm font-extrabold';
+          chipClass = isHol
+            ? 'bg-rose-600 text-white shadow-sm font-extrabold ring-2 ring-rose-400/50'
+            : 'bg-indigo-600 text-white shadow-sm font-extrabold';
+        } else if (isToday) {
+          chipClass = 'bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/40 font-bold';
         } else if (isHol) {
-          chipClass = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30';
+          chipClass = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-bold hover:bg-rose-500/20';
         } else {
           chipClass = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
         }
 
         chipsHtml += `
-          <button type="button" onclick="selectFcWidgetDay(${i})" class="py-1 rounded-lg transition text-[10px] ${chipClass}" title="${d.day} ${d.date}">
-            <div class="leading-none text-[9px] font-bold">${dayNum}</div>
-            <div class="leading-none text-[9px] opacity-80">${shortLetter}</div>
+          <button type="button" onclick="selectFcWidgetDay(${i})" class="py-1.5 rounded-xl transition text-[10px] flex flex-col items-center justify-center ${chipClass}" title="${d.day} ${d.date}${isHol ? ' (National Holiday - Campus Closed)' : ''}">
+            <div class="leading-none text-[11px] font-extrabold">${dayNum}${isHol ? '<span class="text-[8px] text-rose-500 ml-0.5">●</span>' : ''}</div>
+            <div class="leading-none text-[9px] opacity-75 mt-0.5 uppercase">${shortLetter}</div>
           </button>
         `;
       }
@@ -162,16 +178,42 @@
     if (days[curDayIdx]) {
       const currentDay = days[curDayIdx];
       if (badge) {
-        badge.textContent = `${currentDay.dayShort}, ${currentDay.date}`;
+        if (autoIdx === -1 && daysUntil > 0) {
+          badge.textContent = `🗓️ Starts in ${daysUntil}d`;
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20';
+        } else if (autoIdx >= 0 && curDayIdx === autoIdx) {
+          badge.textContent = `🔴 Today · ${currentDay.dayShort}`;
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-600 text-white shadow-sm';
+        } else if (currentDay.holiday) {
+          badge.textContent = `🇮🇳 Holiday · ${currentDay.date}`;
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+        } else {
+          badge.textContent = `${currentDay.dayShort}, ${currentDay.date}`;
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20';
+        }
       }
 
       if (contentContainer) {
+        let preCommenceHtml = '';
+        if (autoIdx === -1 && daysUntil > 0) {
+          preCommenceHtml = `
+            <div class="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[10px] flex items-center justify-between">
+              <span class="flex items-center gap-1.5 font-bold">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500 shrink-0"></i>
+                <span>Commences Mon, 28 Sep</span>
+              </span>
+              <span class="font-extrabold px-1.5 py-0.5 rounded bg-indigo-500/20 text-[9px]">${daysUntil} days left</span>
+            </div>
+          `;
+        }
+
         if (currentDay.holiday) {
           contentContainer.innerHTML = `
-            <div class="bg-amber-50 dark:bg-amber-950/40 p-2.5 rounded-xl border border-amber-200 dark:border-amber-800/60 space-y-1 text-center">
-              <span class="text-base">🇮🇳</span>
-              <p class="font-bold text-amber-700 dark:text-amber-400 text-xs">${esc(currentDay.holidayTitle || 'Holiday')}</p>
-              <p class="text-[10px] text-amber-600/80 dark:text-amber-400/80">National Holiday · No academic sessions</p>
+            ${preCommenceHtml}
+            <div class="bg-rose-50 dark:bg-rose-950/40 p-3 rounded-xl border border-rose-200 dark:border-rose-800/60 space-y-1 text-center">
+              <span class="text-lg">🇮🇳</span>
+              <p class="font-bold text-rose-700 dark:text-rose-400 text-xs">${esc(currentDay.holidayTitle || 'Holiday')}</p>
+              <p class="text-[10px] text-rose-600/80 dark:text-rose-400/80">National Holiday · No academic sessions</p>
             </div>
           `;
         } else {
@@ -193,13 +235,14 @@
           if (remainingCount > 0) {
             sessionsHtml += `
               <div class="text-center pt-0.5">
-                <span class="text-[10px] font-semibold text-slate-400">+ ${remainingCount} more sessions today</span>
+                <span class="text-[10px] font-semibold text-slate-400">+ ${remainingCount} more sessions ${autoIdx >= 0 && curDayIdx === autoIdx ? 'today' : 'on this date'}</span>
               </div>
             `;
           }
 
-          contentContainer.innerHTML = sessionsHtml;
+          contentContainer.innerHTML = preCommenceHtml + sessionsHtml;
         }
+        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
       }
     }
   }
@@ -230,20 +273,40 @@
     const days = data.days;
     const activeIdx = courseScheduleState.activeDayIndex;
     const autoIdx = getAutoSelectedDayIndex(days);
+    const daysUntil = getDaysUntilCommencement();
+
+    // Pre-commencement Countdown Banner
+    const countdownBannerHtml = (autoIdx === -1 && daysUntil > 0) ? `
+      <div class="flex items-center justify-between gap-2 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 border border-indigo-500/20 rounded-2xl px-4 py-2.5 text-xs text-indigo-700 dark:text-indigo-300">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🗓️</span>
+          <div>
+            <span class="font-extrabold">Foundation Course commences in ${daysUntil} ${daysUntil === 1 ? 'day' : 'days'}</span>
+            <span class="hidden sm:inline text-slate-500 dark:text-slate-400"> · Starts Monday, 28 Sep 2026</span>
+          </div>
+        </div>
+        <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-[10px]">Upcoming</span>
+      </div>
+    ` : '';
 
     // Build day chips row
     let chipsHtml = `
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
         ${days.map((d, i) => {
           const isActive = (activeIdx === i);
-          const isToday = (i === autoIdx);
-          const label = `${d.date.split('-')[0]} ${d.dayShort}${d.holiday ? ' 🇮🇳' : ''}`;
+          const isToday = (autoIdx >= 0 && i === autoIdx);
+          const isHol = d.holiday;
+          const label = `${d.date.split('-')[0]} ${d.dayShort}${isHol ? ' 🇮🇳' : ''}`;
           let btnCls = '';
 
           if (isActive) {
-            btnCls = 'bg-indigo-600 text-white shadow-sm font-bold';
+            btnCls = isHol
+              ? 'bg-rose-600 text-white shadow-sm font-bold ring-2 ring-rose-400/40'
+              : 'bg-indigo-600 text-white shadow-sm font-bold';
           } else if (isToday) {
             btnCls = 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 font-bold';
+          } else if (isHol) {
+            btnCls = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-bold hover:bg-rose-500/20';
           } else {
             btnCls = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
           }
@@ -282,12 +345,12 @@
               ${days.map((row, idx) => {
                 if (row.holiday) {
                   return `
-                    <tr class="bg-amber-50/50 dark:bg-amber-950/20">
+                    <tr class="bg-rose-50/60 dark:bg-rose-950/25">
                       <td class="p-3 font-bold text-slate-900 dark:text-white whitespace-nowrap">
-                        <span class="text-indigo-600 dark:text-indigo-400 font-extrabold">W${row.week}</span> · ${row.date} (${row.dayShort})
+                        <span class="text-rose-600 dark:text-rose-400 font-extrabold">W${row.week}</span> · ${row.date} (${row.dayShort})
                       </td>
-                      <td colspan="6" class="p-3 text-center font-bold text-amber-700 dark:text-amber-400 text-xs">
-                        🇮🇳 ${esc(row.holidayTitle || 'Holiday')} - Campus Closed (No sessions scheduled)
+                      <td colspan="6" class="p-3 text-center font-bold text-rose-700 dark:text-rose-400 text-xs">
+                        🇮🇳 ${esc(row.holidayTitle || 'Holiday')} - Campus Closed (National Holiday)
                       </td>
                     </tr>
                   `;
@@ -310,7 +373,7 @@
                   `;
                 };
 
-                const isToday = (idx === autoIdx);
+                const isToday = (autoIdx >= 0 && idx === autoIdx);
 
                 return `
                   <tr class="${isToday ? 'bg-indigo-500/5 dark:bg-indigo-500/10 font-medium' : 'hover:bg-slate-50/80 dark:hover:bg-slate-900/50'}">
@@ -338,10 +401,10 @@
 
       if (dayData.holiday) {
         mainContentHtml = `
-          <div class="rounded-2xl p-8 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200 dark:border-amber-800/60 text-center space-y-3 shadow-sm">
+          <div class="rounded-2xl p-8 bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/20 border border-rose-200 dark:border-rose-800/60 text-center space-y-3 shadow-sm">
             <span class="text-4xl">🇮🇳</span>
-            <h3 class="text-lg font-extrabold text-amber-800 dark:text-amber-300">${esc(dayData.holidayTitle || 'Gandhi Jayanti')}</h3>
-            <p class="text-xs text-amber-700/80 dark:text-amber-400/80 max-w-md mx-auto">
+            <h3 class="text-lg font-extrabold text-rose-800 dark:text-rose-300">${esc(dayData.holidayTitle || 'Gandhi Jayanti')}</h3>
+            <p class="text-xs text-rose-700/80 dark:text-rose-400/80 max-w-md mx-auto">
               National holiday in commemoration of Mahatma Gandhi's birthday. College departments and academic sessions remain closed.
             </p>
           </div>
@@ -450,6 +513,8 @@
           </div>
         </div>
 
+        ${countdownBannerHtml}
+
         ${chipsHtml}
 
         ${mainContentHtml}
@@ -511,9 +576,10 @@
 
     if (courseScheduleState.data && courseScheduleState.data.days) {
       const autoIdx = getAutoSelectedDayIndex(courseScheduleState.data.days);
-      courseScheduleState.activeDayIndex = autoIdx;
-      courseScheduleState.widgetDayIndex = autoIdx;
-      courseScheduleState.widgetWeek = autoIdx < 6 ? 1 : 2;
+      const defaultIdx = autoIdx >= 0 ? autoIdx : 0;
+      courseScheduleState.activeDayIndex = defaultIdx;
+      courseScheduleState.widgetDayIndex = defaultIdx;
+      courseScheduleState.widgetWeek = defaultIdx < 6 ? 1 : 2;
       renderFoundationCourseWidget();
     }
 
