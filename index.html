@@ -1752,7 +1752,9 @@
           
           if (!authUser) {
             const msg = (authErr.message || '').toLowerCase();
-            if (msg.includes('email not confirmed')) {
+            if (msg.includes('disabled') || authErr.code === 'auth/provider-disabled') {
+              errBox.textContent = 'Email Provider is disabled in Supabase! Please enable "Enable Email provider" under Authentication -> Providers -> Email in your Supabase dashboard.';
+            } else if (msg.includes('email not confirmed')) {
               errBox.textContent = 'Email confirmation pending in Supabase. Please disable "Confirm email" under Authentication -> Providers -> Email in your Supabase dashboard.';
             } else if (msg.includes('rate limit') || msg.includes('over_email_send_rate_limit')) {
               errBox.textContent = 'Supabase email rate limit reached. Please disable "Confirm email" in Supabase Authentication -> Providers -> Email.';
@@ -1906,7 +1908,11 @@
           }
         } catch (authErr) {
           const msg = (authErr.message || '').toLowerCase();
-          if (authErr.code === 'auth/email-already-in-use') {
+          if (msg.includes('disabled') || authErr.code === 'auth/provider-disabled') {
+            errBox.textContent = 'Email Provider is disabled in Supabase! Please enable "Enable Email provider" in Supabase Authentication -> Providers -> Email.';
+            errBox.classList.remove('hidden');
+            return;
+          } else if (authErr.code === 'auth/email-already-in-use') {
             errBox.textContent = 'This username is already taken. Please choose another.';
             errBox.classList.remove('hidden');
             return;

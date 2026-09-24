@@ -37,7 +37,13 @@ const auth = {
     const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
     if (error) {
       const err = new Error(error.message);
-      err.code = 'auth/invalid-credential';
+      if (error.message.includes('Invalid login credentials')) {
+        err.code = 'auth/invalid-credential';
+      } else if (error.message.includes('Email logins are disabled')) {
+        err.code = 'auth/provider-disabled';
+      } else {
+        err.code = 'auth/error';
+      }
       throw err;
     }
     currentSupabaseUser = data.user ? { uid: data.user.id, email: data.user.email } : null;
@@ -49,9 +55,13 @@ const auth = {
     const { data, error } = await sb.auth.signUp({ email, password: pass });
     if (error) {
       const err = new Error(error.message);
-      err.code = (error.message.includes('already registered') || error.message.includes('User already registered'))
-        ? 'auth/email-already-in-use'
-        : 'auth/error';
+      if (error.message.includes('already registered') || error.message.includes('User already registered')) {
+        err.code = 'auth/email-already-in-use';
+      } else if (error.message.includes('Email signups are disabled')) {
+        err.code = 'auth/provider-disabled';
+      } else {
+        err.code = 'auth/error';
+      }
       throw err;
     }
     currentSupabaseUser = data.user ? { uid: data.user.id, email: data.user.email } : null;
