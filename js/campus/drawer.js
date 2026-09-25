@@ -41,7 +41,7 @@ function toggleMobileCampusDrawer() {
       // Reset buttons
       [tabMess, tabSchedule].forEach(btn => {
         if (btn) {
-          btn.className = 'py-1.5 rounded-lg transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5';
+          btn.className = 'py-1.5 rounded transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5';
         }
       });
 
@@ -50,11 +50,11 @@ function toggleMobileCampusDrawer() {
       if (secSchedule) secSchedule.classList.add('hidden');
 
       if (tab === 'mess') {
-        if (tabMess) tabMess.className = 'py-1.5 rounded-lg transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1.5 font-bold';
+        if (tabMess) tabMess.className = 'py-1.5 rounded transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1.5 font-bold';
         if (secMess) secMess.classList.remove('hidden');
         renderMessWidget();
       } else if (tab === 'schedule') {
-        if (tabSchedule) tabSchedule.className = 'py-1.5 rounded-lg transition bg-indigo-600 text-white shadow-sm flex items-center justify-center gap-1.5 font-bold';
+        if (tabSchedule) tabSchedule.className = 'py-1.5 rounded transition bg-indigo-600 text-white shadow-sm flex items-center justify-center gap-1.5 font-bold';
         if (secSchedule) secSchedule.classList.remove('hidden');
         if (typeof window.renderFoundationCourseWidget === 'function') {
           window.renderFoundationCourseWidget();

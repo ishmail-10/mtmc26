@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mtmc26-bbs-v26';
+const CACHE_NAME = 'mtmc26-bbs-v28';
 const ASSETS = [
   './',
   './index.html',
@@ -38,7 +38,15 @@ const ASSETS = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS).catch(() => {}))
+    caches.open(CACHE_NAME).then((cache) => {
+      return Promise.allSettled(
+        ASSETS.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn(`[SW] Failed to cache: ${url}`, err);
+          })
+        )
+      );
+    })
   );
   self.skipWaiting();
 });

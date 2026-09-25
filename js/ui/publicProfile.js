@@ -29,13 +29,13 @@
       const roleBadge = document.getElementById('pub-role-badge');
       if (user.role === 'supermod') {
         roleBadge.textContent = '🛡️ Super Mod';
-        roleBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30';
+        roleBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30';
       } else if (user.role === 'admin' || user.role === 'moderator') {
         roleBadge.textContent = 'Batch Moderator';
-        roleBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20';
+        roleBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20';
       } else {
         roleBadge.textContent = 'Verified Student';
-        roleBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+        roleBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
       }
 
       // Joined date & Authorized Mobile Phone
@@ -157,7 +157,7 @@
         }
 
         container.innerHTML = userPosts.map(p => `
-          <div onclick="closePublicProfileModal(); openThread('${p.id}')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 hover:border-brand-orange transition cursor-pointer space-y-1.5 shadow-sm group">
+          <div onclick="closePublicProfileModal(); openThread('${p.id}')" class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 hover:border-brand-orange transition cursor-pointer space-y-1.5 shadow-sm group">
             <div class="flex items-center justify-between text-[11px] text-slate-500">
               <span class="font-bold text-brand-orange uppercase tracking-wider text-[10px]">${p.board}</span>
               <span>${p.createdAt || 'Recent'}</span>
@@ -184,7 +184,7 @@
         }
 
         container.innerHTML = userComments.map(c => `
-          <div onclick="closePublicProfileModal(); openThread('${c.postId}')" class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 hover:border-brand-orange transition cursor-pointer space-y-1.5 shadow-sm group">
+          <div onclick="closePublicProfileModal(); openThread('${c.postId}')" class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 hover:border-brand-orange transition cursor-pointer space-y-1.5 shadow-sm group">
             <div class="text-[10px] text-slate-400">
               Replied in <span class="font-semibold text-slate-700 dark:text-slate-300 group-hover:text-brand-orange">${escapeHtml(c.postTitle)}</span> · ${c.time || 'Recent'}
             </div>

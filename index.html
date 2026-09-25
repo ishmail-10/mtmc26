@@ -137,7 +137,7 @@
         <!-- NOTIFICATION BELL (Only visible to verified members) -->
         <button onclick="toggleNotificationsModal()" id="notif-bell-btn" class="hidden relative items-center justify-center p-2 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-brand-orange text-slate-700 dark:text-slate-200 text-xs font-bold transition" title="Notifications">
           <i data-lucide="bell" class="w-4 h-4"></i>
-          <span id="notif-badge" class="hidden absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-brand-orange text-white text-[9px] font-black flex items-center justify-center shadow">0</span>
+          <span id="notif-badge" class="hidden absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded bg-brand-orange text-white text-[9px] font-black flex items-center justify-center shadow">0</span>
         </button>
 
         <!-- COMMUNITY FEEDBACK / SUGGESTION TRIGGER (Only visible to verified members) -->
@@ -150,7 +150,7 @@
         <button onclick="openAdminModal()" id="admin-shield-btn" class="hidden items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md bg-purple-500/10 border border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 text-xs font-bold transition" title="Batch Moderator Panel">
           <i data-lucide="shield" class="w-4 h-4 text-purple-500"></i>
           <span class="hidden sm:inline" id="admin-shield-label">Moderator</span>
-          <span id="pending-badge" class="hidden px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-extrabold">0</span>
+          <span id="pending-badge" class="hidden px-1.5 py-0.2 rounded bg-rose-500 text-white text-[10px] font-extrabold">0</span>
         </button>
 
         <!-- NEW POST BUTTON (Only visible to verified members) -->
@@ -161,7 +161,7 @@
 
         <!-- User Profile Button (Only visible to verified members) -->
         <button onclick="handleUserBtnClick()" id="user-profile-btn" class="hidden items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-md bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition" title="My Profile">
-          <div class="w-5 h-5 rounded-full bg-orange-500/20 text-brand-orange flex items-center justify-center text-[10px] font-bold" id="user-avatar">
+          <div class="w-5 h-5 rounded-md bg-orange-500/20 text-brand-orange flex items-center justify-center text-[10px] font-bold" id="user-avatar">
             B26
           </div>
           <span class="hidden sm:inline" id="user-display-name">Profile</span>
@@ -420,44 +420,44 @@
   <nav class="bg-white/80 dark:bg-[#0a0f1d] border-b border-slate-200 dark:border-slate-800/80 sticky top-[57px] z-30 shadow-sm transition-colors duration-200 backdrop-blur-md">
     <div class="max-w-6xl mx-auto px-3 sm:px-6">
       <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-2">
-        <button onclick="filterBoard('all')" id="board-btn-all" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap bg-brand-orange text-white">
+        <button onclick="filterBoard('all')" id="board-btn-all" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap bg-brand-orange text-white">
           <i data-lucide="flame" class="w-3.5 h-3.5"></i>
           <span>All Discussions</span>
         </button>
 
-        <button onclick="filterBoard('resources')" id="board-btn-resources" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
+        <button onclick="filterBoard('resources')" id="board-btn-resources" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
           <i data-lucide="bookmark-check" class="w-3.5 h-3.5 text-indigo-500"></i>
           <span>📌 Batch Resources</span>
           <span class="text-[9px] px-1 rounded bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold">Guides & Menu</span>
         </button>
 
-        <button onclick="filterBoard('anonymous')" id="board-btn-anonymous" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
+        <button onclick="filterBoard('anonymous')" id="board-btn-anonymous" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
           <i data-lucide="eye-off" class="w-3.5 h-3.5 text-emerald-500"></i>
           <span>Anonymous Wall</span>
           <span class="text-[9px] px-1 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold">100% Anon</span>
         </button>
 
-        <button onclick="filterBoard('academics')" id="board-btn-academics" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
+        <button onclick="filterBoard('academics')" id="board-btn-academics" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
           <i data-lucide="book-open" class="w-3.5 h-3.5 text-blue-500"></i>
           <span>Studies & Viva Prep</span>
         </button>
 
-        <button onclick="filterBoard('bazaar')" id="board-btn-bazaar" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
+        <button onclick="filterBoard('bazaar')" id="board-btn-bazaar" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
           <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-amber-500"></i>
           <span>Batch Marketplace (Buy & Sell)</span>
         </button>
 
-        <button onclick="filterBoard('lostfound')" id="board-btn-lostfound" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
+        <button onclick="filterBoard('lostfound')" id="board-btn-lostfound" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
           <i data-lucide="help-circle" class="w-3.5 h-3.5 text-purple-500"></i>
           <span>Lost & Found</span>
         </button>
 
-        <button onclick="filterBoard('notices')" id="board-btn-notices" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
+        <button onclick="filterBoard('notices')" id="board-btn-notices" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900">
           <i data-lucide="bell" class="w-3.5 h-3.5 text-rose-500"></i>
           <span>CR & Batch Notices</span>
         </button>
 
-        <button onclick="filterBoard('events')" id="board-btn-events" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 border border-transparent hover:border-cyan-500/40">
+        <button onclick="filterBoard('events')" id="board-btn-events" class="board-chip flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition whitespace-nowrap text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 border border-transparent hover:border-cyan-500/40">
           <i data-lucide="sparkles" class="w-3.5 h-3.5 text-cyan-400"></i>
           <span>🎉 Batch Events & Gallery</span>
         </button>
@@ -472,9 +472,9 @@
     <aside class="hidden lg:block lg:col-span-3 space-y-4">
       
       <!-- COMMUNITY CARD -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-3 transition-colors duration-200">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-4 shadow-sm space-y-3 transition-colors duration-200">
         <div class="flex items-center gap-2.5">
-          <img src="./logo/logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-0.5">
+          <img src="./logo/logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-0.5">
           <div>
             <h3 class="font-extrabold text-sm text-slate-900 dark:text-white">MTMC Batch 2026</h3>
             <p class="text-[11px] text-slate-500 dark:text-slate-400">Unofficial Student Forum</p>
@@ -484,11 +484,11 @@
           A dedicated private hub for our MBBS batch. Ask doubts without hesitation, prepare for viva tests, and buy or sell second-hand medical books and kits.
         </p>
         <div class="pt-2 border-t border-slate-100 dark:border-slate-800/80 grid grid-cols-2 gap-2 text-center text-xs">
-          <div class="bg-slate-50 dark:bg-slate-950/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60">
+          <div class="bg-slate-50 dark:bg-slate-950/60 p-2 rounded border border-slate-200 dark:border-slate-800/60">
             <div id="stat-post-count" class="font-bold text-slate-900 dark:text-white text-base">0</div>
             <div class="text-[10px] text-slate-500 uppercase">Threads</div>
           </div>
-          <div class="bg-slate-50 dark:bg-slate-950/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60">
+          <div class="bg-slate-50 dark:bg-slate-950/60 p-2 rounded border border-slate-200 dark:border-slate-800/60">
             <div class="font-bold text-brand-orange text-base">250</div>
             <div class="text-[10px] text-slate-500 uppercase">Batch Size</div>
           </div>
@@ -496,7 +496,7 @@
       </div>
 
       <!-- ANONYMOUS WALL RULE -->
-      <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-xs space-y-2 transition-colors duration-200 shadow-sm">
+      <div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-md p-4 text-xs space-y-2 transition-colors duration-200 shadow-sm">
         <h4 class="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
           <i data-lucide="shield-check" class="w-4 h-4"></i>
           Anonymous Wall Guidelines
@@ -507,13 +507,13 @@
       </div>
 
       <!-- FOUNDATION COURSE SCHEDULE WIDGET -->
-      <div id="fc-widget-card" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-xs space-y-3 transition-colors duration-200 shadow-sm">
+      <div id="fc-widget-card" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-md p-4 text-xs space-y-3 transition-colors duration-200 shadow-sm">
         <div class="flex items-center justify-between">
           <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
             <i data-lucide="calendar" class="w-4 h-4 text-indigo-500"></i>
             <span>Foundation Course</span>
           </h4>
-          <span id="fc-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">28 Sep – 10 Oct</span>
+          <span id="fc-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">28 Sep – 10 Oct</span>
         </div>
 
         <!-- Week 1 / Week 2 Quick Switcher & Day Selector -->
@@ -521,8 +521,8 @@
           <div class="flex items-center justify-between text-[10px] font-semibold text-slate-500 dark:text-slate-400 px-0.5">
             <span id="fc-widget-week-label">Week 1 (28 Sep – 3 Oct)</span>
             <div class="flex items-center gap-1">
-              <button type="button" onclick="setFcWidgetWeek(1)" id="fc-w1-btn" class="px-2 py-0.5 rounded-md font-bold bg-indigo-600 text-white transition text-[9px]">W1</button>
-              <button type="button" onclick="setFcWidgetWeek(2)" id="fc-w2-btn" class="px-2 py-0.5 rounded-md font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]">W2</button>
+              <button type="button" onclick="setFcWidgetWeek(1)" id="fc-w1-btn" class="px-2 py-0.5 rounded font-bold bg-indigo-600 text-white transition text-[9px]">W1</button>
+              <button type="button" onclick="setFcWidgetWeek(2)" id="fc-w2-btn" class="px-2 py-0.5 rounded font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]">W2</button>
             </div>
           </div>
           <div class="grid grid-cols-6 gap-1 text-center font-bold text-[10px]" id="fc-widget-day-chips">
@@ -548,24 +548,24 @@
       </div>
 
       <!-- DAILY HOSTEL MESS MENU WIDGET (LIVE GOOGLE DRIVE SYNC) -->
-      <div id="mess-widget-card" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 text-xs space-y-3 transition-colors duration-200 shadow-sm">
+      <div id="mess-widget-card" class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-md p-4 text-xs space-y-3 transition-colors duration-200 shadow-sm">
         <div class="flex items-center justify-between">
           <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
             <i data-lucide="utensils" class="w-4 h-4 text-brand-orange"></i>
             <span>Hostel Mess Menu</span>
           </h4>
-          <span id="mess-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-orange/10 text-brand-orange border border-brand-orange/20">Today</span>
+          <span id="mess-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/20">Today</span>
         </div>
 
         <!-- Day Selector Chips (Mon-Sun) -->
         <div class="grid grid-cols-7 gap-1 text-center font-bold text-[10px]">
-          <button type="button" onclick="selectWidgetDay(0)" id="wday-btn-0" class="wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">M</button>
-          <button type="button" onclick="selectWidgetDay(1)" id="wday-btn-1" class="wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
-          <button type="button" onclick="selectWidgetDay(2)" id="wday-btn-2" class="wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">W</button>
-          <button type="button" onclick="selectWidgetDay(3)" id="wday-btn-3" class="wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
-          <button type="button" onclick="selectWidgetDay(4)" id="wday-btn-4" class="wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">F</button>
-          <button type="button" onclick="selectWidgetDay(5)" id="wday-btn-5" class="wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
-          <button type="button" onclick="selectWidgetDay(6)" id="wday-btn-6" class="wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
+          <button type="button" onclick="selectWidgetDay(0)" id="wday-btn-0" class="wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">M</button>
+          <button type="button" onclick="selectWidgetDay(1)" id="wday-btn-1" class="wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
+          <button type="button" onclick="selectWidgetDay(2)" id="wday-btn-2" class="wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">W</button>
+          <button type="button" onclick="selectWidgetDay(3)" id="wday-btn-3" class="wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
+          <button type="button" onclick="selectWidgetDay(4)" id="wday-btn-4" class="wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">F</button>
+          <button type="button" onclick="selectWidgetDay(5)" id="wday-btn-5" class="wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
+          <button type="button" onclick="selectWidgetDay(6)" id="wday-btn-6" class="wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
         </div>
 
         <!-- Meals Preview Container -->
@@ -580,15 +580,15 @@
             <span id="mess-rating-total" class="text-[10px] text-slate-400 font-mono">0 votes</span>
           </div>
           <div class="grid grid-cols-3 gap-1.5" id="mess-rating-buttons">
-            <button type="button" onclick="submitMessRating('good')" id="btn-rating-good" class="flex items-center justify-center gap-1 py-1 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
+            <button type="button" onclick="submitMessRating('good')" id="btn-rating-good" class="flex items-center justify-center gap-1 py-1 px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
               <span>😋 Good</span>
               <span id="count-rating-good" class="font-mono text-[10px] text-slate-400 font-bold ml-0.5">0</span>
             </button>
-            <button type="button" onclick="submitMessRating('okay')" id="btn-rating-okay" class="flex items-center justify-center gap-1 py-1 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-amber-500/50 hover:bg-amber-50/50 dark:hover:bg-amber-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
+            <button type="button" onclick="submitMessRating('okay')" id="btn-rating-okay" class="flex items-center justify-center gap-1 py-1 px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-amber-500/50 hover:bg-amber-50/50 dark:hover:bg-amber-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
               <span>😐 Okay</span>
               <span id="count-rating-okay" class="font-mono text-[10px] text-slate-400 font-bold ml-0.5">0</span>
             </button>
-            <button type="button" onclick="submitMessRating('bad')" id="btn-rating-bad" class="flex items-center justify-center gap-1 py-1 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-rose-500/50 hover:bg-rose-50/50 dark:hover:bg-rose-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
+            <button type="button" onclick="submitMessRating('bad')" id="btn-rating-bad" class="flex items-center justify-center gap-1 py-1 px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-rose-500/50 hover:bg-rose-50/50 dark:hover:bg-rose-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
               <span>👎 Bad</span>
               <span id="count-rating-bad" class="font-mono text-[10px] text-slate-400 font-bold ml-0.5">0</span>
             </button>
@@ -609,23 +609,23 @@
     <section class="lg:col-span-9 space-y-4">
 
       <!-- MOBILE CAMPUS HUB DRAWER (STRICTLY MOBILE ONLY: block lg:hidden) -->
-      <div id="mobile-campus-drawer" class="block lg:hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
+      <div id="mobile-campus-drawer" class="block lg:hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md shadow-sm overflow-hidden transition-all duration-300">
         
         <!-- DRAWER TOGGLE HEADER BUTTON -->
         <button type="button" onclick="toggleMobileCampusDrawer()" class="w-full p-3.5 flex items-center justify-between gap-3 text-left hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
           <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-orange to-indigo-600 text-white flex items-center justify-center shadow-sm shrink-0">
+            <div class="w-9 h-9 rounded-md bg-gradient-to-tr from-brand-orange to-indigo-600 text-white flex items-center justify-center shadow-sm shrink-0">
               <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
             </div>
             <div>
               <div class="flex items-center gap-1.5">
                 <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Campus Daily Hub</span>
-                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded-full bg-brand-orange/15 text-brand-orange border border-brand-orange/30">Live</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-brand-orange/15 text-brand-orange border border-brand-orange/30">Live</span>
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">Mess Menu, Class Schedule & Batch Info</p>
             </div>
           </div>
-          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 shrink-0">
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 shrink-0">
             <span id="mobile-drawer-btn-label">View Hub</span>
             <i data-lucide="chevron-down" id="mobile-drawer-chevron" class="w-3.5 h-3.5 transition-transform duration-300"></i>
           </div>
@@ -635,12 +635,12 @@
         <div id="mobile-campus-drawer-body" class="hidden border-t border-slate-100 dark:border-slate-800 p-3.5 space-y-3 bg-slate-50/50 dark:bg-slate-950/40">
           
           <!-- QUICK TAB SWITCHER INSIDE DRAWER (2 CLEAN TABS) -->
-          <div class="grid grid-cols-2 gap-1.5 bg-slate-200/70 dark:bg-slate-900 p-1 rounded-xl text-center text-xs font-bold">
-            <button type="button" onclick="switchMobileDrawerTab('mess')" id="mobile-tab-mess-btn" class="py-1.5 rounded-lg transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1.5">
+          <div class="grid grid-cols-2 gap-1.5 bg-slate-200/70 dark:bg-slate-900 p-1 rounded-md text-center text-xs font-bold">
+            <button type="button" onclick="switchMobileDrawerTab('mess')" id="mobile-tab-mess-btn" class="py-1.5 rounded transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1.5">
               <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
               <span>Mess Menu</span>
             </button>
-            <button type="button" onclick="switchMobileDrawerTab('schedule')" id="mobile-tab-schedule-btn" class="py-1.5 rounded-lg transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5">
+            <button type="button" onclick="switchMobileDrawerTab('schedule')" id="mobile-tab-schedule-btn" class="py-1.5 rounded transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5">
               <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
               <span>Schedule</span>
             </button>
@@ -648,24 +648,24 @@
 
           <!-- TAB 1: HOSTEL MESS MENU & FOOD RATING -->
           <div id="mobile-drawer-section-mess" class="space-y-3">
-            <div id="mobile-mess-widget-card" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-xs space-y-3 shadow-sm">
+            <div id="mobile-mess-widget-card" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-4 text-xs space-y-3 shadow-sm">
               <div class="flex items-center justify-between">
                 <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                   <i data-lucide="utensils" class="w-4 h-4 text-brand-orange"></i>
                   <span>Hostel Mess Menu</span>
                 </h4>
-                <span id="mobile-mess-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-orange/10 text-brand-orange border border-brand-orange/20">Today</span>
+                <span id="mobile-mess-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/20">Today</span>
               </div>
 
               <!-- Day Selector Chips (Mon-Sun) -->
               <div class="grid grid-cols-7 gap-1 text-center font-bold text-[10px]">
-                <button type="button" onclick="selectWidgetDay(0)" id="mobile-wday-btn-0" class="wday-chip py-1.5 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">M</button>
-                <button type="button" onclick="selectWidgetDay(1)" id="mobile-wday-btn-1" class="wday-chip py-1.5 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
-                <button type="button" onclick="selectWidgetDay(2)" id="mobile-wday-btn-2" class="wday-chip py-1.5 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">W</button>
-                <button type="button" onclick="selectWidgetDay(3)" id="mobile-wday-btn-3" class="wday-chip py-1.5 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
-                <button type="button" onclick="selectWidgetDay(4)" id="mobile-wday-btn-4" class="wday-chip py-1.5 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">F</button>
-                <button type="button" onclick="selectWidgetDay(5)" id="mobile-wday-btn-5" class="wday-chip py-1.5 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
-                <button type="button" onclick="selectWidgetDay(6)" id="mobile-wday-btn-6" class="wday-chip py-1.5 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
+                <button type="button" onclick="selectWidgetDay(0)" id="mobile-wday-btn-0" class="wday-chip py-1.5 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">M</button>
+                <button type="button" onclick="selectWidgetDay(1)" id="mobile-wday-btn-1" class="wday-chip py-1.5 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
+                <button type="button" onclick="selectWidgetDay(2)" id="mobile-wday-btn-2" class="wday-chip py-1.5 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">W</button>
+                <button type="button" onclick="selectWidgetDay(3)" id="mobile-wday-btn-3" class="wday-chip py-1.5 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">T</button>
+                <button type="button" onclick="selectWidgetDay(4)" id="mobile-wday-btn-4" class="wday-chip py-1.5 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">F</button>
+                <button type="button" onclick="selectWidgetDay(5)" id="mobile-wday-btn-5" class="wday-chip py-1.5 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
+                <button type="button" onclick="selectWidgetDay(6)" id="mobile-wday-btn-6" class="wday-chip py-1.5 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">S</button>
               </div>
 
               <!-- Meals Preview Container -->
@@ -680,15 +680,15 @@
                   <span id="mobile-mess-rating-total" class="text-[10px] text-slate-400 font-mono">0 votes</span>
                 </div>
                 <div class="grid grid-cols-3 gap-1.5">
-                  <button type="button" onclick="submitMessRating('good')" id="mobile-btn-rating-good" class="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
+                  <button type="button" onclick="submitMessRating('good')" id="mobile-btn-rating-good" class="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-emerald-500/50 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
                     <span>😋 Good</span>
                     <span id="mobile-count-rating-good" class="font-mono text-[10px] text-slate-400 font-bold ml-0.5">0</span>
                   </button>
-                  <button type="button" onclick="submitMessRating('okay')" id="mobile-btn-rating-okay" class="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-amber-500/50 hover:bg-amber-50/50 dark:hover:bg-amber-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
+                  <button type="button" onclick="submitMessRating('okay')" id="mobile-btn-rating-okay" class="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-amber-500/50 hover:bg-amber-50/50 dark:hover:bg-amber-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
                     <span>😐 Okay</span>
                     <span id="mobile-count-rating-okay" class="font-mono text-[10px] text-slate-400 font-bold ml-0.5">0</span>
                   </button>
-                  <button type="button" onclick="submitMessRating('bad')" id="mobile-btn-rating-bad" class="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-rose-500/50 hover:bg-rose-50/50 dark:hover:bg-rose-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
+                  <button type="button" onclick="submitMessRating('bad')" id="mobile-btn-rating-bad" class="flex items-center justify-center gap-1 py-1.5 px-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:border-rose-500/50 hover:bg-rose-50/50 dark:hover:bg-rose-950/30 text-slate-700 dark:text-slate-300 transition text-[11px]">
                     <span>👎 Bad</span>
                     <span id="mobile-count-rating-bad" class="font-mono text-[10px] text-slate-400 font-bold ml-0.5">0</span>
                   </button>
@@ -706,13 +706,13 @@
 
           <!-- TAB 2: FOUNDATION COURSE SCHEDULE WIDGET -->
           <div id="mobile-drawer-section-schedule" class="hidden space-y-3">
-            <div id="mobile-fc-widget-card" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-xs space-y-3 shadow-sm">
+            <div id="mobile-fc-widget-card" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-4 text-xs space-y-3 shadow-sm">
               <div class="flex items-center justify-between">
                 <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                   <i data-lucide="calendar" class="w-4 h-4 text-indigo-500"></i>
                   <span>Foundation Course</span>
                 </h4>
-                <span id="mobile-fc-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">28 Sep – 10 Oct</span>
+                <span id="mobile-fc-widget-day-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">28 Sep – 10 Oct</span>
               </div>
 
               <!-- Week 1 / Week 2 Quick Switcher & Day Selector -->
@@ -720,8 +720,8 @@
                 <div class="flex items-center justify-between text-[10px] font-semibold text-slate-500 dark:text-slate-400 px-0.5">
                   <span id="mobile-fc-widget-week-label">Week 1 (28 Sep – 3 Oct)</span>
                   <div class="flex items-center gap-1">
-                    <button type="button" onclick="setFcWidgetWeek(1)" id="mobile-fc-w1-btn" class="px-2 py-0.5 rounded-md font-bold bg-indigo-600 text-white transition text-[9px]">W1</button>
-                    <button type="button" onclick="setFcWidgetWeek(2)" id="mobile-fc-w2-btn" class="px-2 py-0.5 rounded-md font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]">W2</button>
+                    <button type="button" onclick="setFcWidgetWeek(1)" id="mobile-fc-w1-btn" class="px-2 py-0.5 rounded font-bold bg-indigo-600 text-white transition text-[9px]">W1</button>
+                    <button type="button" onclick="setFcWidgetWeek(2)" id="mobile-fc-w2-btn" class="px-2 py-0.5 rounded font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition text-[9px]">W2</button>
                   </div>
                 </div>
                 <div class="grid grid-cols-6 gap-1 text-center font-bold text-[10px]" id="mobile-fc-widget-day-chips">
@@ -751,16 +751,16 @@
       </div>
 
       <!-- FEED TOOLBAR: SORT & ACTIVE BOARD HEADER -->
-      <div id="feed-header" class="flex items-center justify-between bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl px-4 py-2.5 shadow-sm transition-colors duration-200">
+      <div id="feed-header" class="flex items-center justify-between bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-md px-4 py-2.5 shadow-sm transition-colors duration-200">
         <div class="flex items-center gap-2">
           <span id="current-board-name" class="font-bold text-sm text-slate-900 dark:text-white">All Discussions</span>
-          <span id="posts-counter-badge" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">0</span>
+          <span id="posts-counter-badge" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">0</span>
         </div>
         
         <!-- Sort tabs -->
-        <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
-          <button onclick="setSort('latest')" id="sort-latest" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-brand-orange text-white">Latest</button>
-          <button onclick="setSort('hot')" id="sort-hot" class="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">Hot 🔥</button>
+        <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-md border border-slate-200 dark:border-slate-800">
+          <button onclick="setSort('latest')" id="sort-latest" class="px-2.5 py-1 rounded text-xs font-bold transition bg-brand-orange text-white">Latest</button>
+          <button onclick="setSort('hot')" id="sort-hot" class="px-2.5 py-1 rounded text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">Hot 🔥</button>
         </div>
       </div>
 
@@ -798,7 +798,7 @@
 
   <!-- MODAL: CREATE NEW POST -->
   <div id="post-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl transition-colors">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md max-w-lg w-full p-5 space-y-4 shadow-2xl transition-colors">
       <div class="flex items-center justify-between">
         <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <i data-lucide="edit-3" class="w-4 h-4 text-brand-orange"></i>
@@ -812,7 +812,7 @@
         <!-- Board Selector -->
         <div>
           <label class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">Select Category / Board:</label>
-          <select id="modal-board-select" onchange="toggleBoardExtraFields()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
+          <select id="modal-board-select" onchange="toggleBoardExtraFields()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
             <option value="resources">📌 Batch Resources (Guides, Mess Menu, Timetables)</option>
             <option value="anonymous">🤫 Anonymous Wall (Post without revealing name)</option>
             <option value="academics">📚 Studies & Viva Prep (Anatomy, Physio, Biochem)</option>
@@ -826,36 +826,36 @@
         <div>
           <label class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">Tag (Optional):</label>
           <div class="flex flex-wrap gap-1.5" id="modal-tag-selector">
-            <button type="button" onclick="selectModalTag('')" id="modal-tag-none" class="modal-tag-chip px-2.5 py-1 rounded-lg border text-[11px] font-bold transition bg-brand-orange text-white border-brand-orange">None</button>
-            <button type="button" onclick="selectModalTag('🚨 Hostel SOS')" id="modal-tag-sos" class="modal-tag-chip px-2.5 py-1 rounded-lg border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🚨 Hostel SOS</button>
-            <button type="button" onclick="selectModalTag('🚖 Cab Share')" id="modal-tag-cab" class="modal-tag-chip px-2.5 py-1 rounded-lg border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🚖 Cab Share</button>
-            <button type="button" onclick="selectModalTag('🩺 Viva Tip')" id="modal-tag-viva" class="modal-tag-chip px-2.5 py-1 rounded-lg border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🩺 Viva Tip</button>
-            <button type="button" onclick="selectModalTag('🎁 Free Giveaway')" id="modal-tag-free" class="modal-tag-chip px-2.5 py-1 rounded-lg border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🎁 Free Giveaway</button>
+            <button type="button" onclick="selectModalTag('')" id="modal-tag-none" class="modal-tag-chip px-2.5 py-1 rounded border text-[11px] font-bold transition bg-brand-orange text-white border-brand-orange">None</button>
+            <button type="button" onclick="selectModalTag('🚨 Hostel SOS')" id="modal-tag-sos" class="modal-tag-chip px-2.5 py-1 rounded border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🚨 Hostel SOS</button>
+            <button type="button" onclick="selectModalTag('🚖 Cab Share')" id="modal-tag-cab" class="modal-tag-chip px-2.5 py-1 rounded border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🚖 Cab Share</button>
+            <button type="button" onclick="selectModalTag('🩺 Viva Tip')" id="modal-tag-viva" class="modal-tag-chip px-2.5 py-1 rounded border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🩺 Viva Tip</button>
+            <button type="button" onclick="selectModalTag('🎁 Free Giveaway')" id="modal-tag-free" class="modal-tag-chip px-2.5 py-1 rounded border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange">🎁 Free Giveaway</button>
           </div>
         </div>
 
         <!-- Title -->
         <div>
           <label class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">Title:</label>
-          <input type="text" id="modal-post-title" placeholder="What's your question or topic?" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
+          <input type="text" id="modal-post-title" placeholder="What's your question or topic?" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
         </div>
 
         <!-- Marketplace Extra Field: Price -->
         <div id="field-market-price" class="hidden">
           <label class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">Price (₹) & Condition:</label>
-          <input type="text" id="modal-market-price" placeholder="e.g. ₹500 · 3rd Edition · Good Condition" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
+          <input type="text" id="modal-market-price" placeholder="e.g. ₹500 · 3rd Edition · Good Condition" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
         </div>
 
         <!-- Content -->
         <div>
           <label class="block text-slate-600 dark:text-slate-400 mb-1 font-semibold">Details:</label>
-          <textarea id="modal-post-content" rows="4" placeholder="Share your thoughts, question, or details..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange"></textarea>
+          <textarea id="modal-post-content" rows="4" placeholder="Share your thoughts, question, or details..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md p-3 text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange"></textarea>
         </div>
 
         <!-- Photo Attachment -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium transition text-xs shadow-sm">
+            <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium transition text-xs shadow-sm">
               <i data-lucide="camera" class="w-4 h-4 text-brand-orange"></i>
               <span>Attach Photo</span>
               <input type="file" id="modal-post-image-input" accept="image/*" class="hidden" onchange="handleImageSelected(event)">
@@ -864,16 +864,16 @@
           </div>
 
           <div id="modal-image-preview-container" class="hidden relative inline-block">
-            <img id="modal-image-preview" src="" class="h-24 w-auto rounded-xl border border-slate-200 dark:border-slate-700 object-cover shadow-sm">
-            <button type="button" onclick="removeSelectedImage()" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center shadow hover:bg-rose-700 transition" title="Remove Photo">
+            <img id="modal-image-preview" src="" class="h-24 w-auto rounded-md border border-slate-200 dark:border-slate-700 object-cover shadow-sm">
+            <button type="button" onclick="removeSelectedImage()" class="absolute -top-2 -right-2 w-6 h-6 rounded bg-rose-600 text-white flex items-center justify-center shadow hover:bg-rose-700 transition" title="Remove Photo">
               <i data-lucide="x" class="w-3.5 h-3.5"></i>
             </button>
           </div>
         </div>
 
         <!-- Anonymous Indicator (Only visible when Anonymous Wall is selected) -->
-        <div id="modal-anon-indicator" class="hidden bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-xl p-3 flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+        <div id="modal-anon-indicator" class="hidden bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-md p-3 flex items-center gap-3">
+          <div class="w-8 h-8 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
             <i data-lucide="eye-off" class="w-4 h-4"></i>
           </div>
           <div class="space-y-0.5">
@@ -887,20 +887,20 @@
       </div>
 
       <div class="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-        <button onclick="closeNewPostModal()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700">Cancel</button>
-        <button onclick="saveNewPost()" class="px-4 py-2 rounded-xl bg-brand-orange text-white text-xs font-bold hover:bg-brand-orangeHover shadow">Publish Thread</button>
+        <button onclick="closeNewPostModal()" class="px-4 py-2 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700">Cancel</button>
+        <button onclick="saveNewPost()" class="px-4 py-2 rounded-md bg-brand-orange text-white text-xs font-bold hover:bg-brand-orangeHover shadow">Publish Thread</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL: CREATE BATCH EVENT & 4K ALBUM (GOOGLE DRIVE POWERED · ZERO STORAGE COST) -->
   <div id="event-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4 select-none">
-    <div class="bg-white dark:bg-[#0b101e] border border-slate-200 dark:border-slate-800/80 rounded-2xl max-w-xl w-full p-5 space-y-4 shadow-2xl transition-colors max-h-[92vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
+    <div class="bg-white dark:bg-[#0b101e] border border-slate-200 dark:border-slate-800/80 rounded-md max-w-xl w-full p-5 space-y-4 shadow-2xl transition-colors max-h-[92vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
       
       <!-- Modal Header -->
       <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 dark:text-cyan-400 flex items-center justify-center">
+          <div class="w-8 h-8 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 dark:text-cyan-400 flex items-center justify-center">
             <i data-lucide="sparkles" class="w-4 h-4"></i>
           </div>
           <div>
@@ -917,14 +917,14 @@
         <!-- 1. Event Name / Title -->
         <div>
           <label class="block text-slate-700 dark:text-slate-300 mb-1 font-bold">1. Event Name / Title *</label>
-          <input type="text" id="modal-event-title" oninput="updateLiveBanner()" placeholder="e.g. 🩺 White Coat Ceremony or 🏕️ Dalma Hills Batch Trek" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-medium">
+          <input type="text" id="modal-event-title" oninput="updateLiveBanner()" placeholder="e.g. 🩺 White Coat Ceremony or 🏕️ Dalma Hills Batch Trek" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-medium">
         </div>
 
         <!-- Category & Venue Row -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-slate-700 dark:text-slate-300 mb-1 font-bold">Category</label>
-            <select id="modal-event-category" onchange="updateLiveBanner()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
+            <select id="modal-event-category" onchange="updateLiveBanner()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
               <option value="ceremony">🩺 Milestone Ceremony (White Coat, Oath)</option>
               <option value="fest">🎉 Fest & Cultural (Freshers, DJ Night)</option>
               <option value="sports">🏆 Sports & Athletics (Cricket, Football)</option>
@@ -936,23 +936,23 @@
 
           <div>
             <label class="block text-slate-700 dark:text-slate-300 mb-1 font-bold">Venue / Location (Optional)</label>
-            <input type="text" id="modal-event-venue" oninput="updateLiveBanner()" placeholder="e.g. Main Auditorium, MTMC" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
+            <input type="text" id="modal-event-venue" oninput="updateLiveBanner()" placeholder="e.g. Main Auditorium, MTMC" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
           </div>
         </div>
 
         <!-- 2. Event Date: Single Day vs Period of Time -->
-        <div class="space-y-1.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
+        <div class="space-y-1.5 p-3 rounded-md bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <label class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-500"></i>
               <span>2. Event Date / Timing *</span>
             </label>
             <!-- Toggle Single Day vs Period of Time -->
-            <div class="inline-flex rounded-lg bg-slate-200 dark:bg-slate-900 p-0.5 text-[11px]">
-              <button type="button" id="btn-date-mode-single" onclick="setEventDateMode('single')" class="px-2.5 py-1 rounded-md font-bold transition bg-cyan-500 text-white shadow-sm">
+            <div class="inline-flex rounded-md bg-slate-200 dark:bg-slate-900 p-0.5 text-[11px]">
+              <button type="button" id="btn-date-mode-single" onclick="setEventDateMode('single')" class="px-2.5 py-1 rounded font-bold transition bg-cyan-500 text-white shadow-sm">
                 Single Day
               </button>
-              <button type="button" id="btn-date-mode-range" onclick="setEventDateMode('range')" class="px-2.5 py-1 rounded-md font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+              <button type="button" id="btn-date-mode-range" onclick="setEventDateMode('range')" class="px-2.5 py-1 rounded font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
                 Period of Time (Range)
               </button>
             </div>
@@ -960,24 +960,24 @@
 
           <!-- Single Day Input -->
           <div id="date-input-container-single" class="pt-1">
-            <input type="date" id="modal-event-date-single" onchange="updateLiveBanner()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs">
+            <input type="date" id="modal-event-date-single" onchange="updateLiveBanner()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs">
           </div>
 
           <!-- Period of Time (Range) Inputs -->
           <div id="date-input-container-range" class="hidden grid grid-cols-2 gap-2 pt-1">
             <div>
               <span class="text-[10px] text-slate-400 block mb-0.5">Start Date:</span>
-              <input type="date" id="modal-event-date-start" onchange="updateLiveBanner()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs">
+              <input type="date" id="modal-event-date-start" onchange="updateLiveBanner()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs">
             </div>
             <div>
               <span class="text-[10px] text-slate-400 block mb-0.5">End Date:</span>
-              <input type="date" id="modal-event-date-end" onchange="updateLiveBanner()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs">
+              <input type="date" id="modal-event-date-end" onchange="updateLiveBanner()" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs">
             </div>
           </div>
         </div>
 
         <!-- 3. Google Drive Folder Link (Viewer Permit) -->
-        <div class="space-y-1.5 p-3 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/40">
+        <div class="space-y-1.5 p-3 rounded-md bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/40">
           <div class="flex items-center justify-between">
             <label class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
               <i data-lucide="folder-symlink" class="w-3.5 h-3.5 text-blue-500"></i>
@@ -985,7 +985,7 @@
             </label>
             <span id="modal-event-drive-status" class="text-[10px] font-mono font-bold text-slate-400"></span>
           </div>
-          <input type="url" id="modal-event-drive" oninput="handleDriveUrlInput()" placeholder="https://drive.google.com/drive/folders/1abcXYZ..." class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs">
+          <input type="url" id="modal-event-drive" oninput="handleDriveUrlInput()" placeholder="https://drive.google.com/drive/folders/1abcXYZ..." class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 font-mono text-xs">
           
           <div class="text-[11px] text-slate-600 dark:text-slate-400 flex items-start gap-1.5 pt-0.5">
             <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5"></i>
@@ -997,7 +997,7 @@
         </div>
 
         <!-- 4. Backcover Banner with Title & Date written on it -->
-        <div class="space-y-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
+        <div class="space-y-2 p-3 rounded-md bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <div>
               <label class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
@@ -1007,7 +1007,7 @@
               <p class="text-[10px] text-slate-400">Shows what event happened with title and date clearly overlaid</p>
             </div>
 
-            <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 font-semibold transition text-xs shadow-sm">
+            <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 font-semibold transition text-xs shadow-sm">
               <i data-lucide="upload" class="w-3.5 h-3.5"></i>
               <span>Upload Cover Photo</span>
               <input type="file" id="modal-event-banner-input" accept="image/*" class="hidden" onchange="handleEventBannerSelected(event)">
@@ -1015,7 +1015,7 @@
           </div>
 
           <!-- Live Canvas Banner Preview -->
-          <div class="relative rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-950 shadow-md aspect-video max-h-48 sm:max-h-56 mx-auto flex items-center justify-center">
+          <div class="relative rounded-md overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-950 shadow-md aspect-video max-h-48 sm:max-h-56 mx-auto flex items-center justify-center">
             <canvas id="event-banner-canvas" width="1280" height="720" class="w-full h-full object-cover"></canvas>
             <div id="banner-canvas-loading" class="hidden absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xs font-semibold">
               Generating Live Banner...
@@ -1027,7 +1027,7 @@
         <!-- Event Description (Optional) -->
         <div>
           <label class="block text-slate-700 dark:text-slate-300 mb-1 font-semibold">Highlights & Note (Optional):</label>
-          <textarea id="modal-event-desc" rows="2" placeholder="Brief highlights, key moments, or batch note..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs"></textarea>
+          <textarea id="modal-event-desc" rows="2" placeholder="Brief highlights, key moments, or batch note..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 text-xs"></textarea>
         </div>
 
       </div>
@@ -1036,8 +1036,8 @@
       <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80">
         <span class="text-[11px] text-slate-400">Zero database bytes for photos</span>
         <div class="flex items-center gap-2">
-          <button type="button" onclick="closeEventModal()" class="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold transition">Cancel</button>
-          <button type="button" onclick="submitBatchEvent()" id="btn-submit-event" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-bold transition shadow-lg flex items-center gap-1.5">
+          <button type="button" onclick="closeEventModal()" class="px-4 py-2 rounded-md text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold transition">Cancel</button>
+          <button type="button" onclick="submitBatchEvent()" id="btn-submit-event" class="px-5 py-2 rounded-md bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-bold transition shadow-lg flex items-center gap-1.5">
             <i data-lucide="check" class="w-3.5 h-3.5"></i>
             <span>Publish Event</span>
           </button>
@@ -1048,14 +1048,14 @@
 
   <!-- MODAL: DEDICATED EVENT 4K ALBUM VIEWER (DIRECT GOOGLE DRIVE FOLDER) -->
   <div id="event-viewer-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4 select-none">
-    <div class="bg-white dark:bg-[#0b101e] border border-slate-200 dark:border-slate-800/80 rounded-2xl max-w-4xl w-full p-4 sm:p-6 space-y-4 shadow-2xl transition-colors max-h-[96vh] overflow-y-auto no-scrollbar flex flex-col" onclick="event.stopPropagation()">
+    <div class="bg-white dark:bg-[#0b101e] border border-slate-200 dark:border-slate-800/80 rounded-md max-w-4xl w-full p-4 sm:p-6 space-y-4 shadow-2xl transition-colors max-h-[96vh] overflow-y-auto no-scrollbar flex flex-col" onclick="event.stopPropagation()">
       
       <!-- Top Bar: Event Header & Metadata -->
       <div class="space-y-3 pb-3 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <div class="flex items-start justify-between gap-3">
           <div class="space-y-1">
             <div class="flex items-center gap-2 flex-wrap">
-              <span id="viewer-event-category-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full border"></span>
+              <span id="viewer-event-category-badge" class="text-xs font-bold px-2.5 py-0.5 rounded border"></span>
               <span id="viewer-event-date" class="text-xs font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1"></span>
               <span id="viewer-event-venue" class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1"></span>
             </div>
@@ -1069,7 +1069,7 @@
           </div>
 
           <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="closeEventViewer()" class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-300">
+            <button type="button" onclick="closeEventViewer()" class="w-8 h-8 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-300">
               <i data-lucide="x" class="w-4 h-4"></i>
             </button>
           </div>
@@ -1078,11 +1078,11 @@
         <!-- Action Buttons Bar -->
         <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
           <div class="flex items-center gap-2 flex-wrap">
-            <a id="viewer-btn-open-drive" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+            <a id="viewer-btn-open-drive" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
               <i data-lucide="folder-symlink" class="w-3.5 h-3.5"></i>
               <span>Open in Google Drive ↗</span>
             </a>
-            <button type="button" onclick="refreshEventViewerIframe()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold transition flex items-center gap-1.5">
+            <button type="button" onclick="refreshEventViewerIframe()" class="px-3 py-1.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold transition flex items-center gap-1.5">
               <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
               <span>Reload Folder</span>
             </button>
@@ -1095,44 +1095,44 @@
       </div>
 
       <!-- Main Viewer Area: Responsive Photo Collage Grid (Default) or Embedded Drive Folder -->
-      <div class="relative w-full flex-1 min-h-[480px] sm:min-h-[580px] rounded-2xl border border-slate-700/80 bg-slate-950 shadow-2xl flex flex-col overflow-hidden">
+      <div class="relative w-full flex-1 min-h-[480px] sm:min-h-[580px] rounded-md border border-slate-700/80 bg-slate-950 shadow-2xl flex flex-col overflow-hidden">
         <!-- Top Toolbar with View Mode Toggles -->
         <div class="flex items-center justify-between p-3 bg-slate-900/90 border-b border-slate-800/80 shrink-0 text-xs flex-wrap gap-2">
           <div class="flex items-center gap-2">
-            <button type="button" id="viewer-mode-collage-btn" onclick="setEventViewMode('collage')" class="px-3 py-1.5 rounded-lg font-bold bg-cyan-600 text-white transition flex items-center gap-1.5 shadow-sm">
-              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
-              <span>Photo Collage (<span id="viewer-collage-count">0</span>)</span>
-            </button>
-            <button type="button" id="viewer-mode-drive-btn" onclick="setEventViewMode('drive')" class="px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5">
+            <button type="button" id="viewer-mode-drive-btn" onclick="setEventViewMode('drive')" class="px-3 py-1.5 rounded font-bold bg-cyan-600 text-white transition flex items-center gap-1.5 shadow-sm">
               <i data-lucide="folder" class="w-3.5 h-3.5"></i>
               <span>Google Drive View</span>
             </button>
+            <button type="button" id="viewer-mode-collage-btn" onclick="setEventViewMode('collage')" class="px-3 py-1.5 rounded font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span>Photo Collage</span>
+            </button>
           </div>
           <span class="text-[11px] text-slate-400 hidden sm:inline-flex items-center gap-1">
-            <i data-lucide="zoom-in" class="w-3 h-3 text-cyan-400"></i> Tap photo to zoom & pan in 4K
+            <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i> Direct 100% Free CDN Stream (Zero API)
           </span>
         </div>
 
-        <!-- Mode 1: Photo Collage Grid (Primary) -->
-        <div id="viewer-collage-container" class="flex-1 p-3 sm:p-4 overflow-y-auto max-h-[520px]">
+        <!-- Mode 1: Embedded Google Drive Folder Iframe (Primary 100% Free View) -->
+        <div id="viewer-drive-container" class="flex-1 w-full h-full min-h-[480px]">
+          <iframe id="viewer-drive-iframe" src="" class="w-full h-full min-h-[480px] sm:min-h-[520px] border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <!-- Mode 2: Photo Collage Grid (Optional) -->
+        <div id="viewer-collage-container" class="hidden flex-1 p-3 sm:p-4 overflow-y-auto max-h-[520px]">
           <div id="viewer-direct-photos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3">
             <!-- Injected via JS -->
           </div>
           <div id="viewer-collage-empty" class="hidden py-16 text-center text-slate-400 space-y-2">
             <i data-lucide="images" class="w-8 h-8 mx-auto text-slate-600"></i>
-            <p class="font-bold text-xs">Loading photos or Google Drive permission restricted</p>
-            <p class="text-[11px] text-slate-500">Switch to Google Drive View above or verify folder has "Anyone with link can view".</p>
+            <p class="font-bold text-xs">Switch to Google Drive View above to browse all event photos</p>
+            <p class="text-[11px] text-slate-500">Google Drive View streams 4K originals directly with zero setup required.</p>
           </div>
-        </div>
-
-        <!-- Mode 2: Embedded Google Drive Folder Iframe -->
-        <div id="viewer-drive-container" class="hidden flex-1 w-full h-full min-h-[480px]">
-          <iframe id="viewer-drive-iframe" src="" class="w-full h-full min-h-[480px] sm:min-h-[520px] border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
 
       <!-- Permission Helper Notice -->
-      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between gap-2">
+      <div class="p-2.5 rounded-md bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between gap-2">
         <span class="flex items-center gap-1.5">
           <i data-lucide="info" class="w-3.5 h-3.5 text-cyan-500 shrink-0"></i>
           <span>Photos stream live from Google Drive. Folder link must be set to <strong>"Anyone with the link can view"</strong>.</span>
@@ -1149,31 +1149,31 @@
     <!-- Top Floating Control Bar -->
     <div class="w-full px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between bg-black/60 backdrop-blur-md border-b border-white/10 z-20 shrink-0" onclick="event.stopPropagation()">
       <div class="flex items-center gap-2 text-white">
-        <span id="lightbox-zoom-badge" class="px-2.5 py-0.5 rounded-full bg-white/10 border border-white/20 text-xs font-mono font-bold text-brand-orange">100%</span>
+        <span id="lightbox-zoom-badge" class="px-2.5 py-0.5 rounded bg-white/10 border border-white/20 text-xs font-mono font-bold text-brand-orange">100%</span>
         <span class="text-[11px] text-white/70 hidden md:inline">Click/Tap image to zoom • Drag/swipe to pan</span>
       </div>
 
       <div class="flex items-center gap-1 sm:gap-2">
-        <button type="button" onclick="zoomLightbox(-0.35)" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition text-xs flex items-center gap-1" title="Zoom Out (-)">
+        <button type="button" onclick="zoomLightbox(-0.35)" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white transition text-xs flex items-center gap-1" title="Zoom Out (-)">
           <i data-lucide="zoom-out" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Zoom Out</span>
         </button>
-        <button type="button" onclick="resetLightboxZoom()" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition text-xs font-semibold flex items-center gap-1" title="Reset Zoom (100%)">
+        <button type="button" onclick="resetLightboxZoom()" class="px-2.5 py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white transition text-xs font-semibold flex items-center gap-1" title="Reset Zoom (100%)">
           <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
           <span>Reset</span>
         </button>
-        <button type="button" onclick="zoomLightbox(0.35)" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition text-xs flex items-center gap-1" title="Zoom In (+)">
+        <button type="button" onclick="zoomLightbox(0.35)" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-md bg-white/10 hover:bg-white/20 text-white transition text-xs flex items-center gap-1" title="Zoom In (+)">
           <i data-lucide="zoom-in" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Zoom In</span>
         </button>
-        <a id="lightbox-download-btn" href="#" download="mtmc26_hd_photo.jpg" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-cyan-600/80 hover:bg-cyan-600 text-white transition text-xs font-semibold flex items-center gap-1 shadow" title="Download HD Original Photo">
+        <a id="lightbox-download-btn" href="#" download="mtmc26_hd_photo.jpg" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-md bg-cyan-600/80 hover:bg-cyan-600 text-white transition text-xs font-semibold flex items-center gap-1 shadow" title="Download HD Original Photo">
           <i data-lucide="download" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Save HD</span>
         </a>
-        <button type="button" onclick="openLightboxFullImage()" class="p-1.5 sm:p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition text-xs flex items-center justify-center" title="Open Full Size Photo">
+        <button type="button" onclick="openLightboxFullImage()" class="p-1.5 sm:p-2 rounded-md bg-white/10 hover:bg-white/20 text-white transition text-xs flex items-center justify-center" title="Open Full Size Photo">
           <i data-lucide="external-link" class="w-4 h-4"></i>
         </button>
-        <button type="button" onclick="closeLightbox()" class="p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-rose-600/85 hover:bg-rose-600 text-white transition text-xs font-bold flex items-center gap-1 ml-1 sm:ml-2 shadow" title="Close Viewer">
+        <button type="button" onclick="closeLightbox()" class="p-1.5 sm:px-3 sm:py-1.5 rounded-md bg-rose-600/85 hover:bg-rose-600 text-white transition text-xs font-bold flex items-center gap-1 ml-1 sm:ml-2 shadow" title="Close Viewer">
           <i data-lucide="x" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Close</span>
         </button>
@@ -1182,7 +1182,7 @@
 
     <!-- Main Viewport Area (Captures Click / Drag / Pinch / Mouse Wheel) -->
     <div id="lightbox-viewport" class="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center cursor-zoom-in touch-none p-2">
-      <img id="lightbox-img" src="" alt="Enlarged study photo" class="max-w-full max-h-[85vh] object-contain transition-transform duration-150 ease-out will-change-transform shadow-2xl pointer-events-auto rounded-lg" draggable="false">
+      <img id="lightbox-img" src="" alt="Enlarged study photo" class="max-w-full max-h-[85vh] object-contain transition-transform duration-150 ease-out will-change-transform shadow-2xl pointer-events-auto rounded-md" draggable="false">
     </div>
 
     <!-- Bottom Caption & Credit Bar (HD Metadata) -->
@@ -1197,10 +1197,10 @@
 
   <!-- MODAL: COMMUNITY CODE OF CONDUCT & TERMS -->
   <div id="rules-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl transition-colors">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md max-w-lg w-full p-5 space-y-4 shadow-2xl transition-colors">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-lg bg-orange-500/10 border border-orange-500/20 text-brand-orange flex items-center justify-center">
+          <div class="w-7 h-7 rounded bg-orange-500/10 border border-orange-500/20 text-brand-orange flex items-center justify-center">
             <i data-lucide="shield-check" class="w-4 h-4"></i>
           </div>
           <div>
@@ -1214,7 +1214,7 @@
       <div class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300 max-h-[60vh] overflow-y-auto pr-1">
         
         <!-- Non-Affiliation Disclaimer -->
-        <div class="p-3 rounded-xl bg-orange-500/5 border border-orange-500/20 space-y-1">
+        <div class="p-3 rounded-md bg-orange-500/5 border border-orange-500/20 space-y-1">
           <p class="font-bold text-brand-orange flex items-center gap-1.5">
             <i data-lucide="info" class="w-3.5 h-3.5"></i> 1. Independent Student Network (Non-Affiliation)
           </p>
@@ -1224,7 +1224,7 @@
         </div>
 
         <!-- Personal Legal Liability -->
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
+        <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
           <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
             <i data-lucide="scale" class="w-3.5 h-3.5 text-blue-500"></i> 2. Individual Personal & Legal Responsibility
           </p>
@@ -1234,7 +1234,7 @@
         </div>
 
         <!-- Medical Ethics & Patient Privacy -->
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
+        <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
           <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
             <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-emerald-500"></i> 3. Medical Ethics & Patient Confidentiality
           </p>
@@ -1244,7 +1244,7 @@
         </div>
 
         <!-- Anti-Bullying & Defamation Protection -->
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
+        <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
           <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
             <i data-lucide="alert-octagon" class="w-3.5 h-3.5 text-rose-500"></i> 4. Anti-Bullying, Zero Harassment & Defamation Protection
           </p>
@@ -1254,7 +1254,7 @@
         </div>
 
         <!-- Anonymous Wall Safeguards -->
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
+        <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
           <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
             <i data-lucide="eye-off" class="w-3.5 h-3.5 text-purple-500"></i> 5. Anonymous Wall Integrity & Anti-Doxxing
           </p>
@@ -1264,7 +1264,7 @@
         </div>
 
         <!-- Batch Exclusivity & Single Identity -->
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
+        <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
           <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
             <i data-lucide="user-check" class="w-3.5 h-3.5 text-amber-500"></i> 6. Batch Exclusivity & Single Identity Policy
           </p>
@@ -1275,16 +1275,16 @@
 
       </div>
 
-      <button onclick="closeRulesModal()" class="w-full py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow">I Understand & Accept These Terms</button>
+      <button onclick="closeRulesModal()" class="w-full py-2.5 rounded-md bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow">I Understand & Accept These Terms</button>
     </div>
   </div>
 
   <!-- MODAL: BATCH MODERATOR DASHBOARD -->
   <div id="admin-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-xl w-full p-5 space-y-4 shadow-2xl transition-colors">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md max-w-xl w-full p-5 space-y-4 shadow-2xl transition-colors">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+          <div class="w-7 h-7 rounded bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
             <i data-lucide="shield" class="w-4 h-4"></i>
           </div>
           <div>
@@ -1296,31 +1296,31 @@
       </div>
 
       <!-- Admin Tabs -->
-      <div class="flex rounded-xl bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 text-[11px] sm:text-xs gap-1 overflow-x-auto">
-        <button onclick="switchAdminTab('pending')" id="tab-admin-pending" class="flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-brand-orange text-white flex items-center justify-center gap-1 shrink-0">
+      <div class="flex rounded-md bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 text-[11px] sm:text-xs gap-1 overflow-x-auto">
+        <button onclick="switchAdminTab('pending')" id="tab-admin-pending" class="flex-1 py-1.5 px-2 rounded font-bold transition bg-brand-orange text-white flex items-center justify-center gap-1 shrink-0">
           <span>Verifications</span>
-          <span id="admin-tab-pending-badge" class="px-1.5 py-0.2 rounded-full bg-white text-brand-orange text-[10px] font-extrabold hidden">0</span>
+          <span id="admin-tab-pending-badge" class="px-1.5 py-0.2 rounded bg-white text-brand-orange text-[10px] font-extrabold hidden">0</span>
         </button>
-        <button onclick="switchAdminTab('review-queue')" id="tab-admin-review-queue" class="flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
+        <button onclick="switchAdminTab('review-queue')" id="tab-admin-review-queue" class="flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
           <span>Review</span>
-          <span id="admin-tab-review-badge" class="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
+          <span id="admin-tab-review-badge" class="px-1.5 py-0.2 rounded bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
         </button>
-        <button onclick="switchAdminTab('profile-requests')" id="tab-admin-profile-requests" class="flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
+        <button onclick="switchAdminTab('profile-requests')" id="tab-admin-profile-requests" class="flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
           <span>Profiles</span>
-          <span id="admin-tab-profile-badge" class="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
+          <span id="admin-tab-profile-badge" class="px-1.5 py-0.2 rounded bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
         </button>
-        <button onclick="switchAdminTab('deletions')" id="tab-admin-deletions" class="flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
+        <button onclick="switchAdminTab('deletions')" id="tab-admin-deletions" class="flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
           <span>Deletions</span>
-          <span id="admin-tab-deletions-badge" class="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
+          <span id="admin-tab-deletions-badge" class="px-1.5 py-0.2 rounded bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
         </button>
-        <button onclick="switchAdminTab('roster')" id="tab-admin-roster" class="flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition shrink-0">Roster</button>
-        <button onclick="switchAdminTab('frozen')" id="tab-admin-frozen" class="hidden flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
+        <button onclick="switchAdminTab('roster')" id="tab-admin-roster" class="flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition shrink-0">Roster</button>
+        <button onclick="switchAdminTab('frozen')" id="tab-admin-frozen" class="hidden flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
           <span>❄️ Frozen</span>
-          <span id="admin-tab-frozen-badge" class="px-1.5 py-0.2 rounded-full bg-cyan-500 text-white text-[10px] font-extrabold hidden">0</span>
+          <span id="admin-tab-frozen-badge" class="px-1.5 py-0.2 rounded bg-cyan-500 text-white text-[10px] font-extrabold hidden">0</span>
         </button>
-        <button onclick="switchAdminTab('feedback')" id="tab-admin-feedback" class="hidden flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
+        <button onclick="switchAdminTab('feedback')" id="tab-admin-feedback" class="hidden flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0">
           <span>💡 Feedback</span>
-          <span id="admin-tab-feedback-badge" class="px-1.5 py-0.2 rounded-full bg-amber-500 text-white text-[10px] font-extrabold hidden">0</span>
+          <span id="admin-tab-feedback-badge" class="px-1.5 py-0.2 rounded bg-amber-500 text-white text-[10px] font-extrabold hidden">0</span>
         </button>
       </div>
 
@@ -1355,7 +1355,7 @@
       <!-- Tab: Batch Roster -->
       <div id="admin-section-roster" class="hidden space-y-3 max-h-[55vh] overflow-y-auto pr-1">
         <div class="flex items-center gap-2">
-          <input type="text" id="roster-search-input" oninput="renderRosterList()" placeholder="Search by student full name, username, or phone..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
+          <input type="text" id="roster-search-input" oninput="renderRosterList()" placeholder="Search by student full name, username, or phone..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
         </div>
         <div id="batch-roster-list" class="space-y-2">
           <!-- Injected via JavaScript -->
@@ -1364,7 +1364,7 @@
 
       <!-- Tab: Frozen Usernames (Ghost Admin Exclusive) -->
       <div id="admin-section-frozen" class="hidden space-y-3 max-h-[55vh] overflow-y-auto pr-1">
-        <div class="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+        <div class="p-2.5 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-1">
           <div class="flex items-center justify-between">
             <span class="font-bold text-cyan-600 dark:text-cyan-400 flex items-center gap-1">
               <i data-lucide="snowflake" class="w-3.5 h-3.5"></i>
@@ -1379,7 +1379,7 @@
           </p>
         </div>
         <div class="flex items-center gap-2">
-          <input type="text" id="frozen-search-input" oninput="filterFrozenList()" placeholder="Filter frozen handles..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
+          <input type="text" id="frozen-search-input" oninput="filterFrozenList()" placeholder="Filter frozen handles..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500">
         </div>
         <div id="admin-frozen-list" class="space-y-2">
           <!-- Injected via JavaScript -->
@@ -1388,7 +1388,7 @@
 
       <!-- Tab: Feedback & Feature Requests (Ghost Admin Exclusive) -->
       <div id="admin-section-feedback" class="hidden space-y-3 max-h-[55vh] overflow-y-auto pr-1">
-        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+        <div class="p-2.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-1">
           <div class="flex items-center justify-between">
             <span class="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
               <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
@@ -1401,7 +1401,7 @@
           </p>
         </div>
         <div class="flex items-center gap-2">
-          <input type="text" id="feedback-search-input" oninput="renderFeedbackList()" placeholder="Filter feedback by title, category, or author..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
+          <input type="text" id="feedback-search-input" oninput="renderFeedbackList()" placeholder="Filter feedback by title, category, or author..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
         </div>
         <div id="admin-feedback-list" class="space-y-2">
           <!-- Injected via JavaScript -->
@@ -1412,12 +1412,12 @@
 
   <!-- MODAL: USER PROFILE & SETTINGS -->
   <div id="profile-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl transition-colors max-h-[92vh] overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md max-w-md w-full p-5 space-y-4 shadow-2xl transition-colors max-h-[92vh] overflow-y-auto">
       
       <!-- Modal Header -->
       <div class="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-800">
         <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-lg bg-orange-500/10 border border-orange-500/20 text-brand-orange flex items-center justify-center font-bold">
+          <div class="w-7 h-7 rounded bg-orange-500/10 border border-orange-500/20 text-brand-orange flex items-center justify-center font-bold">
             <i data-lucide="user-cog" class="w-4 h-4"></i>
           </div>
           <div>
@@ -1429,15 +1429,15 @@
       </div>
 
       <!-- Identity Summary Card -->
-      <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
+      <div class="bg-slate-50 dark:bg-slate-950 p-3.5 rounded-md border border-slate-200 dark:border-slate-800 space-y-3">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-2xl bg-orange-500/15 border border-orange-500/25 text-brand-orange font-black text-base flex items-center justify-center shrink-0 shadow-sm" id="profile-modal-avatar">
+          <div class="w-12 h-12 rounded-md bg-orange-500/15 border border-orange-500/25 text-brand-orange font-black text-base flex items-center justify-center shrink-0 shadow-sm" id="profile-modal-avatar">
             B26
           </div>
           <div class="min-w-0 flex-1">
             <div class="flex items-center gap-1.5 flex-wrap">
               <h4 class="text-sm font-bold text-slate-900 dark:text-white truncate" id="profile-modal-fullname"></h4>
-              <span class="px-2 py-0.2 rounded-full text-[9px] font-extrabold uppercase bg-brand-orange/10 text-brand-orange border border-brand-orange/20" id="profile-modal-role"></span>
+              <span class="px-2 py-0.2 rounded text-[9px] font-extrabold uppercase bg-brand-orange/10 text-brand-orange border border-brand-orange/20" id="profile-modal-role"></span>
             </div>
             <p class="text-xs text-brand-orange font-mono font-semibold" id="profile-modal-username"></p>
             <p class="text-[10px]" id="profile-modal-status"></p>
@@ -1445,14 +1445,14 @@
         </div>
 
         <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/80 text-[11px]">
-          <div class="bg-white dark:bg-slate-900 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div class="bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
             <span class="text-slate-400 block text-[10px] flex items-center gap-1">
               <span>Mobile Phone</span>
               <i data-lucide="lock" class="w-3 h-3 text-slate-400" title="Primary Identity Identifier • Locked"></i>
             </span>
             <span id="profile-modal-phone" class="font-mono font-semibold text-slate-700 dark:text-slate-300"></span>
           </div>
-          <div class="bg-white dark:bg-slate-900 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+          <div class="bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
             <span class="text-slate-400 block text-[10px]">Verification Token</span>
             <span id="profile-modal-token" class="font-mono font-bold text-brand-orange"></span>
           </div>
@@ -1460,23 +1460,23 @@
       </div>
 
       <!-- Settings Sub-Tabs -->
-      <div class="flex rounded-xl bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 text-xs gap-1">
-        <button type="button" onclick="switchProfileTab('identity')" id="profile-tab-btn-identity" class="flex-1 py-1.5 rounded-lg font-bold transition bg-brand-orange text-white text-center flex items-center justify-center">
+      <div class="flex rounded-md bg-slate-100 dark:bg-slate-950 p-1 border border-slate-200 dark:border-slate-800 text-xs gap-1">
+        <button type="button" onclick="switchProfileTab('identity')" id="profile-tab-btn-identity" class="flex-1 py-1.5 rounded font-bold transition bg-brand-orange text-white text-center flex items-center justify-center">
           Edit Identity
         </button>
-        <button type="button" onclick="switchProfileTab('security')" id="profile-tab-btn-security" class="flex-1 py-1.5 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center flex items-center justify-center">
+        <button type="button" onclick="switchProfileTab('security')" id="profile-tab-btn-security" class="flex-1 py-1.5 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center flex items-center justify-center">
           Password
         </button>
-        <button type="button" onclick="switchProfileTab('trash')" id="profile-tab-btn-trash" class="flex-1 py-1.5 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center flex items-center justify-center gap-1">
+        <button type="button" onclick="switchProfileTab('trash')" id="profile-tab-btn-trash" class="flex-1 py-1.5 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center flex items-center justify-center gap-1">
           <span>Trash</span>
-          <span id="profile-trash-badge" class="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
+          <span id="profile-trash-badge" class="px-1.5 py-0.2 rounded bg-rose-500 text-white text-[10px] font-extrabold hidden">0</span>
         </button>
       </div>
 
       <!-- Sub-Tab: Edit Identity (Subject to Mod Approval) -->
       <div id="profile-section-identity" class="space-y-3 text-xs">
         <!-- Pending Notice (Shown when request exists) -->
-        <div id="profile-pending-request-notice" class="hidden p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 space-y-2">
+        <div id="profile-pending-request-notice" class="hidden p-3 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 space-y-2">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
             <span class="font-bold text-xs">Profile Change Request Under Review</span>
@@ -1487,7 +1487,7 @@
             <p><strong>Reason:</strong> <span id="pending-req-display-reason" class="italic"></span></p>
           </div>
           <p class="text-[10px] text-amber-700 dark:text-amber-400">Your current handle remains active until a Batch Moderator reviews your request.</p>
-          <button type="button" onclick="cancelProfileUpdateRequest()" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-amber-500/30 hover:bg-rose-500 hover:text-white text-rose-600 dark:text-rose-400 text-xs font-semibold transition">
+          <button type="button" onclick="cancelProfileUpdateRequest()" class="px-2.5 py-1 rounded bg-white dark:bg-slate-900 border border-amber-500/30 hover:bg-rose-500 hover:text-white text-rose-600 dark:text-rose-400 text-xs font-semibold transition">
             Cancel Request
           </button>
         </div>
@@ -1496,24 +1496,24 @@
         <div id="profile-identity-form" class="space-y-3">
           <div class="space-y-1">
             <label class="block font-bold text-slate-700 dark:text-slate-300 text-xs">Student Full Name</label>
-            <input type="text" id="profile-edit-fullname" placeholder="Full Name as per College Records" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
+            <input type="text" id="profile-edit-fullname" placeholder="Full Name as per College Records" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
           </div>
 
           <div class="space-y-1">
             <label class="block font-bold text-slate-700 dark:text-slate-300 text-xs">Username Handle</label>
             <div class="relative">
               <span class="absolute left-3 top-2 text-slate-400 font-mono text-xs">@</span>
-              <input type="text" id="profile-edit-username" placeholder="chosen_handle" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl pl-7 pr-3 py-2 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-brand-orange">
+              <input type="text" id="profile-edit-username" placeholder="chosen_handle" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md pl-7 pr-3 py-2 text-xs text-slate-900 dark:text-white font-mono focus:outline-none focus:border-brand-orange">
             </div>
             <p class="text-[10px] text-slate-400">3–20 lowercase letters, numbers, and underscores.</p>
           </div>
 
           <div class="space-y-1">
             <label class="block font-bold text-slate-700 dark:text-slate-300 text-xs">Reason for Change (Optional)</label>
-            <input type="text" id="profile-edit-reason" placeholder="e.g. Correcting spelling, preferred campus nickname" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
+            <input type="text" id="profile-edit-reason" placeholder="e.g. Correcting spelling, preferred campus nickname" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
           </div>
 
-          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-1">
+          <div class="p-2.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 space-y-1">
             <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-brand-orange"></i>
               <span>Moderation Policy</span>
@@ -1521,9 +1521,9 @@
             <p>To prevent impersonation and maintain trust in the Batch Marketplace, name and handle changes require approval by a Batch Moderator.</p>
           </div>
 
-          <div id="profile-edit-error" class="hidden p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold"></div>
+          <div id="profile-edit-error" class="hidden p-2 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold"></div>
 
-          <button type="button" onclick="submitProfileChangeRequest()" class="w-full py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow">
+          <button type="button" onclick="submitProfileChangeRequest()" class="w-full py-2 rounded-md bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow">
             Request Moderator Approval
           </button>
         </div>
@@ -1534,7 +1534,7 @@
         <div class="space-y-1">
           <label class="block font-bold text-slate-700 dark:text-slate-300 text-xs">Current Password</label>
           <div class="relative">
-            <input type="password" id="pass-current-input" placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange pr-9">
+            <input type="password" id="pass-current-input" placeholder="••••••••" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange pr-9">
             <button type="button" onclick="togglePasswordVisibility('pass-current-input', 'eye-curr-pass')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-white">
               <i data-lucide="eye" id="eye-curr-pass" class="w-3.5 h-3.5"></i>
             </button>
@@ -1544,7 +1544,7 @@
         <div class="space-y-1">
           <label class="block font-bold text-slate-700 dark:text-slate-300 text-xs">New Password</label>
           <div class="relative">
-            <input type="password" id="pass-new-input" placeholder="Minimum 6 characters" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange pr-9">
+            <input type="password" id="pass-new-input" placeholder="Minimum 6 characters" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange pr-9">
             <button type="button" onclick="togglePasswordVisibility('pass-new-input', 'eye-new-pass')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-white">
               <i data-lucide="eye" id="eye-new-pass" class="w-3.5 h-3.5"></i>
             </button>
@@ -1553,20 +1553,20 @@
 
         <div class="space-y-1">
           <label class="block font-bold text-slate-700 dark:text-slate-300 text-xs">Confirm New Password</label>
-          <input type="password" id="pass-confirm-input" placeholder="Repeat new password" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
+          <input type="password" id="pass-confirm-input" placeholder="Repeat new password" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange">
         </div>
 
-        <div id="pass-change-error" class="hidden p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold"></div>
-        <div id="pass-change-success" class="hidden p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold"></div>
+        <div id="pass-change-error" class="hidden p-2 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold"></div>
+        <div id="pass-change-success" class="hidden p-2 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold"></div>
 
-        <button type="button" onclick="submitPasswordChange()" class="w-full py-2 rounded-xl bg-slate-900 hover:bg-black dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold transition shadow">
+        <button type="button" onclick="submitPasswordChange()" class="w-full py-2 rounded-md bg-slate-900 hover:bg-black dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold transition shadow">
           Update Password Now
         </button>
       </div>
 
       <!-- Sub-Tab: Trash & Mistaken Deletion Recovery -->
       <div id="profile-section-trash" class="hidden space-y-3 text-xs max-h-[50vh] overflow-y-auto pr-1">
-        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400 flex items-start gap-2">
+        <div class="p-2.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400 flex items-start gap-2">
           <i data-lucide="archive-restore" class="w-4 h-4 text-brand-orange shrink-0 mt-0.5"></i>
           <div>
             <p class="font-bold text-slate-800 dark:text-slate-200">7-Day Mistaken Deletion Recovery</p>
@@ -1581,7 +1581,7 @@
 
       <!-- Community Feedback Trigger in Profile -->
       <div class="pt-1">
-        <button type="button" onclick="closeProfileModal(); openFeedbackModal();" class="w-full py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold transition flex items-center justify-center gap-2">
+        <button type="button" onclick="closeProfileModal(); openFeedbackModal();" class="w-full py-2 px-3 rounded-md bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold transition flex items-center justify-center gap-2">
           <i data-lucide="lightbulb" class="w-4 h-4"></i>
           <span>Suggest a Feature / Give Feedback</span>
         </button>
@@ -1589,11 +1589,11 @@
 
       <!-- Footer Actions -->
       <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-        <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold transition flex items-center gap-1.5">
+        <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-md bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold transition flex items-center gap-1.5">
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
           <span>Log Out</span>
         </button>
-        <button type="button" onclick="closeProfileModal()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition">
+        <button type="button" onclick="closeProfileModal()" class="px-3.5 py-1.5 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition">
           Close
         </button>
       </div>
@@ -1603,11 +1603,11 @@
 
   <!-- MODAL: COMMUNITY FEEDBACK & FEATURE SUGGESTIONS -->
   <div id="feedback-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4" onclick="handleFeedbackBackdropClick(event)">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-5 space-y-4 shadow-2xl transition-colors max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md max-w-md w-full p-5 space-y-4 shadow-2xl transition-colors max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
       <!-- Modal Header -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center font-bold">
+          <div class="w-8 h-8 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center font-bold">
             <i data-lucide="lightbulb" class="w-4 h-4"></i>
           </div>
           <div>
@@ -1623,7 +1623,7 @@
         <!-- Category Selector -->
         <div class="space-y-1">
           <label class="block font-bold text-slate-700 dark:text-slate-300">Category</label>
-          <select id="feedback-category-input" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
+          <select id="feedback-category-input" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
             <option value="Feature Idea">💡 Feature Idea / Improvement</option>
             <option value="Bug Report">🐛 Bug Report / Broken Function</option>
             <option value="Design / UI Tweak">🎨 Design / UI Tweak</option>
@@ -1636,17 +1636,17 @@
         <!-- Title -->
         <div class="space-y-1">
           <label class="block font-bold text-slate-700 dark:text-slate-300">Short Summary / Title</label>
-          <input type="text" id="feedback-title-input" placeholder="e.g. Dark mode timetable export, or custom note sharing..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500" maxlength="120">
+          <input type="text" id="feedback-title-input" placeholder="e.g. Dark mode timetable export, or custom note sharing..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500" maxlength="120">
         </div>
 
         <!-- Description -->
         <div class="space-y-1">
           <label class="block font-bold text-slate-700 dark:text-slate-300">Details & Thoughts</label>
-          <textarea id="feedback-desc-input" rows="4" placeholder="Describe the feature or problem clearly. Share how it will benefit our batch..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"></textarea>
+          <textarea id="feedback-desc-input" rows="4" placeholder="Describe the feature or problem clearly. Share how it will benefit our batch..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-md px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"></textarea>
         </div>
 
         <!-- Anonymous Option -->
-        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer select-none">
+        <label class="flex items-center gap-2 p-2.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer select-none">
           <input type="checkbox" id="feedback-anon-checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900">
           <div class="text-[11px] leading-tight">
             <span class="font-bold text-slate-800 dark:text-slate-200">Submit Anonymously</span>
@@ -1657,8 +1657,8 @@
 
       <!-- Action Buttons -->
       <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2 shrink-0">
-        <button type="button" onclick="closeFeedbackModal()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition">Cancel</button>
-        <button type="button" id="feedback-submit-btn" onclick="submitCommunityFeedback()" class="px-4 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+        <button type="button" onclick="closeFeedbackModal()" class="px-3.5 py-1.5 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition">Cancel</button>
+        <button type="button" id="feedback-submit-btn" onclick="submitCommunityFeedback()" class="px-4 py-1.5 rounded-md bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-1.5">
           <i data-lucide="send" class="w-3.5 h-3.5"></i>
           <span>Send to Developer</span>
         </button>
@@ -1668,11 +1668,11 @@
 
   <!-- MODAL: REAL-TIME NOTIFICATIONS CENTER (REDDIT STYLE) -->
   <div id="notif-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4" onclick="handleNotifBackdropClick(event)">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-4 sm:p-5 space-y-3.5 shadow-2xl transition-colors max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md max-w-md w-full p-4 sm:p-5 space-y-3.5 shadow-2xl transition-colors max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
       <!-- Header -->
       <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-orange-500/10 text-brand-orange flex items-center justify-center">
+          <div class="w-8 h-8 rounded-md bg-orange-500/10 text-brand-orange flex items-center justify-center">
             <i data-lucide="bell" class="w-4 h-4"></i>
           </div>
           <div>
@@ -1684,7 +1684,7 @@
           <button type="button" onclick="markAllNotificationsAsRead()" class="text-[11px] font-semibold text-brand-orange hover:underline">
             Mark all read
           </button>
-          <button type="button" onclick="closeNotificationsModal()" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500">
+          <button type="button" onclick="closeNotificationsModal()" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500">
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
@@ -1699,24 +1699,24 @@
 
   <!-- MODAL: REDDIT-STYLE PUBLIC STUDENT PROFILE -->
   <div id="public-profile-modal" class="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4" onclick="handlePublicProfileBackdropClick(event)">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-4 sm:p-6 space-y-4 shadow-2xl transition-colors max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md max-w-lg w-full p-4 sm:p-6 space-y-4 shadow-2xl transition-colors max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
       <!-- Close button -->
       <div class="flex justify-between items-center pb-1 border-b border-slate-100 dark:border-slate-800 shrink-0">
         <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Student Profile</span>
-        <button type="button" onclick="closePublicProfileModal()" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500">
+        <button type="button" onclick="closePublicProfileModal()" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
       <!-- Profile Header / Banner -->
       <div class="flex items-start gap-3.5 pb-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
-        <div id="pub-avatar" class="w-14 h-14 rounded-2xl bg-orange-500/15 border-2 border-brand-orange text-brand-orange flex items-center justify-center text-lg font-black shrink-0">
+        <div id="pub-avatar" class="w-14 h-14 rounded-md bg-orange-500/15 border-2 border-brand-orange text-brand-orange flex items-center justify-center text-lg font-black shrink-0">
           ST
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2 flex-wrap">
             <h3 id="pub-fullname" class="font-extrabold text-base text-slate-900 dark:text-white truncate">Student Profile</h3>
-            <span id="pub-role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/10 text-brand-orange border border-orange-500/20">Verified Student</span>
+            <span id="pub-role-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-500/10 text-brand-orange border border-orange-500/20">Verified Student</span>
           </div>
           <p id="pub-handle" class="text-xs text-slate-500 font-mono font-medium">@student</p>
           <p id="pub-joined" class="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
@@ -1726,7 +1726,7 @@
       </div>
 
       <!-- Batch Karma & Contribution Stats Strip -->
-      <div class="grid grid-cols-4 gap-2 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800/80 text-center shrink-0">
+      <div class="grid grid-cols-4 gap-2 bg-slate-50 dark:bg-slate-950 p-2.5 rounded-md border border-slate-200 dark:border-slate-800/80 text-center shrink-0">
         <div>
           <span id="pub-stat-karma" class="block font-extrabold text-sm sm:text-base text-brand-orange">⭐ 0</span>
           <span class="text-[10px] text-slate-500 font-medium">Batch Karma</span>
@@ -1763,13 +1763,13 @@
   </div>
 
   <!-- TOAST: UNDO THREAD DELETION (7-DAY RECOVERY) -->
-  <div id="undo-toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-sm w-[92%] sm:w-auto bg-slate-900/95 dark:bg-white/95 text-white dark:text-slate-900 px-4 py-3 rounded-2xl shadow-2xl backdrop-blur border border-white/10 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
+  <div id="undo-toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-sm w-[92%] sm:w-auto bg-slate-900/95 dark:bg-white/95 text-white dark:text-slate-900 px-4 py-3 rounded-md shadow-2xl backdrop-blur border border-white/10 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
     <div class="flex items-center gap-2">
       <i data-lucide="archive-restore" class="w-4 h-4 text-brand-orange shrink-0"></i>
       <span id="undo-toast-text" class="font-medium truncate max-w-[170px] sm:max-w-[230px]">Discussion moved to Trash</span>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-      <button id="undo-toast-btn" class="px-2.5 py-1 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs transition shadow flex items-center gap-1">
+      <button id="undo-toast-btn" class="px-2.5 py-1 rounded bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs transition shadow flex items-center gap-1">
         <span>Restore</span> ↺
       </button>
       <button onclick="dismissUndoToast()" class="p-1 text-slate-400 hover:text-white dark:hover:text-slate-900 transition">
@@ -1780,11 +1780,11 @@
 
   <!-- MEAL DETAIL MODAL (TAP-TO-VIEW COMPLETE MEAL DISHES) -->
   <div id="meal-detail-modal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs hidden items-center justify-center p-4" onclick="handleMealModalBackdropClick(event)">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden transition-all duration-300 transform scale-95 opacity-0 space-y-0" id="meal-detail-modal-box">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md w-full max-w-sm shadow-2xl overflow-hidden transition-all duration-300 transform scale-95 opacity-0 space-y-0" id="meal-detail-modal-box">
       <!-- Header -->
       <div class="p-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
         <div class="flex items-center gap-2.5">
-          <div id="meal-modal-icon-wrap" class="w-9 h-9 rounded-xl flex items-center justify-center text-lg shadow-xs bg-amber-500/10">
+          <div id="meal-modal-icon-wrap" class="w-9 h-9 rounded-md flex items-center justify-center text-lg shadow-xs bg-amber-500/10">
             <span id="meal-modal-icon">🍳</span>
           </div>
           <div>
@@ -1792,7 +1792,7 @@
             <p id="meal-modal-subtitle" class="text-[10px] text-slate-400">Hostel Mess Menu</p>
           </div>
         </div>
-        <button type="button" onclick="closeMealDetailModal()" class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition">
+        <button type="button" onclick="closeMealDetailModal()" class="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -1807,7 +1807,7 @@
         <div id="meal-modal-rating-badge" class="text-[11px] font-semibold text-slate-500">
           <!-- Sentiment e.g. 😋 85% Good -->
         </div>
-        <button type="button" onclick="closeMealDetailModal()" class="px-3 py-1.5 rounded-xl bg-brand-orange text-white font-bold hover:bg-brand-orangeHover transition shadow-xs">
+        <button type="button" onclick="closeMealDetailModal()" class="px-3 py-1.5 rounded-md bg-brand-orange text-white font-bold hover:bg-brand-orangeHover transition shadow-xs">
           Done
         </button>
       </div>

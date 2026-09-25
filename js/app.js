@@ -2,6 +2,12 @@
  * MTMC26 — Main Application Bootstrap & Listeners
  */
 
+    let firebaseListenersActive = false;
+
+    function resetFirebaseListenersActive() {
+      firebaseListenersActive = false;
+    }
+
     function setupFirebaseListeners() {
       if (!db) {
         allPosts = DEFAULT_POSTS;
@@ -10,6 +16,9 @@
         updateProfileTrashBadge();
         return;
       }
+
+      if (firebaseListenersActive) return;
+      firebaseListenersActive = true;
 
       // Listen for Posts in real-time
       db.ref('posts').on('value', snapshot => {
@@ -141,6 +150,15 @@
         if (!document.getElementById('admin-modal').classList.contains('hidden')) {
           if (currentAdminTab === 'deletions') renderDeletionRequestsList();
           else if (currentAdminTab === 'roster') renderRosterList();
+        }
+      });
+
+      // Listen for Quarantined Content in real-time
+      db.ref('quarantinedContent').on('value', snapshot => {
+        allQuarantinedContent = snapshot.val() || {};
+        updateAdminBadges();
+        if (!document.getElementById('admin-modal').classList.contains('hidden')) {
+          if (currentAdminTab === 'review-queue') renderReviewQueueList();
         }
       });
 

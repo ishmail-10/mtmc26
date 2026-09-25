@@ -75,11 +75,11 @@
       let daysChips = `
         <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
           ${daysShort.map((d, i) => `
-            <button type="button" onclick="setMessTimetableDay(${i})" class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 ${messTimetableActiveDay === i ? 'bg-brand-orange text-white shadow-sm' : (i === realTodayIdx ? 'bg-orange-500/15 text-brand-orange border border-orange-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700')}">
+            <button type="button" onclick="setMessTimetableDay(${i})" class="px-3 py-1.5 rounded font-bold transition shrink-0 ${messTimetableActiveDay === i ? 'bg-brand-orange text-white shadow-sm' : (i === realTodayIdx ? 'bg-orange-500/15 text-brand-orange border border-orange-500/30' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700')}">
               ${d} ${i === realTodayIdx ? '•' : ''}
             </button>
           `).join('')}
-          <button type="button" onclick="setMessTimetableDay('all')" class="px-3 py-1.5 rounded-xl font-bold transition shrink-0 ${messTimetableActiveDay === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}">
+          <button type="button" onclick="setMessTimetableDay('all')" class="px-3 py-1.5 rounded font-bold transition shrink-0 ${messTimetableActiveDay === 'all' ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}">
             📅 Full Week
           </button>
         </div>
@@ -89,7 +89,7 @@
 
       if (messTimetableActiveDay === 'all') {
         contentHTML = `
-          <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-950">
+          <div class="overflow-x-auto rounded-md border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-950">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-extrabold uppercase text-[10px] tracking-wider">
@@ -104,7 +104,7 @@
                 ${((cachedMessSchedule && cachedMessSchedule.length > 0) ? cachedMessSchedule : DEFAULT_MESS_SCHEDULE).map((row, idx) => `
                   <tr class="${idx === realTodayIdx ? 'bg-orange-500/5 dark:bg-orange-500/10 font-medium' : 'hover:bg-slate-50/80 dark:hover:bg-slate-900/50'}">
                     <td class="p-3 font-bold text-slate-900 dark:text-white whitespace-nowrap">
-                      ${row.day} ${idx === realTodayIdx ? '<span class="ml-1 text-[9px] px-1.5 py-0.5 rounded-full bg-brand-orange text-white font-black">TODAY</span>' : ''}
+                      ${row.day} ${idx === realTodayIdx ? '<span class="ml-1 text-[9px] px-1.5 py-0.5 rounded bg-brand-orange text-white font-black">TODAY</span>' : ''}
                     </td>
                     <td class="p-3 text-slate-700 dark:text-slate-300 min-w-[160px]">${(row.breakfast || []).join(' · ')}</td>
                     <td class="p-3 text-slate-700 dark:text-slate-300 min-w-[180px]">${(row.lunch || []).join(' · ')}</td>
@@ -124,7 +124,7 @@
         };
 
         const renderMealCard = (icon, title, items, badgeColor, borderColor) => `
-          <div class="rounded-2xl p-4 bg-white dark:bg-slate-900 border ${borderColor} shadow-sm space-y-2">
+          <div class="rounded-md p-4 bg-white dark:bg-slate-900 border ${borderColor} shadow-sm space-y-2">
             <div class="flex items-center justify-between">
               <span class="inline-flex items-center gap-1.5 text-xs font-extrabold ${badgeColor}">
                 <span>${icon}</span>
@@ -155,9 +155,9 @@
 
       return `
         <div id="mess-thread-timetable-container" class="space-y-3 pt-1">
-          <div class="flex items-center justify-between gap-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5">
+          <div class="flex items-center justify-between gap-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-md px-3.5 py-2.5">
             <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">
+              <div class="w-7 h-7 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm">
                 <i data-lucide="utensils" class="w-4 h-4"></i>
               </div>
               <div>
@@ -165,7 +165,7 @@
                 <p class="text-[10px] text-slate-400">Hostel Mess Timetable · Local & Offline Cached</p>
               </div>
             </div>
-            <button type="button" onclick="syncLiveMessMenu(true)" id="btn-sync-mess-data" class="px-2.5 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition inline-flex items-center gap-1.5 shadow-sm">
+            <button type="button" onclick="syncLiveMessMenu(true)" id="btn-sync-mess-data" class="px-2.5 py-1.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition inline-flex items-center gap-1.5 shadow-sm">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-400"></i>
               <span>Sync</span>
             </button>
@@ -217,12 +217,16 @@
           }
         }
 
-        if (syncBtn) {
-          syncBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-emerald-600 dark:text-emerald-400 font-bold">Synced</span>`;
+        const activeSyncBtn = document.getElementById('btn-sync-mess-data') || syncBtn;
+        if (activeSyncBtn) {
+          activeSyncBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i><span class="text-emerald-600 dark:text-emerald-400 font-bold">Synced</span>`;
           lucide.createIcons();
           setTimeout(() => {
-            syncBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-400"></i><span>Sync</span>`;
-            lucide.createIcons();
+            const currentBtn = document.getElementById('btn-sync-mess-data') || activeSyncBtn;
+            if (currentBtn) {
+              currentBtn.innerHTML = `<i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-slate-400"></i><span>Sync</span>`;
+              lucide.createIcons();
+            }
           }, 2000);
         }
       } catch (err) {
@@ -312,10 +316,10 @@
       let badgeCls = '';
       if (activeWidgetDayIndex === realTodayIdx) {
         badgeText = `Today (${daysShort[activeWidgetDayIndex]})`;
-        badgeCls = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-orange/10 text-brand-orange border border-brand-orange/20';
+        badgeCls = 'text-[10px] font-bold px-2 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/20';
       } else {
         badgeText = daysFull[activeWidgetDayIndex];
-        badgeCls = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
+        badgeCls = 'text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
       }
 
       ['mess-widget-day-badge', 'mobile-mess-widget-day-badge'].forEach(id => {
@@ -329,11 +333,11 @@
       for (let i = 0; i < 7; i++) {
         let chipCls = '';
         if (i === activeWidgetDayIndex) {
-          chipCls = 'wday-chip py-1 rounded-lg transition bg-brand-orange text-white shadow-sm font-extrabold';
+          chipCls = 'wday-chip py-1 rounded transition bg-brand-orange text-white shadow-sm font-extrabold';
         } else if (i === realTodayIdx) {
-          chipCls = 'wday-chip py-1 rounded-lg transition bg-brand-orange/15 text-brand-orange font-bold border border-brand-orange/30';
+          chipCls = 'wday-chip py-1 rounded transition bg-brand-orange/15 text-brand-orange font-bold border border-brand-orange/30';
         } else {
-          chipCls = 'wday-chip py-1 rounded-lg transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
+          chipCls = 'wday-chip py-1 rounded transition bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700';
         }
 
         ['wday-btn-' + i, 'mobile-wday-btn-' + i].forEach(btnId => {
@@ -364,7 +368,7 @@
         if (activeWidgetDayIndex === realTodayIdx) {
           if (activeMeal.key === mealKey) {
             sentimentBadgeHtml = `
-              <span class="px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold border border-emerald-500/20 flex items-center gap-1">
+              <span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold border border-emerald-500/20 flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>${rate.total > 0 ? `😋 ${rate.goodPct}%` : 'Rating Open'}</span>
               </span>
@@ -377,7 +381,7 @@
 
             if (rate.total > 0) {
               sentimentBadgeHtml = `
-                <span class="px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[9px] font-bold border border-slate-200 dark:border-slate-700">
+                <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[9px] font-bold border border-slate-200 dark:border-slate-700">
                   😋 ${rate.goodPct}% (${rate.total})
                 </span>
               `;
@@ -390,7 +394,7 @@
         const previewText = items.slice(0, 2).join(', ') + (items.length > 2 ? '...' : '');
 
         return `
-          <div onclick="openMealDetailModal(${activeWidgetDayIndex}, '${mealKey}')" class="bg-slate-50 dark:bg-slate-950/70 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800/60 hover:border-brand-orange/40 hover:shadow-xs transition cursor-pointer space-y-1 group">
+          <div onclick="openMealDetailModal(${activeWidgetDayIndex}, '${mealKey}')" class="bg-slate-50 dark:bg-slate-950/70 p-2.5 rounded-md border border-slate-200 dark:border-slate-800/60 hover:border-brand-orange/40 hover:shadow-xs transition cursor-pointer space-y-1 group">
             <div class="flex items-center justify-between text-[10px]">
               <span class="font-bold ${colorCls} flex items-center gap-1">
                 <span>${icon}</span> <span>${title}</span>
@@ -524,7 +528,7 @@
         if (el) el.innerHTML = formatBtnCount(rate.bad, rate.badPct);
       });
 
-      const baseClass = 'flex items-center justify-center gap-1 py-1 px-1.5 rounded-lg border transition text-[11px]';
+      const baseClass = 'flex items-center justify-center gap-1 py-1 px-1.5 rounded border transition text-[11px]';
       const isGood = rate.userVote === 'good';
       const isOkay = rate.userVote === 'okay';
       const isBad = rate.userVote === 'bad';
@@ -602,11 +606,11 @@
       if (titleEl) titleEl.textContent = `${dayName} · ${meta.title}`;
       if (subtitleEl) subtitleEl.textContent = `${items.length} dishes on menu`;
       if (iconEl) iconEl.textContent = meta.icon;
-      if (iconWrap) iconWrap.className = `w-9 h-9 rounded-xl flex items-center justify-center text-lg shadow-xs ${meta.bg}`;
+      if (iconWrap) iconWrap.className = `w-9 h-9 rounded-md flex items-center justify-center text-lg shadow-xs ${meta.bg}`;
 
       if (itemsContainer) {
         itemsContainer.innerHTML = items.map((item, idx) => `
-          <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-100 dark:border-slate-800/80 text-xs">
+          <div class="flex items-start gap-2.5 p-2.5 rounded-md bg-slate-50 dark:bg-slate-950/70 border border-slate-100 dark:border-slate-800/80 text-xs">
             <span class="w-5 h-5 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold flex items-center justify-center text-[10px] shrink-0">${idx + 1}</span>
             <span class="text-slate-800 dark:text-slate-200 font-medium leading-relaxed">${escapeHtml(item)}</span>
           </div>

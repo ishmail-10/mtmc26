@@ -63,16 +63,16 @@
       const secFrozen = document.getElementById('admin-section-frozen');
       const secFeedback = document.getElementById('admin-section-feedback');
 
-      const inactiveClass = 'flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0';
-      const activeClass = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-brand-orange text-white flex items-center justify-center gap-1 shrink-0';
-      const activeCyanClass = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-cyan-600 text-white flex items-center justify-center gap-1 shrink-0';
-      const activeAmberClass = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-amber-600 text-white flex items-center justify-center gap-1 shrink-0';
+      const inactiveClass = 'flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 shrink-0';
+      const activeClass = 'flex-1 py-1.5 px-2 rounded font-bold transition bg-brand-orange text-white flex items-center justify-center gap-1 shrink-0';
+      const activeCyanClass = 'flex-1 py-1.5 px-2 rounded font-bold transition bg-cyan-600 text-white flex items-center justify-center gap-1 shrink-0';
+      const activeAmberClass = 'flex-1 py-1.5 px-2 rounded font-bold transition bg-amber-600 text-white flex items-center justify-center gap-1 shrink-0';
 
       if (tabPending) tabPending.className = inactiveClass;
       if (tabReview) tabReview.className = inactiveClass;
       if (tabProfile) tabProfile.className = inactiveClass;
       if (tabDeletions) tabDeletions.className = inactiveClass;
-      if (tabRoster) tabRoster.className = 'flex-1 py-1.5 px-2 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center shrink-0';
+      if (tabRoster) tabRoster.className = 'flex-1 py-1.5 px-2 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center shrink-0';
       if (tabFrozen) tabFrozen.className = inactiveClass;
       if (tabFeedback) tabFeedback.className = inactiveClass;
 
@@ -85,7 +85,7 @@
       if (secFeedback) secFeedback.classList.add('hidden');
 
       if (tab === 'roster') {
-        if (tabRoster) tabRoster.className = 'flex-1 py-1.5 px-2 rounded-lg font-bold transition bg-brand-orange text-white text-center shrink-0';
+        if (tabRoster) tabRoster.className = 'flex-1 py-1.5 px-2 rounded font-bold transition bg-brand-orange text-white text-center shrink-0';
         if (secRoster) secRoster.classList.remove('hidden');
         renderRosterList();
       } else if (tab === 'review-queue') {
@@ -151,7 +151,7 @@
       } catch (err) {
         console.error('Failed to load frozen usernames:', err);
         container.innerHTML = `
-          <div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs text-center space-y-1">
+          <div class="p-4 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs text-center space-y-1">
             <p class="font-bold">Unable to load frozen handles</p>
             <p class="text-[11px] text-slate-400">${escapeHtml(err.message || 'Error executing RPC')}</p>
           </div>
@@ -174,7 +174,7 @@
       if (!list || list.length === 0) {
         container.innerHTML = `
           <div class="py-10 text-center text-slate-400 space-y-2">
-            <div class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mx-auto text-lg font-bold">
+            <div class="w-10 h-10 rounded-md bg-cyan-500/10 text-cyan-500 flex items-center justify-center mx-auto text-lg font-bold">
               ✓
             </div>
             <p class="font-bold text-slate-700 dark:text-slate-300 text-xs">No Frozen Handles Found</p>
@@ -186,7 +186,7 @@
       }
 
       container.innerHTML = list.map(item => `
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
+        <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
           <div class="min-w-0 flex-1 space-y-1">
             <div class="flex items-center gap-1.5 flex-wrap">
               <span class="font-bold text-slate-900 dark:text-white font-mono">@${escapeHtml(item.username)}</span>
@@ -200,7 +200,7 @@
             </p>
           </div>
           <div class="shrink-0">
-            <button onclick="handleUnfreezeHandle('${item.user_id}', '${escapeHtml(item.username)}')" class="px-2.5 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white text-xs font-bold transition shadow-sm flex items-center gap-1">
+            <button onclick="handleUnfreezeHandle('${item.user_id}', '${escapeHtml(item.username)}')" class="px-2.5 py-1.5 rounded bg-cyan-500 hover:bg-cyan-600 text-white text-xs font-bold transition shadow-sm flex items-center gap-1">
               <i data-lucide="unlock" class="w-3.5 h-3.5"></i>
               <span>Unfreeze</span>
             </button>
@@ -383,22 +383,22 @@
         const catBadgeClass = categoryColors[item.category] || categoryColors['Other'];
 
         return `
-          <div class="p-3.5 rounded-2xl border ${isDone ? 'bg-slate-50/50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 opacity-70' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm'} space-y-2.5 transition">
+          <div class="p-3.5 rounded-md border ${isDone ? 'bg-slate-50/50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 opacity-70' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm'} space-y-2.5 transition">
             <div class="flex items-start justify-between gap-2">
               <div class="flex items-center gap-1.5 flex-wrap">
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${catBadgeClass}">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${catBadgeClass}">
                   ${escapeHtml(item.category)}
                 </span>
                 <span class="text-[10px] text-slate-400 font-mono">${timeAgo}</span>
-                ${isDone ? '<span class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">✅ Completed</span>' : '<span class="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20">🟡 Pending</span>'}
+                ${isDone ? '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">✅ Completed</span>' : '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20">🟡 Pending</span>'}
               </div>
               <div class="flex items-center gap-1 shrink-0">
                 ${!isDone ? `
-                  <button type="button" onclick="markFeedbackDone('${item.id}')" class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition flex items-center gap-1 shadow-xs" title="Mark this suggestion as completed">
+                  <button type="button" onclick="markFeedbackDone('${item.id}')" class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition flex items-center gap-1 shadow-xs" title="Mark this suggestion as completed">
                     <i data-lucide="check" class="w-3 h-3"></i> Mark Done
                   </button>
                 ` : ''}
-                <button type="button" onclick="clearFeedbackItem('${item.id}')" class="p-1 rounded-lg hover:bg-rose-500/10 text-slate-400 hover:text-rose-500 transition" title="Clear / Delete Feedback">
+                <button type="button" onclick="clearFeedbackItem('${item.id}')" class="p-1 rounded hover:bg-rose-500/10 text-slate-400 hover:text-rose-500 transition" title="Clear / Delete Feedback">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
@@ -456,12 +456,22 @@
       const container = document.getElementById('review-queue-list');
       if (!container) return;
 
-      const quarantinedPosts = (allPosts || []).filter(p => p.status === 'quarantined');
-      const quarantinedComments = [];
+      const quarantinedItems = Object.values(allQuarantinedContent || {});
+      const quarantinedPosts = [
+        ...quarantinedItems.filter(q => q.type !== 'comment'),
+        ...(allPosts || []).filter(p => p.status === 'quarantined' && !quarantinedItems.some(q => q.id === p.id))
+      ];
+
+      const quarantinedComments = [
+        ...quarantinedItems.filter(q => q.type === 'comment').map(c => ({
+          comment: c,
+          post: (allPosts || []).find(p => p.id === c.postId) || { id: c.postId, title: c.threadTitle || 'Discussion' }
+        }))
+      ];
       (allPosts || []).forEach(p => {
         if (p.comments) {
           p.comments.forEach(c => {
-            if (c.status === 'quarantined') {
+            if (c.status === 'quarantined' && !quarantinedItems.some(q => q.id === (c.id || c.key))) {
               quarantinedComments.push({ comment: c, post: p });
             }
           });
@@ -494,13 +504,13 @@
       let html = '';
 
       quarantinedPosts.forEach(p => {
-        const authorDisplay = p.isAnon ? `${p.author} (Anon UID: ${p.authorUid ? p.authorUid.substring(0, 8) : 'N/A'})` : getPostAuthorDisplay(p);
+        const authorDisplay = p.isAnon ? `${p.author || 'Anonymous'} (Anon UID: ${p.authorUid ? p.authorUid.substring(0, 8) : 'N/A'})` : getPostAuthorDisplay(p);
         html += `
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
+          <div class="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
             <div class="flex items-start justify-between gap-2 flex-wrap">
               <div class="space-y-0.5">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                     🚨 ${escapeHtml(p.quarantineCategory || 'Flagged Discussion')}
                   </span>
                   <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-orange-500/10 text-brand-orange border border-orange-500/20">
@@ -508,24 +518,24 @@
                   </span>
                 </div>
                 <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">${escapeHtml(p.title || 'Untitled')}</h4>
-                <p class="text-[11px] text-slate-500">By ${authorDisplay} · ${p.createdAt || 'Just now'}</p>
+                <p class="text-[11px] text-slate-500">By ${authorDisplay} · ${p.createdAt ? (typeof p.createdAt === 'string' ? p.createdAt : formatTimeAgo(p.createdAt)) : formatTimeAgo(p.timestamp || p.quarantinedAt)}</p>
               </div>
             </div>
 
-            <div class="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-xs text-rose-800 dark:text-rose-300">
+            <div class="p-2 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-xs text-rose-800 dark:text-rose-300">
               <span class="font-bold block text-[11px]">Safety Trigger:</span>
               <p class="text-[11px] mt-0.5">${escapeHtml(p.quarantineReason || 'Triggered automated safety filter.')}</p>
             </div>
 
-            <div class="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 max-h-32 overflow-y-auto whitespace-pre-wrap">
-${escapeHtml(p.content || '')}
+            <div class="p-2.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 max-h-32 overflow-y-auto whitespace-pre-wrap">
+${escapeHtml(p.content || p.text || '')}
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-1">
-              <button onclick="rejectQuarantinedPost('${p.id}')" class="px-3 py-1.5 rounded-xl border border-rose-300 dark:border-rose-800/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold transition flex items-center gap-1">
+              <button onclick="rejectQuarantinedPost('${p.id}')" class="px-3 py-1.5 rounded border border-rose-300 dark:border-rose-800/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold transition flex items-center gap-1">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Reject & Purge
               </button>
-              <button onclick="approveQuarantinedPost('${p.id}')" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition flex items-center gap-1">
+              <button onclick="approveQuarantinedPost('${p.id}')" class="px-3.5 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition flex items-center gap-1">
                 <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Approve & Publish
               </button>
             </div>
@@ -534,34 +544,36 @@ ${escapeHtml(p.content || '')}
       });
 
       quarantinedComments.forEach(({ comment: c, post: p }) => {
+        const commentId = c.id || c.key;
+        const targetPostId = c.postId || p.id;
         html += `
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
+          <div class="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
             <div class="flex items-start justify-between gap-2 flex-wrap">
               <div class="space-y-0.5">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                     🚨 ${escapeHtml(c.quarantineCategory || 'Flagged Reply')}
                   </span>
-                  <span class="text-[11px] text-slate-500">Reply on: <strong>${escapeHtml(p.title || 'Discussion')}</strong></span>
+                  <span class="text-[11px] text-slate-500">Reply on: <strong>${escapeHtml(p.title || c.threadTitle || 'Discussion')}</strong></span>
                 </div>
-                <p class="text-[11px] text-slate-500">By @${escapeHtml(c.author || 'User')} · ${c.time || 'Just now'}</p>
+                <p class="text-[11px] text-slate-500">By @${escapeHtml(c.author || 'User')} · ${c.time || formatTimeAgo(c.timestamp || c.quarantinedAt)}</p>
               </div>
             </div>
 
-            <div class="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-xs text-rose-800 dark:text-rose-300">
+            <div class="p-2 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 text-xs text-rose-800 dark:text-rose-300">
               <span class="font-bold block text-[11px]">Safety Trigger:</span>
               <p class="text-[11px] mt-0.5">${escapeHtml(c.quarantineReason || 'Triggered automated safety filter.')}</p>
             </div>
 
-            <div class="p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-${escapeHtml(c.text || '')}
+            <div class="p-2.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+${escapeHtml(c.text || c.content || '')}
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-1">
-              <button onclick="rejectQuarantinedComment('${p.id}', '${c.key || c.id}')" class="px-3 py-1.5 rounded-xl border border-rose-300 dark:border-rose-800/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold transition flex items-center gap-1">
+              <button onclick="rejectQuarantinedComment('${targetPostId}', '${commentId}')" class="px-3 py-1.5 rounded border border-rose-300 dark:border-rose-800/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold transition flex items-center gap-1">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Reject Reply
               </button>
-              <button onclick="approveQuarantinedComment('${p.id}', '${c.key || c.id}')" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition flex items-center gap-1">
+              <button onclick="approveQuarantinedComment('${targetPostId}', '${commentId}')" class="px-3.5 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition flex items-center gap-1">
                 <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Approve Reply
               </button>
             </div>
@@ -578,26 +590,45 @@ ${escapeHtml(c.text || '')}
         alert('Unauthorized: Only batch moderators can approve quarantined content.');
         return;
       }
-      const post = (allPosts || []).find(p => p.id === postId);
-      if (!post) return;
+      const item = allQuarantinedContent[postId] || (allPosts || []).find(p => p.id === postId);
+      if (!item) return;
 
       const modUsername = currentUserSession.username;
-      const updates = {
+      const approvedPost = {
+        id: item.id || postId,
+        board: item.board || 'resources',
+        title: item.title,
+        content: item.content || item.text || '',
+        price: item.price || null,
+        tag: item.tag || null,
+        imageUrl: item.imageUrl || null,
+        author: item.author,
+        authorUid: item.authorUid,
+        authorUsername: item.authorUsername,
+        isAnon: Boolean(item.isAnon),
+        createdAt: 'Just now',
+        timestamp: Date.now(),
+        upvotes: 0,
+        upvotedBy: {},
+        views: 0,
+        viewedBy: {},
+        comments: [],
         status: 'published',
         approvedBy: modUsername,
         approvedAt: Date.now()
       };
 
       if (db) {
-        await db.ref('posts/' + postId).update(updates);
-        if (post.authorUid && post.authorUid !== currentUserSession.uid) {
+        await db.ref('posts/' + postId).set(approvedPost);
+        await db.ref('quarantinedContent/' + postId).remove().catch(() => {});
+        if (item.authorUid && item.authorUid !== currentUserSession.uid) {
           try {
-            const notifRef = db.ref('notifications/' + post.authorUid).push();
+            const notifRef = db.ref('notifications/' + item.authorUid).push();
             await notifRef.set({
               id: notifRef.key,
               type: 'system',
               postId: postId,
-              threadTitle: post.title,
+              threadTitle: item.title || 'Discussion',
               senderUid: currentUserSession.uid,
               senderName: `@${modUsername} (Moderator)`,
               senderUsername: modUsername,
@@ -609,10 +640,16 @@ ${escapeHtml(c.text || '')}
             console.warn('Notification failed:', e);
           }
         }
-      } else {
-        Object.assign(post, updates);
-        renderFeed();
       }
+
+      delete allQuarantinedContent[postId];
+      const existingIdx = (allPosts || []).findIndex(p => p.id === postId);
+      if (existingIdx >= 0) {
+        allPosts[existingIdx] = approvedPost;
+      } else {
+        allPosts.unshift(approvedPost);
+      }
+      renderFeed();
 
       renderReviewQueueList();
       updateAdminBadges();
@@ -624,30 +661,25 @@ ${escapeHtml(c.text || '')}
         alert('Unauthorized.');
         return;
       }
-      const post = (allPosts || []).find(p => p.id === postId);
-      if (!post) return;
+      const item = allQuarantinedContent[postId] || (allPosts || []).find(p => p.id === postId);
+      if (!item) return;
 
-      const reason = prompt('Optional rejection note for student author:', post.quarantineReason || 'Violates community safety guidelines');
+      const reason = prompt('Optional rejection note for student author:', item.quarantineReason || 'Violates community safety guidelines');
       if (reason === null) return;
 
       const modUsername = currentUserSession.username;
 
       if (db) {
-        await db.ref('posts/' + postId).update({
-          status: 'rejected',
-          isDeleted: true,
-          deletedAt: Date.now(),
-          deletedByUsername: modUsername,
-          rejectionReason: reason
-        });
-        if (post.authorUid && post.authorUid !== currentUserSession.uid) {
+        await db.ref('quarantinedContent/' + postId).remove().catch(() => {});
+        await db.ref('posts/' + postId).remove().catch(() => {});
+        if (item.authorUid && item.authorUid !== currentUserSession.uid) {
           try {
-            const notifRef = db.ref('notifications/' + post.authorUid).push();
+            const notifRef = db.ref('notifications/' + item.authorUid).push();
             await notifRef.set({
               id: notifRef.key,
               type: 'system',
               postId: postId,
-              threadTitle: post.title,
+              threadTitle: item.title || 'Discussion',
               senderUid: currentUserSession.uid,
               senderName: `@${modUsername} (Moderator)`,
               senderUsername: modUsername,
@@ -657,10 +689,10 @@ ${escapeHtml(c.text || '')}
             });
           } catch (e) {}
         }
-      } else {
-        post.status = 'rejected';
-        post.isDeleted = true;
       }
+
+      delete allQuarantinedContent[postId];
+      allPosts = allPosts.filter(p => p.id !== postId);
 
       renderReviewQueueList();
       updateAdminBadges();
@@ -672,13 +704,59 @@ ${escapeHtml(c.text || '')}
         return;
       }
       const modUsername = currentUserSession.username;
+      const item = allQuarantinedContent[commentKey] || allQuarantinedContent[postId];
+      const actualPostId = item?.postId || postId;
+      const post = (allPosts || []).find(p => p.id === actualPostId);
+
+      const approvedComment = {
+        id: item?.id || commentKey,
+        postId: actualPostId,
+        parentId: item?.parentId || null,
+        author: item?.author || 'Student',
+        authorUid: item?.authorUid,
+        authorUsername: item?.authorUsername,
+        isAnon: Boolean(item?.isAnon),
+        text: item?.text || item?.content || '',
+        time: 'Just now',
+        timestamp: Date.now(),
+        status: 'published',
+        approvedBy: modUsername,
+        approvedAt: Date.now(),
+        upvotes: 0,
+        upvotedBy: {}
+      };
+
       if (db) {
-        await db.ref(`posts/${postId}/comments/${commentKey}`).update({
-          status: 'published',
-          approvedBy: modUsername,
-          approvedAt: Date.now()
-        });
+        await db.ref(`posts/${actualPostId}/comments`).push(approvedComment);
+        await db.ref(`quarantinedContent/${commentKey}`).remove().catch(() => {});
+        if (item?.authorUid && item.authorUid !== currentUserSession.uid) {
+          try {
+            const notifRef = db.ref('notifications/' + item.authorUid).push();
+            await notifRef.set({
+              id: notifRef.key,
+              type: 'system',
+              postId: actualPostId,
+              threadTitle: post?.title || 'Discussion',
+              senderUid: currentUserSession.uid,
+              senderName: `@${modUsername} (Moderator)`,
+              senderUsername: modUsername,
+              snippet: `Your reply was approved by @${modUsername} and is now live!`,
+              timestamp: Date.now(),
+              read: false
+            });
+          } catch (e) {}
+        }
       }
+
+      delete allQuarantinedContent[commentKey];
+      if (post) {
+        if (!post.comments) post.comments = [];
+        post.comments.push(approvedComment);
+        if (activeThreadId === actualPostId) {
+          renderThreadDetail(actualPostId);
+        }
+      }
+
       renderReviewQueueList();
       updateAdminBadges();
       alert(`✅ Reply approved and published!\nAttributed: Approved by @${modUsername}`);
@@ -691,9 +769,30 @@ ${escapeHtml(c.text || '')}
       }
       if (!confirm('Permanently remove this flagged reply?')) return;
 
+      const item = allQuarantinedContent[commentKey];
       if (db) {
-        await db.ref(`posts/${postId}/comments/${commentKey}`).remove();
+        await db.ref(`quarantinedContent/${commentKey}`).remove().catch(() => {});
+        await db.ref(`posts/${postId}/comments/${commentKey}`).remove().catch(() => {});
+        if (item?.authorUid && item.authorUid !== currentUserSession.uid) {
+          try {
+            const notifRef = db.ref('notifications/' + item.authorUid).push();
+            await notifRef.set({
+              id: notifRef.key,
+              type: 'system',
+              postId: postId,
+              threadTitle: 'Discussion',
+              senderUid: currentUserSession.uid,
+              senderName: `@${currentUserSession.username} (Moderator)`,
+              senderUsername: currentUserSession.username,
+              snippet: `Your reply was removed by moderators after safety review.`,
+              timestamp: Date.now(),
+              read: false
+            });
+          } catch (e) {}
+        }
       }
+      delete allQuarantinedContent[commentKey];
+
       renderReviewQueueList();
       updateAdminBadges();
     }
@@ -732,7 +831,7 @@ ${escapeHtml(c.text || '')}
         const userChanged = req.requestedUsername && req.requestedUsername !== u.username;
 
         return `
-          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+          <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
             <div class="flex items-start justify-between gap-3">
               <div class="space-y-1">
                 <div class="flex items-center gap-2 flex-wrap text-xs">
@@ -762,10 +861,10 @@ ${escapeHtml(c.text || '')}
               </div>
 
               <div class="flex items-center gap-1.5 shrink-0">
-                <button onclick="approveProfileChange('${u.uid}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1">
+                <button onclick="approveProfileChange('${u.uid}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1">
                   <i data-lucide="check" class="w-3.5 h-3.5"></i> Approve
                 </button>
-                <button onclick="rejectProfileChange('${u.uid}')" class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-600 dark:text-slate-300 text-xs font-medium transition" title="Reject Request">
+                <button onclick="rejectProfileChange('${u.uid}')" class="px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-600 dark:text-slate-300 text-xs font-medium transition" title="Reject Request">
                   <i data-lucide="x" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
@@ -874,7 +973,7 @@ ${escapeHtml(c.text || '')}
 
       // Append OP badge if comment author is original post creator
       if (postAuthorUid && c.authorUid === postAuthorUid && !c.isAnon && !c.isDeleted) {
-        authorHtml += ` <span class="ml-1 px-1.5 py-0.2 rounded-md bg-brand-orange/15 text-brand-orange border border-brand-orange/30 font-black text-[9px] uppercase tracking-wide inline-flex items-center gap-0.5" title="Original Poster / Thread Author"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> OP</span>`;
+        authorHtml += ` <span class="ml-1 px-1.5 py-0.2 rounded bg-brand-orange/15 text-brand-orange border border-brand-orange/30 font-black text-[9px] uppercase tracking-wide inline-flex items-center gap-0.5" title="Original Poster / Thread Author"><i data-lucide="sparkles" class="w-2.5 h-2.5"></i> OP</span>`;
       }
 
       return authorHtml;
@@ -911,7 +1010,7 @@ ${escapeHtml(c.text || '')}
         const phone = priv.phone || u.phone || '—';
         const token = priv.token || u.token || '—';
         return `
-        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+        <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
           <div class="space-y-0.5">
             <div class="flex items-center gap-2 flex-wrap">
               <span class="font-bold text-slate-900 dark:text-white text-xs">${u.fullName || u.username}</span>
@@ -923,10 +1022,10 @@ ${escapeHtml(c.text || '')}
             </div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
-            <button onclick="approveStudent('${u.uid}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1">
+            <button onclick="approveStudent('${u.uid}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1">
               <i data-lucide="check" class="w-3.5 h-3.5"></i> Verify
             </button>
-            <button onclick="rejectStudent('${u.uid}')" class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-600 dark:text-slate-300 text-xs font-medium transition" title="Reject">
+            <button onclick="rejectStudent('${u.uid}')" class="px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-600 dark:text-slate-300 text-xs font-medium transition" title="Reject">
               <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             </button>
           </div>
@@ -957,7 +1056,7 @@ ${escapeHtml(c.text || '')}
         const phone = priv.phone || u.phone || '—';
         const token = priv.token || u.token || '';
         return `
-        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
+        <div class="p-2.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 text-xs">
           <div>
             <div class="flex items-center gap-1.5 flex-wrap">
               <span class="font-bold text-slate-900 dark:text-white">${u.fullName || u.username}</span>
@@ -977,29 +1076,29 @@ ${escapeHtml(c.text || '')}
               <!-- Admin Controls: Make/Demote Mod, Make/Demote Super Mod -->
               ${currentUserSession?.role === 'admin' ? `
                 ${u.role === 'admin' ? `
-                  <button onclick="handleAdminDemoteMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-rose-500/30 text-rose-500 hover:bg-rose-500/10">
+                  <button onclick="handleAdminDemoteMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-rose-500/30 text-rose-500 hover:bg-rose-500/10">
                     Demote to Student
                   </button>
                 ` : (u.role === 'supermod' ? `
-                  <button onclick="handleAdminDemoteSuperMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
+                  <button onclick="handleAdminDemoteSuperMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
                     Demote Super Mod
                   </button>
                 ` : `
                   ${u.role === 'moderator' ? `
-                    <button onclick="handleAdminDemoteMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-rose-500/30 text-rose-500 hover:bg-rose-500/10">
+                    <button onclick="handleAdminDemoteMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-rose-500/30 text-rose-500 hover:bg-rose-500/10">
                       Demote Mod
                     </button>
                     ${countActiveSuperMods() < 2 ? `
-                      <button onclick="handleAdminMakeSuperMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
+                      <button onclick="handleAdminMakeSuperMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
                         Make Super Mod
                       </button>
                     ` : ''}
                   ` : `
-                    <button onclick="handleMakeMod('${u.uid}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10">
+                    <button onclick="handleMakeMod('${u.uid}')" class="px-2 py-1 rounded text-[10px] font-bold border border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10">
                       Make Mod
                     </button>
                     ${countActiveSuperMods() < 2 ? `
-                      <button onclick="handleAdminMakeSuperMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
+                      <button onclick="handleAdminMakeSuperMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
                         Make Super Mod
                       </button>
                     ` : ''}
@@ -1007,7 +1106,7 @@ ${escapeHtml(c.text || '')}
                 `)}
               ` : (currentUserSession?.role === 'supermod' ? `
                 ${u.role === 'student' ? `
-                  <button onclick="handleMakeMod('${u.uid}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10">
+                  <button onclick="handleMakeMod('${u.uid}')" class="px-2 py-1 rounded text-[10px] font-bold border border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10">
                     Make Mod
                   </button>
                 ` : (u.role === 'moderator' ? `
@@ -1016,21 +1115,21 @@ ${escapeHtml(c.text || '')}
               ` : '')}
 
               <!-- Reset Password -->
-              <button onclick="adminResetUserPassword('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
+              <button onclick="adminResetUserPassword('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
                 Reset Pass
               </button>
               
               <!-- Direct Deletion (Admin) / Request Deletion (Mod/Supermod) -->
               ${currentUserSession?.role === 'admin' ? `
-                <button onclick="handleAdminDirectDelete('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white transition" title="Direct Instant Deletion (Admin)">
+                <button onclick="handleAdminDirectDelete('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white transition" title="Direct Instant Deletion (Admin)">
                   Delete
                 </button>
               ` : (allDeletionRequests[u.uid] ? `
-                <button onclick="switchAdminTab('deletions')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400" title="Review Deletion Voting">
+                <button onclick="switchAdminTab('deletions')" class="px-2 py-1 rounded text-[10px] font-bold border border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400" title="Review Deletion Voting">
                   Voting...
                 </button>
               ` : (u.role !== 'moderator' && u.role !== 'supermod' ? `
-                <button onclick="handleModRequestDelete('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10" title="Request Deletion (Requires All Moderators)">
+                <button onclick="handleModRequestDelete('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10" title="Request Deletion (Requires All Moderators)">
                   Req Delete
                 </button>
               ` : ''))}
@@ -1048,24 +1147,24 @@ ${escapeHtml(c.text || '')}
         if (hasVoted) {
           return `
             <span class="inline-flex items-center gap-1">
-              <span class="px-2 py-1 rounded-lg text-[10px] font-bold border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400" title="1 of 2 Super Mod approvals recorded. Waiting for other Super Mod to confirm.">
+              <span class="px-2 py-1 rounded text-[10px] font-bold border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400" title="1 of 2 Super Mod approvals recorded. Waiting for other Super Mod to confirm.">
                 Demote (1/2 Voted)
               </span>
-              <button onclick="handleCancelSuperModDemote('${u.uid}')" class="px-1.5 py-1 rounded-lg text-[10px] font-bold border border-slate-300 dark:border-slate-700 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800" title="Cancel demotion request">
+              <button onclick="handleCancelSuperModDemote('${u.uid}')" class="px-1.5 py-1 rounded text-[10px] font-bold border border-slate-300 dark:border-slate-700 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800" title="Cancel demotion request">
                 ✕
               </button>
             </span>
           `;
         } else {
           return `
-            <button onclick="handleSuperModVoteDemote('${u.uid}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white transition animate-pulse" title="Other Super Mod requested demotion. Click to confirm (2/2).">
+            <button onclick="handleSuperModVoteDemote('${u.uid}')" class="px-2 py-1 rounded text-[10px] font-bold border border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-600 hover:text-white transition animate-pulse" title="Other Super Mod requested demotion. Click to confirm (2/2).">
               Confirm Demote (1/2)
             </button>
           `;
         }
       }
       return `
-        <button onclick="handleSuperModInitiateDemote('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-rose-500/30 text-rose-500 hover:bg-rose-500/10" title="Demote Moderator (Requires both Super Mods to approve)">
+        <button onclick="handleSuperModInitiateDemote('${u.uid}', '${u.username}')" class="px-2 py-1 rounded text-[10px] font-bold border border-rose-500/30 text-rose-500 hover:bg-rose-500/10" title="Demote Moderator (Requires both Super Mods to approve)">
           Demote Mod
         </button>
       `;
@@ -1301,12 +1400,13 @@ ${escapeHtml(c.text || '')}
       const profileReqCount = Object.values(allUsers || {}).filter(u => u.pendingProfileUpdate).length;
       const deletionReqCount = Object.keys(allDeletionRequests || {}).length;
 
-      const reviewPostsCount = (allPosts || []).filter(p => p.status === 'quarantined').length;
-      let reviewCommentsCount = 0;
+      const quarantinedItems = Object.values(allQuarantinedContent || {});
+      const reviewPostsCount = quarantinedItems.filter(q => q.type !== 'comment').length + (allPosts || []).filter(p => p.status === 'quarantined' && !quarantinedItems.some(q => q.id === p.id)).length;
+      let reviewCommentsCount = quarantinedItems.filter(q => q.type === 'comment').length;
       (allPosts || []).forEach(p => {
         if (p.comments) {
           p.comments.forEach(c => {
-            if (c.status === 'quarantined') reviewCommentsCount++;
+            if (c.status === 'quarantined' && !quarantinedItems.some(q => q.id === (c.id || c.key))) reviewCommentsCount++;
           });
         }
       });
@@ -1470,7 +1570,7 @@ ${escapeHtml(c.text || '')}
 
       if (requests.length === 0) {
         html += `
-          <div class="p-4 text-center text-slate-500 space-y-1 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+          <div class="p-4 text-center text-slate-500 space-y-1 bg-slate-50 dark:bg-slate-950/50 rounded-md border border-dashed border-slate-200 dark:border-slate-800">
             <i data-lucide="shield-check" class="w-5 h-5 text-emerald-500 mx-auto"></i>
             <p class="font-bold text-slate-900 dark:text-white text-xs">No Pending Deletion Proposals</p>
             <p class="text-[10px]">No student accounts are currently queued for consensus deletion.</p>
@@ -1487,7 +1587,7 @@ ${escapeHtml(c.text || '')}
           const approverUsernames = Object.values(approvals).map(a => `@${a.username}`).join(', ');
 
           return `
-          <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
+          <div class="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
             <div class="flex items-start justify-between gap-3">
               <div class="space-y-1">
                 <div class="flex items-center gap-2 flex-wrap text-xs">
@@ -1508,25 +1608,25 @@ ${escapeHtml(c.text || '')}
 
               ${currentUserSession?.role === 'admin' ? `
                 <div class="flex items-center gap-1 shrink-0">
-                  <button onclick="handleAdminDirectDelete('${req.targetUid}', '${req.targetUsername}')" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow flex items-center gap-1" title="Direct Deactivate">
+                  <button onclick="handleAdminDirectDelete('${req.targetUid}', '${req.targetUsername}')" class="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow flex items-center gap-1" title="Direct Deactivate">
                     <i data-lucide="trash-2" class="w-3 h-3"></i> Deactivate
                   </button>
-                  <button onclick="dismissDeletionRequest('${req.targetUid}')" class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium transition" title="Dismiss Request & Restore Account">
+                  <button onclick="dismissDeletionRequest('${req.targetUid}')" class="px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium transition" title="Dismiss Request & Restore Account">
                     Restore
                   </button>
                 </div>
               ` : `
                 <div class="flex items-center gap-1 shrink-0">
                   ${iHaveApproved ? `
-                    <button onclick="cancelMyDeletionVote('${req.targetUid}')" class="px-2 py-1 rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold transition" title="Revoke My Approval">
+                    <button onclick="cancelMyDeletionVote('${req.targetUid}')" class="px-2 py-1 rounded border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold transition" title="Revoke My Approval">
                       Revoke Vote
                     </button>
                   ` : `
-                    <button onclick="voteApproveDeletion('${req.targetUid}')" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow flex items-center gap-1">
+                    <button onclick="voteApproveDeletion('${req.targetUid}')" class="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow flex items-center gap-1">
                       <i data-lucide="check" class="w-3 h-3"></i> Approve
                     </button>
                   `}
-                  <button onclick="voteRejectDeletion('${req.targetUid}')" class="px-2 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium transition" title="Reject Deletion Proposal">
+                  <button onclick="voteRejectDeletion('${req.targetUid}')" class="px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium transition" title="Reject Deletion Proposal">
                     Reject
                   </button>
                 </div>
@@ -1539,8 +1639,8 @@ ${escapeHtml(c.text || '')}
                 <span class="text-slate-500 font-medium">Moderator Consensus: <strong class="text-slate-900 dark:text-white">${approvalCount} / ${totalModsRequired}</strong> approved</span>
                 <span class="font-mono font-bold ${approvalCount >= totalModsRequired ? 'text-emerald-500' : 'text-amber-500'}">${pct}%</span>
               </div>
-              <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                <div class="bg-rose-500 h-full transition-all duration-300 rounded-full" style="width: ${pct}%"></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded overflow-hidden">
+                <div class="bg-rose-500 h-full transition-all duration-300 rounded" style="width: ${pct}%"></div>
               </div>
               <p class="text-[10px] text-slate-400">
                 Approvals: ${approverUsernames ? approverUsernames : 'None yet'}
@@ -1567,7 +1667,7 @@ ${escapeHtml(c.text || '')}
 
       if (deactivatedUsers.length === 0) {
         html += `
-          <div class="p-3 text-center text-slate-400 space-y-0.5 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+          <div class="p-3 text-center text-slate-400 space-y-0.5 bg-slate-50 dark:bg-slate-950/50 rounded-md border border-dashed border-slate-200 dark:border-slate-800">
             <p class="text-[11px]">No accounts currently in the 7-day recovery queue.</p>
           </div>
         `;
@@ -1580,7 +1680,7 @@ ${escapeHtml(c.text || '')}
           const isExpired = diffMs <= 0;
 
           return `
-            <div class="p-3.5 rounded-xl bg-amber-50/50 dark:bg-amber-950/15 border border-amber-200/80 dark:border-amber-800/40 space-y-2">
+            <div class="p-3.5 rounded-md bg-amber-50/50 dark:bg-amber-950/15 border border-amber-200/80 dark:border-amber-800/40 space-y-2">
               <div class="flex items-start justify-between gap-3">
                 <div class="space-y-1">
                   <div class="flex items-center gap-2 flex-wrap text-xs">
@@ -1600,11 +1700,11 @@ ${escapeHtml(c.text || '')}
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <button onclick="restoreDeletedAccount('${u.uid}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1" title="Restore Account">
-                    <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Restore
+                  <button onclick="restoreDeletedAccount('${u.uid}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1" title="Restore Account">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Restore
                   </button>
                   ${currentUserSession?.role === 'admin' ? `
-                    <button onclick="permanentlyPurgeAccount('${u.uid}')" class="px-2 py-1 rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold transition" title="Hard Purge Record">
+                    <button onclick="permanentlyPurgeAccount('${u.uid}')" class="px-2 py-1 rounded border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold transition" title="Hard Purge Record">
                       Purge
                     </button>
                   ` : ''}
@@ -1632,7 +1732,7 @@ ${escapeHtml(c.text || '')}
 
       if (deletedThreads.length === 0) {
         html += `
-          <div class="p-3 text-center text-slate-400 space-y-0.5 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+          <div class="p-3 text-center text-slate-400 space-y-0.5 bg-slate-50 dark:bg-slate-950/50 rounded-md border border-dashed border-slate-200 dark:border-slate-800">
             <p class="text-[11px]">No discussions currently in the 7-day recovery queue.</p>
           </div>
         `;
@@ -1646,11 +1746,11 @@ ${escapeHtml(c.text || '')}
           const meta = BOARD_META[p.board] || { name: p.board, color: 'text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700' };
 
           return `
-            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+            <div class="p-3.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
               <div class="flex items-start justify-between gap-3">
                 <div class="space-y-1">
                   <div class="flex items-center gap-2 flex-wrap text-xs">
-                    <span class="text-[9px] font-bold px-1.5 py-0.2 rounded-full border ${meta.color}">${meta.name}</span>
+                    <span class="text-[9px] font-bold px-1.5 py-0.2 rounded border ${meta.color}">${meta.name}</span>
                     <span class="font-bold text-slate-900 dark:text-white line-clamp-1">${escapeHtml(p.title)}</span>
                     <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${isExpired ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'}">
                       ${isExpired ? 'Expired' : `${daysLeft} days to recover`}
@@ -1666,10 +1766,10 @@ ${escapeHtml(c.text || '')}
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <button onclick="restorePost('${p.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1" title="Restore Thread">
-                    <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Restore
+                  <button onclick="restorePost('${p.id}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow flex items-center gap-1" title="Restore Thread">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Restore
                   </button>
-                  <button onclick="permanentlyPurgePost('${p.id}')" class="px-2 py-1 rounded-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold transition" title="Hard Purge Record">
+                  <button onclick="permanentlyPurgePost('${p.id}')" class="px-2 py-1 rounded border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold transition" title="Hard Purge Record">
                     Purge
                   </button>
                 </div>

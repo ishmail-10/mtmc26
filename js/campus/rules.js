@@ -140,15 +140,15 @@ function renderHostelRulesThreadHTML() {
     <div id="hostel-rules-thread-container" class="space-y-6">
 
       <!-- TOP OFFICIAL DIRECTIVE BANNER -->
-      <div class="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-indigo-900/40 via-slate-900/60 to-slate-950 border border-indigo-500/30 text-white shadow-lg backdrop-blur-md">
+      <div class="rounded-md p-4 sm:p-5 bg-gradient-to-br from-indigo-900/40 via-slate-900/60 to-slate-950 border border-indigo-500/30 text-white shadow-lg backdrop-blur-md">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center shrink-0 text-indigo-400">
+            <div class="w-10 h-10 rounded-md bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center shrink-0 text-indigo-400">
               <i data-lucide="shield-check" class="w-5 h-5"></i>
             </div>
             <div>
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-[11px] font-extrabold tracking-wider uppercase px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Batch Resident Guidelines</span>
+                <span class="text-[11px] font-extrabold tracking-wider uppercase px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Batch Resident Guidelines</span>
                 <span class="text-[11px] text-slate-400">Batch 2026 Hostel Residents</span>
               </div>
               <h3 class="text-sm sm:text-base font-extrabold text-white mt-0.5">Hostel Rules and Regulations</h3>
@@ -156,11 +156,11 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
-            <button onclick="openLightbox('./hostel_rules_clean.png')" class="flex-1 sm:flex-none px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow flex items-center justify-center gap-1.5">
+            <button onclick="openLightbox('./hostel_rules_clean.png')" class="flex-1 sm:flex-none px-3 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow flex items-center justify-center gap-1.5">
               <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
               <span>Inspect HD Doc</span>
             </button>
-            <a href="./hostel_rules_clean.png" download="MTMC_Hostel_Rules_and_Regulations.png" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition border border-slate-700 flex items-center justify-center gap-1.5" title="Download 300 DPI Document">
+            <a href="./hostel_rules_clean.png" download="MTMC_Hostel_Rules_and_Regulations.png" class="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition border border-slate-700 flex items-center justify-center gap-1.5" title="Download 300 DPI Document">
               <i data-lucide="download" class="w-3.5 h-3.5"></i>
               <span class="hidden sm:inline">Save</span>
             </a>
@@ -183,7 +183,7 @@ function renderHostelRulesThreadHTML() {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           <!-- Card 1: Gates & Biometrics -->
-          <div class="p-3.5 rounded-2xl border border-rose-500/20 bg-rose-500/5 dark:bg-rose-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-rose-500/20 bg-rose-500/5 dark:bg-rose-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
                 <i data-lucide="clock" class="w-4 h-4"></i> Gates & Punching
@@ -200,7 +200,7 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <!-- Card 2: Silence Hours -->
-          <div class="p-3.5 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 dark:bg-indigo-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-indigo-500/20 bg-indigo-500/5 dark:bg-indigo-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
                 <i data-lucide="volume-x" class="w-4 h-4"></i> Silence Hours
@@ -217,7 +217,7 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <!-- Card 3: Vehicles Banned -->
-          <div class="p-3.5 rounded-2xl border border-amber-500/20 bg-amber-500/5 dark:bg-amber-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-amber-500/20 bg-amber-500/5 dark:bg-amber-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
                 <i data-lucide="ban" class="w-4 h-4"></i> Campus Vehicles
@@ -233,7 +233,7 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <!-- Card 4: Fire Hazards & Crackers -->
-          <div class="p-3.5 rounded-2xl border border-rose-500/20 bg-rose-500/5 dark:bg-rose-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-rose-500/20 bg-rose-500/5 dark:bg-rose-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
                 <i data-lucide="flame" class="w-4 h-4"></i> Fire Safety
@@ -249,7 +249,7 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <!-- Card 5: Anti-Ragging & Substances -->
-          <div class="p-3.5 rounded-2xl border border-red-500/20 bg-red-500/5 dark:bg-red-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-red-500/20 bg-red-500/5 dark:bg-red-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-red-600 dark:text-red-400 flex items-center gap-1.5">
                 <i data-lucide="shield-alert" class="w-4 h-4"></i> Ragging & Narcotics
@@ -265,7 +265,7 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <!-- Card 6: Room Inspections & Guests -->
-          <div class="p-3.5 rounded-2xl border border-purple-500/20 bg-purple-500/5 dark:bg-purple-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-purple-500/20 bg-purple-500/5 dark:bg-purple-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
                 <i data-lucide="user-x" class="w-4 h-4"></i> Outsiders & Rooms
@@ -281,7 +281,7 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <!-- Card 7: Energy & Pets -->
-          <div class="p-3.5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 dark:bg-emerald-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-emerald-500/20 bg-emerald-500/5 dark:bg-emerald-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
                 <i data-lucide="zap" class="w-4 h-4"></i> Power & Pets
@@ -297,7 +297,7 @@ function renderHostelRulesThreadHTML() {
           </div>
 
           <!-- Card 8: Beach & Outings -->
-          <div class="p-3.5 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 dark:bg-cyan-950/20 space-y-1.5">
+          <div class="p-3.5 rounded-md border border-cyan-500/20 bg-cyan-500/5 dark:bg-cyan-950/20 space-y-1.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-extrabold text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
                 <i data-lucide="waves" class="w-4 h-4"></i> Water Outings
@@ -315,7 +315,7 @@ function renderHostelRulesThreadHTML() {
       </div>
 
       <!-- SECTION 2: CLEAN DOCUMENT ATTACHMENT CARD -->
-      <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-4 sm:p-5 shadow-sm space-y-3">
+      <div class="rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-4 sm:p-5 shadow-sm space-y-3">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <i data-lucide="file-text" class="w-4 h-4 text-indigo-500"></i>
@@ -324,10 +324,10 @@ function renderHostelRulesThreadHTML() {
           <span class="text-[11px] text-slate-500 dark:text-slate-400">Tap image or button to launch interactive zoom</span>
         </div>
 
-        <div class="relative group cursor-zoom-in rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white" onclick="openLightbox('./hostel_rules_clean.png')">
+        <div class="relative group cursor-zoom-in rounded-md overflow-hidden border border-slate-200 dark:border-slate-700 bg-white" onclick="openLightbox('./hostel_rules_clean.png')">
           <img src="./hostel_rules_clean.png" alt="Hostel Rules and Regulations Document" class="w-full max-h-72 object-contain mx-auto group-hover:scale-[1.01] transition duration-300" loading="lazy">
           <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center backdrop-blur-[2px]">
-            <span class="px-4 py-2 rounded-xl bg-slate-900/90 text-white font-bold text-xs shadow-xl flex items-center gap-2 border border-white/20">
+            <span class="px-4 py-2 rounded-md bg-slate-900/90 text-white font-bold text-xs shadow-xl flex items-center gap-2 border border-white/20">
               <i data-lucide="zoom-in" class="w-4 h-4 text-brand-orange"></i> Tap to open in 500% Lightbox Viewer
             </span>
           </div>
@@ -359,7 +359,7 @@ function renderHostelRulesThreadHTML() {
               id="hostel-rules-search" 
               oninput="filterHostelRules(this.value)" 
               placeholder="Search rules (e.g. biometric, music)..." 
-              class="w-full text-xs pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-hidden focus:border-indigo-500 transition shadow-xs"
+              class="w-full text-xs pl-8 pr-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 transition shadow-xs"
             >
             <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2"></i>
           </div>
@@ -372,7 +372,7 @@ function renderHostelRulesThreadHTML() {
       </div>
 
       <!-- FOOTER NOTE -->
-      <div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-2.5">
+      <div class="p-3.5 rounded-md bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-2.5">
         <i data-lucide="info" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i>
         <div>
           <span class="font-semibold text-slate-700 dark:text-slate-300">Batch Resident Note:</span>
@@ -394,15 +394,15 @@ function renderHostelRulesListHTML(rules) {
   }
 
   return rules.map(rule => `
-    <div class="rule-card p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-indigo-500/30 transition shadow-xs space-y-2" data-rule-id="${rule.id}">
+    <div class="rule-card p-3.5 sm:p-4 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-indigo-500/30 transition shadow-xs space-y-2" data-rule-id="${rule.id}">
       <div class="flex items-center justify-between flex-wrap gap-2">
         <div class="flex items-center gap-2">
-          <span class="w-6 h-6 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-extrabold text-xs flex items-center justify-center border border-indigo-500/20 shrink-0">
+          <span class="w-6 h-6 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-extrabold text-xs flex items-center justify-center border border-indigo-500/20 shrink-0">
             ${String(rule.id).padStart(2, '0')}
           </span>
           <span class="text-xs font-bold text-slate-900 dark:text-white">${rule.category}</span>
         </div>
-        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full border ${rule.badgeColor}">
+        <span class="text-[10px] font-semibold px-2 py-0.5 rounded border ${rule.badgeColor}">
           Clause #${rule.id}
         </span>
       </div>

@@ -64,11 +64,11 @@
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center space-y-3 shadow-sm">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-8 text-center space-y-3 shadow-sm">
             <i data-lucide="inbox" class="w-8 h-8 text-slate-400 mx-auto"></i>
             <p class="font-bold text-slate-900 dark:text-white text-sm">No discussions in this board yet</p>
             <p class="text-xs text-slate-500 dark:text-slate-400">Be the first to post a query, note, or item!</p>
-            <button onclick="handleNewPostClick()" class="px-3.5 py-1.5 rounded-xl bg-brand-orange text-white text-xs font-bold inline-flex items-center gap-1.5 shadow">
+            <button onclick="handleNewPostClick()" class="px-3.5 py-1.5 rounded-md bg-brand-orange text-white text-xs font-bold inline-flex items-center gap-1.5 shadow">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i> Start Thread
             </button>
           </div>
@@ -87,9 +87,9 @@
         // If quarantined and user is not admin/moderator, show quarantine placeholder
         if (isQuarantined && !isModOrAdmin) {
           return `
-            <article class="bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl p-4 transition shadow-sm">
+            <article class="bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/40 rounded-md p-4 transition shadow-sm">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <div class="w-8 h-8 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
                   <i data-lucide="shield-alert" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -106,18 +106,18 @@
           : (isQuarantined ? 'border-amber-400 dark:border-amber-600 ring-1 ring-amber-400/30' : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700');
 
         return `
-          <article onclick="openThread('${post.id}')" class="bg-white dark:bg-slate-900 border ${cardBorderClass} rounded-2xl p-4 sm:p-5 transition cursor-pointer shadow-sm hover:shadow-md group">
+          <article onclick="openThread('${post.id}')" class="bg-white dark:bg-slate-900 border ${cardBorderClass} rounded-md p-4 sm:p-5 transition cursor-pointer shadow-sm hover:shadow-md group">
             ${isQuarantined ? `
-              <div class="mb-3 p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 flex items-center justify-between text-xs">
+              <div class="mb-3 p-2.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 flex items-center justify-between text-xs">
                 <div class="flex items-center gap-1.5 font-bold">
                   <i data-lucide="shield-alert" class="w-4 h-4 text-amber-500"></i>
                   <span>QUARANTINED (${post.reportsCount} flags) — Visible to Moderators</span>
                 </div>
                 <div class="flex items-center gap-1">
-                  <button onclick="event.stopPropagation(); dismissPostFlags('${post.id}')" class="px-2 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition">
+                  <button onclick="event.stopPropagation(); dismissPostFlags('${post.id}')" class="px-2 py-0.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition">
                     Dismiss Flags
                   </button>
-                  <button onclick="event.stopPropagation(); deletePost('${post.id}')" class="px-2 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] transition">
+                  <button onclick="event.stopPropagation(); deletePost('${post.id}')" class="px-2 py-0.5 rounded bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] transition">
                     Delete
                   </button>
                 </div>
@@ -127,13 +127,13 @@
             <div class="flex items-start justify-between gap-3">
               <div class="space-y-1.5 flex-1">
                 <div class="flex flex-wrap items-center gap-2">
-                  ${post.isPinned ? '<span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1 shrink-0">📌 Pinned</span>' : ''}
-                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${meta.color}">
+                  ${post.isPinned ? '<span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1 shrink-0">📌 Pinned</span>' : ''}
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${meta.color}">
                     ${meta.name}
                   </span>
                   ${getTagBadge(post)}
-                  ${post.price ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${post.price}</span>` : ''}
-                  ${post.approvedBy ? `<span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 px-2 py-0.5 rounded-full inline-flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i> Approved by @${escapeHtml(post.approvedBy)}</span>` : ''}
+                  ${post.price ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${post.price}</span>` : ''}
+                  ${post.approvedBy ? `<span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 px-2 py-0.5 rounded inline-flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i> Approved by @${escapeHtml(post.approvedBy)}</span>` : ''}
                   <div class="inline-flex items-center gap-1.5 text-xs">
                     ${getPostAuthorDisplay(post)}
                     <span class="text-slate-400 dark:text-slate-600 font-normal">·</span>
@@ -148,7 +148,7 @@
                 </p>
 
                 ${post.imageUrl ? `
-                  <div class="mt-2.5 max-w-sm rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+                  <div class="mt-2.5 max-w-sm rounded-md overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
                     <img src="${post.imageUrl}" alt="Attachment" class="max-h-48 w-full object-cover cursor-zoom-in hover:opacity-95 transition" onclick="event.stopPropagation(); openLightbox('${post.imageUrl}')" loading="lazy">
                   </div>
                 ` : ''}
@@ -161,7 +161,7 @@
                   </button>
                 ` : ''}
                 ${post.tag && currentUserSession && (isModOrAdmin || currentUserSession.uid === post.authorUid) ? `
-                  <button onclick="event.stopPropagation(); toggleResolvePost('${post.id}')" class="px-2 py-0.5 rounded-lg border text-[10px] font-bold transition ${post.isResolved ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'}" title="${post.isResolved ? 'Reopen Request' : 'Mark as Resolved'}">
+                  <button onclick="event.stopPropagation(); toggleResolvePost('${post.id}')" class="px-2 py-0.5 rounded border text-[10px] font-bold transition ${post.isResolved ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'}" title="${post.isResolved ? 'Reopen Request' : 'Mark as Resolved'}">
                     ${post.isResolved ? 'Reopen' : 'Mark Resolved ✅'}
                   </button>
                 ` : ''}
@@ -308,7 +308,7 @@
 
       return `
         <div id="comment-node-${c.id}" class="space-y-1.5 ${indentClass} transition-colors">
-          <div class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/80 rounded-xl p-3 space-y-1.5 shadow-xs">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/80 rounded-md p-3 space-y-1.5 shadow-xs">
             
             <!-- Header: Collapse, Author, OP Badge, Time, Upvote -->
             <div class="flex items-center justify-between text-xs gap-2">
@@ -318,7 +318,7 @@
                 </button>
                 ${getCommentAuthorDisplay(c, post.authorUid)}
                 ${c.replyToUsername ? `<span class="text-[10px] text-slate-400 dark:text-slate-500 font-normal">↳ @${escapeHtml(c.replyToUsername)}</span>` : ''}
-                ${c.status === 'quarantined' ? `<span class="text-[9px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 px-1.5 py-0.2 rounded-full">🛡️ Under Mod Review</span>` : ''}
+                ${c.status === 'quarantined' ? `<span class="text-[9px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 px-1.5 py-0.2 rounded">🛡️ Under Mod Review</span>` : ''}
                 ${c.approvedBy ? `<span class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-0.5"><i data-lucide="shield-check" class="w-2.5 h-2.5"></i> Approved by @${escapeHtml(c.approvedBy)}</span>` : ''}
               </div>
               <div class="flex items-center gap-2 shrink-0">
@@ -335,7 +335,7 @@
             <!-- Body: Text + Action Bar -->
             <div id="comment-body-${c.id}" class="${isCollapsed ? 'hidden' : ''} space-y-2">
               ${c.isDeleted ? `
-                <p class="text-xs text-slate-400 dark:text-slate-500 italic py-1 px-2.5 rounded-lg bg-slate-50/60 dark:bg-slate-950/40 border border-dashed border-slate-200 dark:border-slate-800">
+                <p class="text-xs text-slate-400 dark:text-slate-500 italic py-1 px-2.5 rounded bg-slate-50/60 dark:bg-slate-950/40 border border-dashed border-slate-200 dark:border-slate-800">
                   [This comment was deleted by ${c.deletedBy === 'moderator' ? 'moderator' : 'author'}]
                 </p>
               ` : `
@@ -367,15 +367,15 @@
               </div>
 
               <!-- Inline micro-reply box -->
-              <div id="inline-reply-box-${c.id}" class="hidden mt-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div id="inline-reply-box-${c.id}" class="hidden mt-2 p-2.5 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
                 <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
                   <span>Replying to <strong class="text-slate-700 dark:text-slate-300">@${escapeHtml(c.isAnon ? 'Anonymous' : (c.author || 'member'))}</strong>:</span>
                   <button type="button" onclick="closeInlineReply('${c.id}')" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                 </div>
-                <textarea id="inline-reply-input-${c.id}" rows="2" placeholder="Write your reply..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange"></textarea>
+                <textarea id="inline-reply-input-${c.id}" rows="2" placeholder="Write your reply..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md p-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange"></textarea>
                 <div class="flex justify-end gap-1.5">
-                  <button type="button" onclick="closeInlineReply('${c.id}')" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition">Cancel</button>
-                  <button type="button" onclick="submitInlineReply('${post.id}', '${c.id}', '${c.isAnon ? 'Anonymous' : (c.author || '')}')" class="px-3 py-1 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow-xs">Reply</button>
+                  <button type="button" onclick="closeInlineReply('${c.id}')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition">Cancel</button>
+                  <button type="button" onclick="submitInlineReply('${post.id}', '${c.id}', '${c.isAnon ? 'Anonymous' : (c.author || '')}')" class="px-3 py-1 rounded bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow-xs">Reply</button>
                 </div>
               </div>
 
@@ -416,11 +416,11 @@
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Discussions
             </button>
           </div>
-          <div class="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center space-y-3">
+          <div class="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-md p-8 text-center space-y-3">
             <i data-lucide="trash-2" class="w-10 h-10 text-slate-400 mx-auto"></i>
             <h3 class="font-bold text-sm text-slate-900 dark:text-white">This Discussion Has Been Deleted</h3>
             <p class="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">This discussion thread was removed by its author or a batch moderator.</p>
-            <button onclick="resetToFeed()" class="mt-2 px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700">Return to Discussions</button>
+            <button onclick="resetToFeed()" class="mt-2 px-4 py-2 rounded-md bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700">Return to Discussions</button>
           </div>
         `;
         if (window.lucide && window.lucide.createIcons) lucide.createIcons();
@@ -434,11 +434,11 @@
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Discussions
             </button>
           </div>
-          <div class="bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 rounded-2xl p-8 text-center space-y-3">
+          <div class="bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 rounded-md p-8 text-center space-y-3">
             <i data-lucide="shield-alert" class="w-10 h-10 text-rose-500 mx-auto"></i>
             <h3 class="font-bold text-sm text-slate-900 dark:text-white">Discussion Under Safety Review</h3>
             <p class="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">This discussion triggered automated campus safety guidelines and is temporarily private pending batch moderator review.</p>
-            <button onclick="resetToFeed()" class="mt-2 px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700">Return to Feed</button>
+            <button onclick="resetToFeed()" class="mt-2 px-4 py-2 rounded-md bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700">Return to Feed</button>
           </div>
         `;
         if (window.lucide && window.lucide.createIcons) lucide.createIcons();
@@ -452,11 +452,11 @@
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Discussions
             </button>
           </div>
-          <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-2xl p-8 text-center space-y-3">
+          <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-md p-8 text-center space-y-3">
             <i data-lucide="shield-alert" class="w-10 h-10 text-amber-500 mx-auto"></i>
             <h3 class="font-bold text-sm text-slate-900 dark:text-white">This Thread is Quarantined</h3>
             <p class="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">This discussion received multiple community flags and is hidden from public view pending batch moderator review.</p>
-            <button onclick="resetToFeed()" class="mt-2 px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700">Return to Feed</button>
+            <button onclick="resetToFeed()" class="mt-2 px-4 py-2 rounded-md bg-slate-200 dark:bg-slate-800 text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700">Return to Feed</button>
           </div>
         `;
         if (window.lucide && window.lucide.createIcons) lucide.createIcons();
@@ -478,13 +478,13 @@
             <button onclick="resetToFeed()" class="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold transition">
               <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Discussions
             </button>
-            <button onclick="shareThread('${post.id}')" class="inline-flex items-center gap-1 text-[11px] text-slate-600 dark:text-slate-400 hover:text-brand-orange font-semibold px-2 py-0.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-orange transition" title="Share discussion">
+            <button onclick="shareThread('${post.id}')" class="inline-flex items-center gap-1 text-[11px] text-slate-600 dark:text-slate-400 hover:text-brand-orange font-semibold px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-orange transition" title="Share discussion">
               <i data-lucide="share-2" class="w-3 h-3 text-brand-orange"></i> Share
             </button>
           </div>
           <div class="flex items-center gap-2">
             ${isQuarantined && isModOrAdmin ? `
-              <button onclick="dismissPostFlags('${post.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">
+              <button onclick="dismissPostFlags('${post.id}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">
                 Dismiss Flags
               </button>
             ` : ''}
@@ -494,7 +494,7 @@
               </button>
             ` : ''}
             ${post.tag && currentUserSession && (isModOrAdmin || currentUserSession.uid === post.authorUid) && !post.isDeleted ? `
-              <button onclick="toggleResolvePost('${post.id}')" class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-lg border ${post.isResolved ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'}">
+              <button onclick="toggleResolvePost('${post.id}')" class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded border ${post.isResolved ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'}">
                 ${post.isResolved ? 'Reopen' : 'Mark Resolved ✅'}
               </button>
             ` : ''}
@@ -515,7 +515,7 @@
         </div>
 
         ${post.status === 'quarantined' ? `
-          <div class="p-3.5 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-900 dark:text-rose-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="p-3.5 rounded-md bg-rose-500/15 border border-rose-500/30 text-rose-900 dark:text-rose-200 flex flex-wrap items-center justify-between gap-3 text-xs">
             <div class="flex items-center gap-2.5">
               <i data-lucide="shield-alert" class="w-5 h-5 text-rose-500 shrink-0"></i>
               <div>
@@ -525,10 +525,10 @@
             </div>
             ${isModOrAdmin ? `
               <div class="flex items-center gap-2">
-                <button onclick="approveQuarantinedPost('${post.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow flex items-center gap-1.5">
+                <button onclick="approveQuarantinedPost('${post.id}')" class="px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow flex items-center gap-1.5">
                   <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Approve & Publish
                 </button>
-                <button onclick="rejectQuarantinedPost('${post.id}')" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow flex items-center gap-1.5">
+                <button onclick="rejectQuarantinedPost('${post.id}')" class="px-3 py-1.5 rounded-md bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow flex items-center gap-1.5">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Reject
                 </button>
               </div>
@@ -537,7 +537,7 @@
         ` : ''}
 
         ${post.isDeleted ? `
-          <div class="p-3.5 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-900 dark:text-amber-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="p-3.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-900 dark:text-amber-200 flex flex-wrap items-center justify-between gap-3 text-xs">
             <div class="flex items-center gap-2.5">
               <i data-lucide="archive-restore" class="w-5 h-5 text-amber-500 shrink-0"></i>
               <div>
@@ -546,10 +546,10 @@
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="restorePost('${post.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow flex items-center gap-1.5">
+              <button onclick="restorePost('${post.id}')" class="px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow flex items-center gap-1.5">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Restore Thread ↺
               </button>
-              <button onclick="permanentlyPurgePost('${post.id}')" class="px-2.5 py-1.5 rounded-xl bg-rose-600/10 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 font-semibold text-xs border border-rose-500/20 transition">
+              <button onclick="permanentlyPurgePost('${post.id}')" class="px-2.5 py-1.5 rounded-md bg-rose-600/10 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 font-semibold text-xs border border-rose-500/20 transition">
                 Purge
               </button>
             </div>
@@ -557,24 +557,24 @@
         ` : ''}
 
         ${isQuarantined && isModOrAdmin && !post.isDeleted ? `
-          <div class="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 flex items-center justify-between text-xs">
+          <div class="p-3 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-800 dark:text-amber-300 flex items-center justify-between text-xs">
             <div class="flex items-center gap-2 font-bold">
               <i data-lucide="shield-alert" class="w-4 h-4 text-amber-500"></i>
               <span>QUARANTINED (${post.reportsCount} Community Flags) — Hidden from Regular Students</span>
             </div>
-            <button onclick="dismissPostFlags('${post.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">
+            <button onclick="dismissPostFlags('${post.id}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition">
               Restore Thread
             </button>
           </div>
         ` : ''}
 
-        <div class="bg-white dark:bg-slate-900 border ${post.isPinned ? 'border-amber-400/90 dark:border-amber-500/70 border-l-4 border-l-amber-500' : (isQuarantined ? 'border-amber-400 dark:border-amber-600' : 'border-slate-200 dark:border-slate-800')} rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="bg-white dark:bg-slate-900 border ${post.isPinned ? 'border-amber-400/90 dark:border-amber-500/70 border-l-4 border-l-amber-500' : (isQuarantined ? 'border-amber-400 dark:border-amber-600' : 'border-slate-200 dark:border-slate-800')} rounded-md p-5 sm:p-6 shadow-sm space-y-4">
           <div class="flex items-center gap-2 flex-wrap">
-            ${post.isPinned ? '<span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1">📌 Pinned</span>' : ''}
-            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full border ${meta.color}">${meta.name}</span>
+            ${post.isPinned ? '<span class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1">📌 Pinned</span>' : ''}
+            <span class="text-xs font-bold px-2.5 py-0.5 rounded border ${meta.color}">${meta.name}</span>
             ${getTagBadge(post)}
-            ${post.price ? `<span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${post.price}</span>` : ''}
-            ${post.approvedBy ? `<span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> Approved by @${escapeHtml(post.approvedBy)}</span>` : ''}
+            ${post.price ? `<span class="text-xs font-bold px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${post.price}</span>` : ''}
+            ${post.approvedBy ? `<span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-2.5 py-0.5 rounded inline-flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> Approved by @${escapeHtml(post.approvedBy)}</span>` : ''}
             <div class="inline-flex items-center gap-1.5 text-xs">
               ${getPostAuthorDisplay(post)}
               <span class="text-slate-400 dark:text-slate-600 font-normal">·</span>
@@ -592,7 +592,7 @@
             </div>
 
             ${post.imageUrl ? `
-              <div class="mt-3 max-w-lg rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm bg-slate-50 dark:bg-slate-950">
+              <div class="mt-3 max-w-lg rounded-md overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm bg-slate-50 dark:bg-slate-950">
                 <img src="${post.imageUrl}" alt="Attachment" class="w-full max-h-96 object-contain cursor-zoom-in hover:opacity-95 transition" onclick="openLightbox('${post.imageUrl}')" loading="lazy">
                 <div class="p-2 bg-slate-100 dark:bg-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
                   <span class="flex items-center gap-1"><i data-lucide="zoom-in" class="w-3.5 h-3.5 text-brand-orange"></i> Tap to enlarge photo</span>
@@ -605,7 +605,7 @@
           ${renderReactionsHtml(post)}
 
           <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80">
-            <button onclick="upvotePost(event, '${post.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border text-xs font-bold transition shadow-sm ${isUpvoted ? 'bg-orange-500/10 border-orange-500/30 text-brand-orange hover:bg-orange-500/15' : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'}" title="${isUpvoted ? 'Click to revoke upvote' : 'Click to upvote'}">
+            <button onclick="upvotePost(event, '${post.id}')" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md border text-xs font-bold transition shadow-sm ${isUpvoted ? 'bg-orange-500/10 border-orange-500/30 text-brand-orange hover:bg-orange-500/15' : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'}" title="${isUpvoted ? 'Click to revoke upvote' : 'Click to upvote'}">
               <i data-lucide="arrow-big-up" class="w-4 h-4 ${isUpvoted ? 'fill-orange-500 text-orange-500' : 'text-slate-400 dark:text-slate-500'}"></i>
               <span>${isUpvoted ? 'Upvoted' : 'Upvote'} (${post.upvotes || 0})</span>
             </button>
@@ -620,16 +620,16 @@
               <span>Discussion (${comments.filter(c => !c.isDeleted).length})</span>
             </h3>
             ${comments.length > 1 ? `
-              <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-[11px]">
-                <button type="button" onclick="setCommentSort('top')" class="px-2 py-0.5 rounded-md font-semibold transition ${commentSort === 'top' ? 'bg-white dark:bg-slate-700 text-brand-orange shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}">Top</button>
-                <button type="button" onclick="setCommentSort('newest')" class="px-2 py-0.5 rounded-md font-semibold transition ${commentSort === 'newest' ? 'bg-white dark:bg-slate-700 text-brand-orange shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}">Newest</button>
+              <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded text-[11px]">
+                <button type="button" onclick="setCommentSort('top')" class="px-2 py-0.5 rounded font-semibold transition ${commentSort === 'top' ? 'bg-white dark:bg-slate-700 text-brand-orange shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}">Top</button>
+                <button type="button" onclick="setCommentSort('newest')" class="px-2 py-0.5 rounded font-semibold transition ${commentSort === 'newest' ? 'bg-white dark:bg-slate-700 text-brand-orange shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'}">Newest</button>
               </div>
             ` : ''}
           </div>
 
           <div class="space-y-2.5">
             ${comments.length === 0 ? `
-              <div class="p-6 text-center text-xs text-slate-400 dark:text-slate-500 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div class="p-6 text-center text-xs text-slate-400 dark:text-slate-500 bg-white dark:bg-slate-900 rounded-md border border-slate-200 dark:border-slate-800">
                 No comments yet. Be the first batchmate to start the discussion!
               </div>
             ` : `
@@ -638,14 +638,14 @@
           </div>
 
           ${post.isDeleted ? `
-            <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1 mt-4">
+            <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1 mt-4">
               <p class="font-bold text-slate-700 dark:text-slate-300">This discussion is currently in Trash</p>
               <p class="text-[11px]">Replies are disabled while in trash. Click "Restore Thread ↺" to reactivate the discussion.</p>
             </div>
           ` : `
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-3 mt-4 shadow-sm">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-4 space-y-3 mt-4 shadow-sm">
               <label class="block text-xs font-bold text-slate-900 dark:text-white">Add your reply:</label>
-              <textarea id="reply-input" rows="2" placeholder="${currentUserSession ? 'Write your reply or viva answer...' : 'Please log in to join the discussion...'}" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange"></textarea>
+              <textarea id="reply-input" rows="2" placeholder="${currentUserSession ? 'Write your reply or viva answer...' : 'Please log in to join the discussion...'}" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-md p-3 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-orange"></textarea>
               
               <div class="flex items-center justify-between">
                 ${post.board === 'anonymous' ? `
@@ -658,7 +658,7 @@
                     Replying as <span class="font-bold text-slate-700 dark:text-slate-300">@${currentUserSession?.username || 'member'}</span>
                   </div>
                 `}
-                <button onclick="submitReply('${post.id}')" class="px-4 py-1.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow">
+                <button onclick="submitReply('${post.id}')" class="px-4 py-1.5 rounded-md bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold transition shadow">
                   Reply
                 </button>
               </div>
@@ -738,11 +738,11 @@
       const btnHot = document.getElementById('sort-hot');
 
       if (type === 'latest') {
-        btnLatest.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-brand-orange text-white';
-        btnHot.className = 'px-2.5 py-1 rounded-lg text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+        btnLatest.className = 'px-2.5 py-1 rounded text-xs font-bold transition bg-brand-orange text-white';
+        btnHot.className = 'px-2.5 py-1 rounded text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
       } else {
-        btnHot.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-brand-orange text-white';
-        btnLatest.className = 'px-2.5 py-1 rounded-lg text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+        btnHot.className = 'px-2.5 py-1 rounded text-xs font-bold transition bg-brand-orange text-white';
+        btnLatest.className = 'px-2.5 py-1 rounded text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
       }
       renderFeed();
     }

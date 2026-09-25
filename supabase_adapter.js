@@ -113,7 +113,7 @@ const db = {
                 .from('posts')
                 .select(`
                   *,
-                  comments (*),
+                  comments (*, comment_upvotes (*)),
                   post_upvotes (*),
                   post_views (*)
                 `)
@@ -131,7 +131,7 @@ const db = {
                 .from('posts')
                 .select(`
                   *,
-                  comments (*),
+                  comments (*, comment_upvotes (*)),
                   post_upvotes (*),
                   post_views (*)
                 `)
@@ -192,6 +192,80 @@ const db = {
             return { val: () => modsMap, exists: () => Object.keys(modsMap).length > 0 };
           }
 
+          if (root === 'events') {
+            if (parts.length === 1) {
+              try {
+                const { data, error } = await sb.from('events').select('*').order('created_at', { ascending: false });
+                if (!error && data) {
+                  const evMap = {};
+                  data.forEach(e => { evMap[e.id] = transformEventRow(e); });
+                  return { val: () => evMap, exists: () => Object.keys(evMap).length > 0 };
+                }
+              } catch (e) {}
+              try {
+                const stored = localStorage.getItem('mtmc26_local_events');
+                if (stored) {
+                  const parsed = JSON.parse(stored);
+                  return { val: () => parsed, exists: () => Object.keys(parsed).length > 0 };
+                }
+              } catch (e) {}
+              return { val: () => ({}), exists: () => false };
+            } else if (parts.length === 2) {
+              const eventId = parts[1];
+              try {
+                const { data, error } = await sb.from('events').select('*').eq('id', eventId).maybeSingle();
+                if (!error && data) {
+                  return { val: () => transformEventRow(data), exists: () => true };
+                }
+              } catch (e) {}
+              try {
+                const stored = localStorage.getItem('mtmc26_local_events');
+                if (stored) {
+                  const parsed = JSON.parse(stored);
+                  if (parsed[eventId]) return { val: () => parsed[eventId], exists: () => true };
+                }
+              } catch (e) {}
+              return { val: () => null, exists: () => false };
+            }
+          }
+
+          if (root === 'quarantinedContent') {
+            if (parts.length === 1) {
+              try {
+                const { data, error } = await sb.from('quarantined_content').select('*').order('created_at', { ascending: false });
+                if (!error && data) {
+                  const qcMap = {};
+                  data.forEach(q => { qcMap[q.id] = transformQuarantinedRow(q); });
+                  return { val: () => qcMap, exists: () => Object.keys(qcMap).length > 0 };
+                }
+              } catch (e) {}
+              try {
+                const stored = localStorage.getItem('mtmc26_local_quarantine');
+                if (stored) {
+                  const parsed = JSON.parse(stored);
+                  return { val: () => parsed, exists: () => Object.keys(parsed).length > 0 };
+                }
+              } catch (e) {}
+              return { val: () => ({}), exists: () => false };
+            } else if (parts.length === 2) {
+              const qId = parts[1];
+              try {
+                const { data, error } = await sb.from('quarantined_content').select('*').eq('id', qId).maybeSingle();
+                if (!error && data) {
+                  return { val: () => transformQuarantinedRow(data), exists: () => true };
+                }
+              } catch (e) {}
+              try {
+                const stored = localStorage.getItem('mtmc26_local_quarantine');
+                if (stored) {
+                  const parsed = JSON.parse(stored);
+                  if (parsed[qId]) return { val: () => parsed[qId], exists: () => true };
+                }
+              } catch (e) {}
+              return { val: () => null, exists: () => false };
+            }
+          }
+
           if (root === 'messMenu') {
             return { val: () => null, exists: () => false };
           }
@@ -199,6 +273,7 @@ const db = {
           console.warn(`db.ref('${cleanPath}').once error:`, err);
         }
 
+        console.warn('[DB once] unhandled path:', cleanPath);
         return { val: () => null, exists: () => false };
       },
 
@@ -212,13 +287,13 @@ const db = {
           registerRealtimeListener('posts', async () => {
             const snap = await db.ref('posts').once('value');
             callback(snap);
-          });
+          }, cleanPath);
           db.ref('posts').once('value').then(callback);
         } else if (root === 'users' && parts.length === 1) {
           registerRealtimeListener('profiles', async () => {
             const snap = await db.ref('users').once('value');
             callback(snap);
-          });
+          }, cleanPath);
           db.ref('users').once('value').then(callback);
         } else if (root === 'userPrivate') {
           registerRealtimeListener('profile_private', async () => {
@@ -228,13 +303,13 @@ const db = {
               privMap[p.id] = { phone: p.phone, token: p.token };
             });
             callback({ val: () => privMap, exists: () => Object.keys(privMap).length > 0 });
-          });
+          }, cleanPath);
           db.ref('userPrivate').once('value').then(callback);
         } else if (root === 'publicModerators') {
           registerRealtimeListener('public_moderators', async () => {
             const snap = await db.ref('publicModerators').once('value');
             callback(snap);
-          });
+          }, cleanPath);
           db.ref('publicModerators').once('value').then(callback);
         } else if (root === 'deletionRequests' && parts.length === 1) {
           registerRealtimeListener('deletion_requests', async () => {
@@ -251,7 +326,7 @@ const db = {
               };
             });
             callback({ val: () => delMap, exists: () => Object.keys(delMap).length > 0 });
-          });
+          }, cleanPath);
           sb.from('deletion_requests').select('*').then(({ data }) => {
             const delMap = {};
             (data || []).forEach(d => {
@@ -268,37 +343,37 @@ const db = {
           });
         } else if (root === 'notifications' && parts.length === 2) {
           const uid = parts[1];
-          registerRealtimeListener('notifications', async () => {
+          const fetchNotifs = async () => {
             const { data } = await sb.from('notifications').select('*').eq('user_id', uid).order('created_at', { ascending: false });
             const notifsMap = {};
             (data || []).forEach(n => {
+              let postId = '';
+              let type = 'reply';
+              if (n.link) {
+                const m = n.link.match(/#thread\/([^?]+)/);
+                if (m) postId = m[1];
+                if (n.link.includes('type=mention')) type = 'mention';
+                else if (n.link.includes('type=system')) type = 'system';
+              }
               notifsMap[n.id] = {
                 id: n.id,
+                type: type,
+                postId: postId,
+                threadTitle: n.title,
                 title: n.title,
-                body: n.body,
                 senderName: n.sender_name,
+                senderUsername: n.sender_name,
+                snippet: n.body,
+                body: n.body,
                 link: n.link,
-                read: n.is_read,
+                read: Boolean(n.is_read),
                 timestamp: new Date(n.created_at).getTime()
               };
             });
             callback({ val: () => notifsMap, exists: () => Object.keys(notifsMap).length > 0 });
-          });
-          sb.from('notifications').select('*').eq('user_id', uid).order('created_at', { ascending: false }).then(({ data }) => {
-            const notifsMap = {};
-            (data || []).forEach(n => {
-              notifsMap[n.id] = {
-                id: n.id,
-                title: n.title,
-                body: n.body,
-                senderName: n.sender_name,
-                link: n.link,
-                read: n.is_read,
-                timestamp: new Date(n.created_at).getTime()
-              };
-            });
-            callback({ val: () => notifsMap, exists: () => Object.keys(notifsMap).length > 0 });
-          });
+          };
+          registerRealtimeListener('notifications', fetchNotifs, cleanPath);
+          fetchNotifs();
         } else if (root === 'messRatings' && parts.length === 2) {
           const dateKey = parts[1];
           registerRealtimeListener('mess_ratings', async () => {
@@ -306,7 +381,7 @@ const db = {
             const votesMap = {};
             (data || []).forEach(r => { votesMap[r.user_id] = r.vote; });
             callback({ val: () => ({ votes: votesMap }), exists: () => (data || []).length > 0 });
-          });
+          }, cleanPath);
           sb.from('mess_ratings').select('*').eq('date_key', dateKey).then(({ data }) => {
             const votesMap = {};
             (data || []).forEach(r => { votesMap[r.user_id] = r.vote; });
@@ -335,7 +410,7 @@ const db = {
             } catch (err) {
               console.warn('Feedback listener error:', err);
             }
-          });
+          }, cleanPath);
           sb.from('community_feedback').select('*').order('created_at', { ascending: false }).then(({ data, error }) => {
             if (error) return;
             const feedbackMap = {};
@@ -355,13 +430,47 @@ const db = {
             });
             callback({ val: () => feedbackMap, exists: () => Object.keys(feedbackMap).length > 0 });
           }).catch(() => {});
+        } else if (root === 'events' && parts.length === 1) {
+          const fetchEvents = async () => {
+            const snap = await db.ref('events').once('value');
+            callback(snap);
+          };
+          registerRealtimeListener('events', fetchEvents, cleanPath);
+          fetchEvents();
+        } else if (root === 'quarantinedContent' && parts.length === 1) {
+          const fetchQC = async () => {
+            const snap = await db.ref('quarantinedContent').once('value');
+            callback(snap);
+          };
+          registerRealtimeListener('quarantined_content', fetchQC, cleanPath);
+          fetchQC();
+        } else {
+          console.warn('[DB on] unhandled path:', cleanPath);
         }
       },
 
       // -------------------------------------------------------
       // UNSUBSCRIBE (.off())
       // -------------------------------------------------------
-      off() {},
+      off(eventType, callback) {
+        if (callback && typeof callback === 'function') {
+          Object.keys(realtimeListeners).forEach(table => {
+            realtimeListeners[table] = (realtimeListeners[table] || []).filter(cb => cb !== callback);
+          });
+          if (pathListeners[cleanPath]) {
+            pathListeners[cleanPath] = pathListeners[cleanPath].filter(e => e.callback !== callback);
+          }
+        } else {
+          if (pathListeners[cleanPath]) {
+            pathListeners[cleanPath].forEach(entry => {
+              if (realtimeListeners[entry.table]) {
+                realtimeListeners[entry.table] = realtimeListeners[entry.table].filter(cb => cb !== entry.callback);
+              }
+            });
+            delete pathListeners[cleanPath];
+          }
+        }
+      },
 
       // -------------------------------------------------------
       // WRITE / REPLACE (.set(val))
@@ -448,6 +557,17 @@ const db = {
               }
               return;
             }
+            if (parts.length === 6 && parts[2] === 'comments' && parts[4] === 'upvotedBy') {
+              const commentId = parts[3];
+              const userId = parts[5];
+              try {
+                await sb.from('comment_upvotes').upsert({ comment_id: commentId, user_id: userId });
+              } catch (err) {
+                console.warn('comment_upvotes set warning:', err);
+              }
+              triggerTableChange('posts');
+              return;
+            }
           }
 
           // 2. User & Profile writes
@@ -530,11 +650,35 @@ const db = {
           }
 
           // 5. Notifications
-          if (root === 'notifications' && parts.length === 4 && parts[3] === 'read') {
-            const notifId = parts[2];
-            await sb.from('notifications').update({ is_read: Boolean(val) }).eq('id', notifId);
-            triggerTableChange('notifications');
-            return;
+          if (root === 'notifications') {
+            if (parts.length === 3) {
+              const targetUid = parts[1];
+              const notifId = parts[2];
+              const postId = val.postId || '';
+              const type = val.type || 'reply';
+              const link = val.link || (postId ? `#thread/${postId}?type=${type}` : '');
+              try {
+                await sb.from('notifications').upsert({
+                  id: notifId,
+                  user_id: targetUid,
+                  sender_name: val.senderName || val.senderUsername || 'Batchmate',
+                  title: val.threadTitle || val.title || 'Discussion',
+                  body: val.snippet || val.body || '',
+                  link: link,
+                  is_read: Boolean(val.read)
+                });
+              } catch (err) {
+                console.warn('notifications upsert warning:', err);
+              }
+              triggerTableChange('notifications');
+              return;
+            }
+            if (parts.length === 4 && parts[3] === 'read') {
+              const notifId = parts[2];
+              await sb.from('notifications').update({ is_read: Boolean(val) }).eq('id', notifId);
+              triggerTableChange('notifications');
+              return;
+            }
           }
 
           // 6. Mess ratings
@@ -563,10 +707,73 @@ const db = {
             triggerTableChange('community_feedback');
             return;
           }
+
+          // 8. Events
+          if (root === 'events' && parts.length === 2) {
+            const eventId = parts[1];
+            try {
+              await sb.from('events').upsert({
+                id: eventId,
+                title: val.title,
+                category: val.category || 'ceremony',
+                category_label: val.categoryLabel || 'Batch Event',
+                status: val.status || 'completed',
+                status_label: val.statusLabel || '4K Gallery',
+                date: val.date,
+                date_mode: val.dateMode || 'single',
+                venue: val.venue || 'MTMC Campus, Baridih',
+                description: val.description || '',
+                drive_album_url: val.driveAlbumUrl || null,
+                drive_folder_id: val.driveFolderId || null,
+                cover_image: val.coverImage || null,
+                created_by_name: val.createdByName || 'Student',
+                created_by_uid: val.createdByUid || currentSupabaseUser?.uid,
+                created_by_role: val.createdByRole || 'student'
+              });
+            } catch (err) {
+              console.warn('Events table set warning:', err);
+            }
+            saveLocalEvent(val);
+            triggerTableChange('events');
+            return;
+          }
+
+          // 9. Quarantined Content
+          if (root === 'quarantinedContent' && parts.length === 2) {
+            const qId = parts[1];
+            try {
+              await sb.from('quarantined_content').upsert({
+                id: qId,
+                item_type: val.type || 'post',
+                post_id: val.postId || qId,
+                parent_id: val.parentId || null,
+                board: val.board || null,
+                title: val.title || val.threadTitle || null,
+                content: val.content || val.text || '',
+                price: val.price || null,
+                tag: val.tag || null,
+                image_url: val.imageUrl || null,
+                author_id: val.authorUid || currentSupabaseUser?.uid,
+                author_name: val.author || 'Student',
+                author_username: val.authorUsername || null,
+                is_anon: Boolean(val.isAnon),
+                category: val.quarantineCategory || 'Content Safety',
+                reason: val.quarantineReason || '',
+                status: 'quarantined'
+              });
+            } catch (err) {
+              console.warn('Quarantined content set warning:', err);
+            }
+            saveLocalQuarantined(val);
+            triggerTableChange('quarantined_content');
+            return;
+          }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').set error:`, err);
           throw err;
         }
+
+        console.warn('[DB set] unhandled path:', cleanPath, val);
       },
 
       // -------------------------------------------------------
@@ -634,10 +841,47 @@ const db = {
             triggerTableChange('community_feedback');
             return;
           }
+
+          if (root === 'events' && parts.length === 2) {
+            await sb.from('events').update(obj).eq('id', parts[1]);
+            triggerTableChange('events');
+            return;
+          }
+
+          if (root === 'quarantinedContent' && parts.length === 2) {
+            await sb.from('quarantined_content').update(obj).eq('id', parts[1]);
+            triggerTableChange('quarantined_content');
+            return;
+          }
+
+          if (root === 'notifications' && parts.length === 2) {
+            const targetUid = parts[1];
+            const sqlUpdate = {};
+            if ('read' in obj) sqlUpdate.is_read = Boolean(obj.read);
+            if ('is_read' in obj) sqlUpdate.is_read = Boolean(obj.is_read);
+            await sb.from('notifications').update(sqlUpdate).eq('user_id', targetUid);
+            triggerTableChange('notifications');
+            return;
+          }
+
+          // Multi-path root updates: e.g. db.ref().update(updates)
+          if (root === '' && typeof obj === 'object') {
+            for (const [keyPath, val] of Object.entries(obj)) {
+              const kParts = keyPath.split('/').filter(Boolean);
+              if (kParts[0] === 'notifications' && kParts.length === 4 && kParts[3] === 'read') {
+                const notifId = kParts[2];
+                await sb.from('notifications').update({ is_read: Boolean(val) }).eq('id', notifId);
+              }
+            }
+            triggerTableChange('notifications');
+            return;
+          }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').update error:`, err);
           throw err;
         }
+
+        console.warn('[DB update] unhandled path:', cleanPath, obj);
       },
 
       // -------------------------------------------------------
@@ -663,7 +907,7 @@ const db = {
               triggerTableChange('posts');
               return;
             }
-            if (parts.length === 5 && parts[2] === 'comments' && parts[4] === 'upvotedBy') {
+            if (parts.length === 6 && parts[2] === 'comments' && parts[4] === 'upvotedBy') {
               await sb.from('comment_upvotes').delete().match({ comment_id: parts[3], user_id: parts[5] });
               triggerTableChange('posts');
               return;
@@ -743,16 +987,42 @@ const db = {
             triggerTableChange('community_feedback');
             return;
           }
+
+          if (root === 'events' && parts.length === 2) {
+            const eventId = parts[1];
+            try {
+              await sb.from('events').delete().eq('id', eventId);
+            } catch (err) {
+              console.warn('events delete warning:', err);
+            }
+            removeLocalEvent(eventId);
+            triggerTableChange('events');
+            return;
+          }
+
+          if (root === 'quarantinedContent' && parts.length === 2) {
+            const qId = parts[1];
+            try {
+              await sb.from('quarantined_content').delete().eq('id', qId);
+            } catch (err) {
+              console.warn('quarantined_content delete warning:', err);
+            }
+            removeLocalQuarantined(qId);
+            triggerTableChange('quarantined_content');
+            return;
+          }
         } catch (err) {
           console.warn(`db.ref('${cleanPath}').remove error:`, err);
         }
+
+        console.warn('[DB remove] unhandled path:', cleanPath);
       },
 
       // -------------------------------------------------------
       // PUSH NEW ITEM (.push(item))
       // -------------------------------------------------------
       async push(val) {
-        if (!sb) return { key: 'local_' + Date.now() };
+        if (!sb) return { key: 'local_' + Date.now(), set: async () => {} };
 
         try {
           if (root === 'posts' && parts.length === 3 && parts[2] === 'comments') {
@@ -776,17 +1046,25 @@ const db = {
           if (root === 'notifications' && parts.length === 2) {
             const targetUid = parts[1];
             const nid = 'n_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
-            await sb.from('notifications').insert({
-              id: nid,
-              user_id: targetUid,
-              sender_name: val.senderName || 'Batchmate',
-              title: val.title,
-              body: val.body,
-              link: val.link || null,
-              is_read: false
-            });
-            triggerTableChange('notifications');
-            return { key: nid };
+            if (val) {
+              const postId = val.postId || '';
+              const type = val.type || 'reply';
+              const link = val.link || (postId ? `#thread/${postId}?type=${type}` : '');
+              await sb.from('notifications').insert({
+                id: nid,
+                user_id: targetUid,
+                sender_name: val.senderName || val.senderUsername || 'Batchmate',
+                title: val.threadTitle || val.title || 'Discussion',
+                body: val.snippet || val.body || '',
+                link: link,
+                is_read: Boolean(val.read)
+              });
+              triggerTableChange('notifications');
+            }
+            return {
+              key: nid,
+              set: (data) => db.ref(`notifications/${targetUid}/${nid}`).set(data)
+            };
           }
 
           if (root === 'feedback' && parts.length === 1) {
@@ -809,7 +1087,8 @@ const db = {
           console.warn(`db.ref('${cleanPath}').push error:`, err);
         }
 
-        return { key: 'k_' + Date.now() };
+        console.warn('[DB push] unhandled path:', cleanPath, val);
+        return { key: 'k_' + Date.now(), set: async () => {} };
       },
 
       // -------------------------------------------------------
@@ -824,7 +1103,12 @@ const db = {
           const next = updateFn(curr);
           await sb.from('posts').update({ reports_count: next }).eq('id', postId);
           triggerTableChange('posts');
+          return;
         }
+        if (root === 'posts' && parts.length === 5 && parts[2] === 'comments' && parts[4] === 'upvotes') {
+          return;
+        }
+        console.warn('[DB transaction] unhandled path:', cleanPath);
       }
     };
   }
@@ -834,19 +1118,36 @@ const db = {
 // INTERNAL HELPERS & REALTIME BROADCAST ENGINE
 // -------------------------------------------------------------
 const realtimeListeners = {};
+const pathListeners = {};
 
-function registerRealtimeListener(table, callback) {
+function registerRealtimeListener(table, callback, path = '') {
   if (!realtimeListeners[table]) realtimeListeners[table] = [];
   realtimeListeners[table].push(callback);
+
+  if (path) {
+    if (!pathListeners[path]) pathListeners[path] = [];
+    pathListeners[path].push({ table, callback });
+  }
 
   if (sb && !realtimeListeners[table + '_subscribed']) {
     realtimeListeners[table + '_subscribed'] = true;
     sb.channel(`sub_${table}`)
       .on('postgres_changes', { event: '*', schema: 'public', table }, () => {
-        (realtimeListeners[table] || []).forEach(cb => cb());
+        (realtimeListeners[table] || []).forEach(cb => {
+          try { cb(); } catch (e) { console.warn('Realtime listener callback error:', e); }
+        });
       })
       .subscribe();
   }
+
+  return () => {
+    if (realtimeListeners[table]) {
+      realtimeListeners[table] = realtimeListeners[table].filter(cb => cb !== callback);
+    }
+    if (path && pathListeners[path]) {
+      pathListeners[path] = pathListeners[path].filter(e => e.callback !== callback);
+    }
+  };
 }
 
 function triggerTableChange(table) {
@@ -862,20 +1163,27 @@ function transformPostRow(row) {
   const viewedByMap = {};
   (row.post_views || []).forEach(v => { viewedByMap[v.user_id] = true; });
 
-  const commentsArr = (row.comments || []).map(c => ({
-    id: c.id,
-    key: c.id,
-    postId: c.post_id,
-    parentId: c.parent_id,
-    author: c.is_anon ? 'Anonymous' : c.author_name,
-    authorUid: c.author_id,
-    authorUsername: c.author_username,
-    isAnon: Boolean(c.is_anon),
-    text: c.text,
-    time: formatTimeAgo(new Date(c.created_at).getTime()),
-    timestamp: new Date(c.created_at).getTime(),
-    isDeleted: Boolean(c.is_deleted)
-  }));
+  const commentsArr = (row.comments || []).map(c => {
+    const commentUpvotedByMap = {};
+    (c.comment_upvotes || []).forEach(cu => { commentUpvotedByMap[cu.user_id] = true; });
+
+    return {
+      id: c.id,
+      key: c.id,
+      postId: c.post_id,
+      parentId: c.parent_id,
+      author: c.is_anon ? 'Anonymous' : c.author_name,
+      authorUid: c.author_id,
+      authorUsername: c.author_username,
+      isAnon: Boolean(c.is_anon),
+      text: c.text,
+      time: typeof formatTimeAgo === 'function' ? formatTimeAgo(new Date(c.created_at).getTime()) : 'Just now',
+      timestamp: new Date(c.created_at).getTime(),
+      isDeleted: Boolean(c.is_deleted),
+      upvotes: Object.keys(commentUpvotedByMap).length,
+      upvotedBy: commentUpvotedByMap
+    };
+  });
 
   return {
     id: row.id,
@@ -895,9 +1203,10 @@ function transformPostRow(row) {
     restoreDeadline: row.restore_deadline ? new Date(row.restore_deadline).getTime() : null,
     reportsCount: row.reports_count || 0,
     isQuarantined: Boolean(row.is_quarantined),
+    status: row.is_quarantined ? 'quarantined' : 'published',
     price: row.price,
     imageUrl: row.image_url,
-    createdAt: row.is_pinned ? 'Pinned Guide' : formatTimeAgo(new Date(row.created_at).getTime()),
+    createdAt: row.is_pinned ? 'Pinned Guide' : (typeof formatTimeAgo === 'function' ? formatTimeAgo(new Date(row.created_at).getTime()) : 'Just now'),
     timestamp: new Date(row.created_at).getTime(),
     upvotes: Object.keys(upvotedByMap).length,
     upvotedBy: upvotedByMap,
@@ -927,16 +1236,84 @@ function transformProfileRow(p) {
   };
 }
 
-function formatTimeAgo(ts) {
-  if (!ts) return 'Just now';
-  const diff = Date.now() - ts;
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'Just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+function transformEventRow(e) {
+  return {
+    id: e.id,
+    title: e.title,
+    category: e.category || 'ceremony',
+    categoryLabel: e.category_label || 'Batch Event',
+    status: e.status || 'completed',
+    statusLabel: e.status_label || '4K Gallery',
+    date: e.date,
+    dateMode: e.date_mode || 'single',
+    venue: e.venue || 'MTMC Campus, Baridih',
+    description: e.description || '',
+    driveAlbumUrl: e.drive_album_url,
+    driveFolderId: e.drive_folder_id,
+    coverImage: e.cover_image,
+    createdByName: e.created_by_name || 'Student',
+    createdByUid: e.created_by_uid,
+    createdByRole: e.created_by_role || 'student',
+    createdAt: e.created_at ? new Date(e.created_at).getTime() : Date.now()
+  };
+}
+
+function transformQuarantinedRow(q) {
+  return {
+    id: q.id,
+    type: q.item_type || 'post',
+    postId: q.post_id || q.id,
+    parentId: q.parent_id || null,
+    board: q.board || 'resources',
+    title: q.title || '',
+    threadTitle: q.title || 'Discussion',
+    content: q.content || '',
+    text: q.content || '',
+    price: q.price || null,
+    tag: q.tag || null,
+    imageUrl: q.image_url || null,
+    author: q.author_name || 'Student',
+    authorUid: q.author_id,
+    authorUsername: q.author_username,
+    isAnon: Boolean(q.is_anon),
+    status: q.status || 'quarantined',
+    quarantineCategory: q.category || 'Content Safety',
+    quarantineReason: q.reason || '',
+    quarantinedAt: q.created_at ? new Date(q.created_at).getTime() : Date.now(),
+    timestamp: q.created_at ? new Date(q.created_at).getTime() : Date.now()
+  };
+}
+
+function saveLocalEvent(ev) {
+  try {
+    const stored = JSON.parse(localStorage.getItem('mtmc26_local_events') || '{}');
+    stored[ev.id] = ev;
+    localStorage.setItem('mtmc26_local_events', JSON.stringify(stored));
+  } catch (e) {}
+}
+
+function removeLocalEvent(id) {
+  try {
+    const stored = JSON.parse(localStorage.getItem('mtmc26_local_events') || '{}');
+    delete stored[id];
+    localStorage.setItem('mtmc26_local_events', JSON.stringify(stored));
+  } catch (e) {}
+}
+
+function saveLocalQuarantined(item) {
+  try {
+    const stored = JSON.parse(localStorage.getItem('mtmc26_local_quarantine') || '{}');
+    stored[item.id] = item;
+    localStorage.setItem('mtmc26_local_quarantine', JSON.stringify(stored));
+  } catch (e) {}
+}
+
+function removeLocalQuarantined(id) {
+  try {
+    const stored = JSON.parse(localStorage.getItem('mtmc26_local_quarantine') || '{}');
+    delete stored[id];
+    localStorage.setItem('mtmc26_local_quarantine', JSON.stringify(stored));
+  } catch (e) {}
 }
 
 // -------------------------------------------------------------

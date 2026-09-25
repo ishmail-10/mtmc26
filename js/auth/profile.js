@@ -20,8 +20,8 @@
       const secSecurity = document.getElementById('profile-section-security');
       const secTrash = document.getElementById('profile-section-trash');
 
-      const activeClass = 'flex-1 py-1.5 rounded-lg font-bold transition bg-brand-orange text-white text-center flex items-center justify-center';
-      const inactiveClass = 'flex-1 py-1.5 rounded-lg font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center flex items-center justify-center';
+      const activeClass = 'flex-1 py-1.5 rounded font-bold transition bg-brand-orange text-white text-center flex items-center justify-center';
+      const inactiveClass = 'flex-1 py-1.5 rounded font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-center flex items-center justify-center';
 
       if (tab === 'security') {
         if (btnSecurity) btnSecurity.className = activeClass;
@@ -67,13 +67,13 @@
       if (roleEl) {
         if (currentUserSession.role === 'supermod') {
           roleEl.textContent = '🛡️ Super Mod';
-          roleEl.className = 'px-2 py-0.2 rounded-full text-[9px] font-extrabold uppercase bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30';
+          roleEl.className = 'px-2 py-0.2 rounded text-[9px] font-extrabold uppercase bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30';
         } else if (currentUserSession.role === 'admin' || currentUserSession.role === 'moderator') {
           roleEl.textContent = 'Batch Moderator';
-          roleEl.className = 'px-2 py-0.2 rounded-full text-[9px] font-extrabold uppercase bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20';
+          roleEl.className = 'px-2 py-0.2 rounded text-[9px] font-extrabold uppercase bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20';
         } else {
           roleEl.textContent = 'Verified Student';
-          roleEl.className = 'px-2 py-0.2 rounded-full text-[9px] font-extrabold uppercase bg-brand-orange/10 text-brand-orange border border-brand-orange/20';
+          roleEl.className = 'px-2 py-0.2 rounded text-[9px] font-extrabold uppercase bg-brand-orange/10 text-brand-orange border border-brand-orange/20';
         }
       }
 
@@ -180,7 +180,7 @@
 
       if (myTrashPosts.length === 0) {
         container.innerHTML = `
-          <div class="p-6 text-center text-slate-400 space-y-2 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+          <div class="p-6 text-center text-slate-400 space-y-2 bg-slate-50 dark:bg-slate-950/50 rounded-md border border-dashed border-slate-200 dark:border-slate-800">
             <i data-lucide="trash" class="w-6 h-6 text-slate-300 dark:text-slate-600 mx-auto"></i>
             <p class="font-semibold text-slate-700 dark:text-slate-300 text-xs">Trash is Empty</p>
             <p class="text-[10px]">No deleted discussions in the 7-day recovery grace period.</p>
@@ -199,11 +199,11 @@
         const meta = BOARD_META[p.board] || { name: p.board, color: 'text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700' };
 
         return `
-          <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+          <div class="p-3 rounded-md bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
             <div class="flex items-start justify-between gap-2">
               <div class="space-y-1 flex-1">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <span class="text-[9px] font-bold px-1.5 py-0.2 rounded-full border ${meta.color}">${meta.name}</span>
+                  <span class="text-[9px] font-bold px-1.5 py-0.2 rounded border ${meta.color}">${meta.name}</span>
                   <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${isExpired ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'}">
                     ${isExpired ? 'Expired' : `${daysLeft}d left to recover`}
                   </span>
@@ -214,7 +214,7 @@
                 </p>
               </div>
               <div class="flex items-center gap-1 shrink-0">
-                <button onclick="restorePost('${p.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow flex items-center gap-1" title="Restore Thread">
+                <button onclick="restorePost('${p.id}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow flex items-center gap-1" title="Restore Thread">
                   <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Restore
                 </button>
                 <button onclick="permanentlyPurgePost('${p.id}')" class="p-1 text-slate-400 hover:text-rose-500 transition" title="Purge Permanently">

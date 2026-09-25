@@ -86,7 +86,7 @@
       selectedModalTag = tag || '';
       const chips = document.querySelectorAll('.modal-tag-chip');
       chips.forEach(btn => {
-        btn.className = 'modal-tag-chip px-2.5 py-1 rounded-lg border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange';
+        btn.className = 'modal-tag-chip px-2.5 py-1 rounded border text-[11px] font-medium transition bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-brand-orange';
       });
 
       const activeBtnId = !tag ? 'modal-tag-none' :
@@ -97,14 +97,14 @@
 
       if (activeBtnId) {
         const el = document.getElementById(activeBtnId);
-        if (el) el.className = 'modal-tag-chip px-2.5 py-1 rounded-lg border text-[11px] font-bold transition bg-brand-orange text-white border-brand-orange shadow-sm';
+        if (el) el.className = 'modal-tag-chip px-2.5 py-1 rounded border text-[11px] font-bold transition bg-brand-orange text-white border-brand-orange shadow-sm';
       }
     }
 
     function getTagBadge(post) {
       if (!post) return '';
       if (post.isResolved) {
-        return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">✅ Resolved</span>`;
+        return `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">✅ Resolved</span>`;
       }
       if (!post.tag) return '';
       let colorClass = 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
@@ -117,7 +117,7 @@
       } else if (post.tag.includes('Free')) {
         colorClass = 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30';
       }
-      return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${colorClass}">${post.tag}</span>`;
+      return `<span class="text-[10px] font-bold px-2 py-0.5 rounded ${colorClass}">${post.tag}</span>`;
     }
 
     async function toggleResolvePost(postId) {
@@ -292,11 +292,38 @@
         comments: {}
       };
 
-      if (db) {
-        await db.ref('posts/' + postId).set(newPost);
+      if (isQuarantined) {
+        const quarantinedPost = {
+          id: postId,
+          type: 'post',
+          postId: postId,
+          board: board,
+          title: title,
+          content: content,
+          price: board === 'bazaar' ? price : null,
+          tag: selectedModalTag || null,
+          imageUrl: selectedPostImageBase64 || null,
+          author: authorName,
+          authorUid: currentUserSession.uid,
+          authorUsername: currentUserSession.username,
+          isAnon: isAnon,
+          status: 'quarantined',
+          quarantineCategory: safetyCheck.category,
+          quarantineReason: safetyCheck.reason,
+          quarantinedAt: Date.now(),
+          timestamp: Date.now()
+        };
+        if (db) {
+          await db.ref('quarantinedContent/' + postId).set(quarantinedPost);
+        }
+        allQuarantinedContent[postId] = quarantinedPost;
       } else {
-        allPosts.unshift(newPost);
-        renderFeed();
+        if (db) {
+          await db.ref('posts/' + postId).set(newPost);
+        } else {
+          allPosts.unshift(newPost);
+          renderFeed();
+        }
       }
 
       lastPostTimestamp = now;
@@ -348,6 +375,36 @@
       const isCommentQuarantined = !safetyCheck.safe;
 
       const authorName = isAnon ? `Anonymous #${Math.floor(Math.random() * 899 + 100)}` : currentUserSession.username;
+
+      if (isCommentQuarantined) {
+        const commentId = 'c_' + Date.now();
+        const quarantinedComment = {
+          id: commentId,
+          type: 'comment',
+          postId: postId,
+          parentId: null,
+          threadTitle: post ? (post.title || 'Discussion') : 'Discussion',
+          author: authorName,
+          authorUid: currentUserSession.uid,
+          authorUsername: currentUserSession.username,
+          isAnon: isAnon,
+          text: text,
+          status: 'quarantined',
+          quarantineCategory: safetyCheck.category,
+          quarantineReason: safetyCheck.reason,
+          quarantinedAt: Date.now(),
+          timestamp: Date.now()
+        };
+        if (db) {
+          await db.ref('quarantinedContent/' + commentId).set(quarantinedComment);
+        }
+        allQuarantinedContent[commentId] = quarantinedComment;
+        lastCommentTimestamp = now;
+        input.value = '';
+        alert(`🛡️ Reply Held for Moderator Review:\n\nYour comment triggered safety guidelines under: [${safetyCheck.category}].\n\nReason: ${safetyCheck.reason}\n\nTo safeguard the batch, it has been submitted to the Moderator Review Queue and will appear once approved by a moderator.`);
+        return;
+      }
+
       const newComment = {
         id: 'c_' + Date.now(),
         parentId: null,
@@ -357,12 +414,7 @@
         text: text,
         time: 'Just now',
         timestamp: Date.now(),
-        status: isCommentQuarantined ? 'quarantined' : 'published',
-        quarantineCategory: isCommentQuarantined ? safetyCheck.category : null,
-        quarantineReason: isCommentQuarantined ? safetyCheck.reason : null,
-        quarantinedAt: isCommentQuarantined ? Date.now() : null,
-        approvedBy: null,
-        approvedAt: null,
+        status: 'published',
         upvotes: 0
       };
 
@@ -370,17 +422,45 @@
         const pushRef = await db.ref('posts/' + postId + '/comments').push(newComment);
         newComment.key = pushRef.key;
 
-        // Dispatch Real-Time Notifications ($0 / Spark Plan) only if not quarantined
-        if (!isCommentQuarantined) {
-          try {
-            // 1. Thread Reply Notification (if replier is not the thread author)
-            if (post && post.authorUid && post.authorUid !== currentUserSession.uid) {
-              const notifRef = db.ref('notifications/' + post.authorUid).push();
-              await notifRef.set({
-                id: notifRef.key,
-                type: 'reply',
+        // Dispatch Real-Time Notifications ($0 / Spark Plan)
+        try {
+          // 1. Thread Reply Notification (if replier is not the thread author)
+          if (post && post.authorUid && post.authorUid !== currentUserSession.uid) {
+            const notifRef = db.ref('notifications/' + post.authorUid).push();
+            await notifRef.set({
+              id: notifRef.key,
+              type: 'reply',
+              postId: postId,
+              threadTitle: post.title || 'Discussion',
+              senderUid: currentUserSession.uid,
+              senderName: isAnon ? 'A Classmate (Anonymous)' : (currentUserSession.fullName || currentUserSession.username),
+              senderUsername: isAnon ? 'anonymous' : currentUserSession.username,
+              snippet: text.substring(0, 80),
+              timestamp: Date.now(),
+              read: false
+            });
+          }
+
+          // 2. @Mentions Notification (e.g. "@batchmate check this out")
+          const mentionMatches = [...text.matchAll(/@([a-zA-Z0-9_]{3,20})/g)].map(m => m[1].toLowerCase());
+          if (mentionMatches.length > 0) {
+            const usersList = Object.values(allUsers || {});
+            const mentionedUids = new Set();
+
+            mentionMatches.forEach(uname => {
+              const target = usersList.find(u => (u.username || '').toLowerCase() === uname && (u.username || '').toLowerCase() !== 'admin');
+              if (target && target.uid !== currentUserSession.uid && (!post || target.uid !== post.authorUid)) {
+                mentionedUids.add(target.uid);
+              }
+            });
+
+            for (const targetUid of mentionedUids) {
+              const mentionRef = db.ref('notifications/' + targetUid).push();
+              await mentionRef.set({
+                id: mentionRef.key,
+                type: 'mention',
                 postId: postId,
-                threadTitle: post.title || 'Discussion',
+                threadTitle: post ? post.title : 'Discussion',
                 senderUid: currentUserSession.uid,
                 senderName: isAnon ? 'A Classmate (Anonymous)' : (currentUserSession.fullName || currentUserSession.username),
                 senderUsername: isAnon ? 'anonymous' : currentUserSession.username,
@@ -389,39 +469,9 @@
                 read: false
               });
             }
-
-            // 2. @Mentions Notification (e.g. "@batchmate check this out")
-            const mentionMatches = [...text.matchAll(/@([a-zA-Z0-9_]{3,20})/g)].map(m => m[1].toLowerCase());
-            if (mentionMatches.length > 0) {
-              const usersList = Object.values(allUsers || {});
-              const mentionedUids = new Set();
-
-              mentionMatches.forEach(uname => {
-                const target = usersList.find(u => (u.username || '').toLowerCase() === uname && (u.username || '').toLowerCase() !== 'admin');
-                if (target && target.uid !== currentUserSession.uid && (!post || target.uid !== post.authorUid)) {
-                  mentionedUids.add(target.uid);
-                }
-              });
-
-              for (const targetUid of mentionedUids) {
-                const mentionRef = db.ref('notifications/' + targetUid).push();
-                await mentionRef.set({
-                  id: mentionRef.key,
-                  type: 'mention',
-                  postId: postId,
-                  threadTitle: post ? post.title : 'Discussion',
-                  senderUid: currentUserSession.uid,
-                  senderName: isAnon ? 'A Classmate (Anonymous)' : (currentUserSession.fullName || currentUserSession.username),
-                  senderUsername: isAnon ? 'anonymous' : currentUserSession.username,
-                  snippet: text.substring(0, 80),
-                  timestamp: Date.now(),
-                  read: false
-                });
-              }
-            }
-          } catch (notifErr) {
-            console.warn("Notification dispatch:", notifErr);
           }
+        } catch (notifErr) {
+          console.warn("Notification dispatch:", notifErr);
         }
       }
 
@@ -435,9 +485,6 @@
         }
       }
 
-      if (isCommentQuarantined) {
-        alert(`🛡️ Reply Held for Moderator Review:\n\nYour comment triggered safety guidelines under: [${safetyCheck.category}].\n\nReason: ${safetyCheck.reason}\n\nTo safeguard the batch, it has been submitted to the Moderator Review Queue and will appear once approved by a moderator.`);
-      }
       renderThreadDetail(postId);
     }
 
@@ -489,6 +536,37 @@
       const authorName = isAnon ? `Anonymous #${Math.floor(Math.random() * 899 + 100)}` : currentUserSession.username;
       const parentComment = (post && post.comments) ? post.comments.find(c => c.id === parentCommentId) : null;
 
+      if (isCommentQuarantined) {
+        const commentId = 'c_' + Date.now();
+        const quarantinedComment = {
+          id: commentId,
+          type: 'comment',
+          postId: postId,
+          parentId: parentCommentId,
+          replyToUsername: isAnon ? null : (parentAuthor || null),
+          threadTitle: post ? (post.title || 'Discussion') : 'Discussion',
+          author: authorName,
+          authorUid: currentUserSession.uid,
+          authorUsername: currentUserSession.username,
+          isAnon: isAnon,
+          text: text,
+          status: 'quarantined',
+          quarantineCategory: safetyCheck.category,
+          quarantineReason: safetyCheck.reason,
+          quarantinedAt: Date.now(),
+          timestamp: Date.now()
+        };
+        if (db) {
+          await db.ref('quarantinedContent/' + commentId).set(quarantinedComment);
+        }
+        allQuarantinedContent[commentId] = quarantinedComment;
+        lastCommentTimestamp = now;
+        input.value = '';
+        closeInlineReply(parentCommentId);
+        alert(`🛡️ Reply Held for Moderator Review:\n\nYour comment triggered safety guidelines under: [${safetyCheck.category}].\n\nReason: ${safetyCheck.reason}\n\nTo safeguard the batch, it has been submitted to the Moderator Review Queue and will appear once approved by a moderator.`);
+        return;
+      }
+
       const newReply = {
         id: 'c_' + Date.now(),
         parentId: parentCommentId,
@@ -499,12 +577,7 @@
         text: text,
         time: 'Just now',
         timestamp: Date.now(),
-        status: isCommentQuarantined ? 'quarantined' : 'published',
-        quarantineCategory: isCommentQuarantined ? safetyCheck.category : null,
-        quarantineReason: isCommentQuarantined ? safetyCheck.reason : null,
-        quarantinedAt: isCommentQuarantined ? Date.now() : null,
-        approvedBy: null,
-        approvedAt: null,
+        status: 'published',
         upvotes: 0
       };
 
@@ -512,14 +585,53 @@
         const pushRef = await db.ref('posts/' + postId + '/comments').push(newReply);
         newReply.key = pushRef.key;
 
-        // Notifications only if not quarantined
-        if (!isCommentQuarantined) {
-          try {
-            if (parentComment && parentComment.authorUid && parentComment.authorUid !== currentUserSession.uid) {
-              const notifRef = db.ref('notifications/' + parentComment.authorUid).push();
-              await notifRef.set({
-                id: notifRef.key,
-                type: 'reply',
+        // Dispatch Real-Time Notifications ($0 / Spark Plan)
+        try {
+          if (parentComment && parentComment.authorUid && parentComment.authorUid !== currentUserSession.uid) {
+            const notifRef = db.ref('notifications/' + parentComment.authorUid).push();
+            await notifRef.set({
+              id: notifRef.key,
+              type: 'reply',
+              postId: postId,
+              threadTitle: post ? post.title : 'Discussion',
+              senderUid: currentUserSession.uid,
+              senderName: isAnon ? 'A Classmate (Anonymous)' : (currentUserSession.fullName || currentUserSession.username),
+              senderUsername: isAnon ? 'anonymous' : currentUserSession.username,
+              snippet: text.substring(0, 80),
+              timestamp: Date.now(),
+              read: false
+            });
+          } else if (post && post.authorUid && post.authorUid !== currentUserSession.uid) {
+            const notifRef = db.ref('notifications/' + post.authorUid).push();
+            await notifRef.set({
+              id: notifRef.key,
+              type: 'reply',
+              postId: postId,
+              threadTitle: post.title || 'Discussion',
+              senderUid: currentUserSession.uid,
+              senderName: isAnon ? 'A Classmate (Anonymous)' : (currentUserSession.fullName || currentUserSession.username),
+              senderUsername: isAnon ? 'anonymous' : currentUserSession.username,
+              snippet: text.substring(0, 80),
+              timestamp: Date.now(),
+              read: false
+            });
+          }
+
+          const mentionMatches = [...text.matchAll(/@([a-zA-Z0-9_]{3,20})/g)].map(m => m[1].toLowerCase());
+          if (mentionMatches.length > 0) {
+            const usersList = Object.values(allUsers || {});
+            const mentionedUids = new Set();
+            mentionMatches.forEach(uname => {
+              const target = usersList.find(u => (u.username || '').toLowerCase() === uname && (u.username || '').toLowerCase() !== 'admin');
+              if (target && target.uid !== currentUserSession.uid) {
+                mentionedUids.add(target.uid);
+              }
+            });
+            for (const targetUid of mentionedUids) {
+              const mentionRef = db.ref('notifications/' + targetUid).push();
+              await mentionRef.set({
+                id: mentionRef.key,
+                type: 'mention',
                 postId: postId,
                 threadTitle: post ? post.title : 'Discussion',
                 senderUid: currentUserSession.uid,
@@ -529,51 +641,10 @@
                 timestamp: Date.now(),
                 read: false
               });
-            } else if (post && post.authorUid && post.authorUid !== currentUserSession.uid) {
-              const notifRef = db.ref('notifications/' + post.authorUid).push();
-              await notifRef.set({
-                id: notifRef.key,
-                type: 'reply',
-                postId: postId,
-                threadTitle: post.title || 'Discussion',
-                senderUid: currentUserSession.uid,
-                senderName: isAnon ? 'A Classmate (Anonymous)' : (currentUserSession.fullName || currentUserSession.username),
-                senderUsername: isAnon ? 'anonymous' : currentUserSession.username,
-                snippet: text.substring(0, 80),
-                timestamp: Date.now(),
-                read: false
-              });
             }
-
-            const mentionMatches = [...text.matchAll(/@([a-zA-Z0-9_]{3,20})/g)].map(m => m[1].toLowerCase());
-            if (mentionMatches.length > 0) {
-              const usersList = Object.values(allUsers || {});
-              const mentionedUids = new Set();
-              mentionMatches.forEach(uname => {
-                const target = usersList.find(u => (u.username || '').toLowerCase() === uname && (u.username || '').toLowerCase() !== 'admin');
-                if (target && target.uid !== currentUserSession.uid) {
-                  mentionedUids.add(target.uid);
-                }
-              });
-              for (const targetUid of mentionedUids) {
-                const mentionRef = db.ref('notifications/' + targetUid).push();
-                await mentionRef.set({
-                  id: mentionRef.key,
-                  type: 'mention',
-                  postId: postId,
-                  threadTitle: post ? post.title : 'Discussion',
-                  senderUid: currentUserSession.uid,
-                  senderName: isAnon ? 'A Classmate (Anonymous)' : (currentUserSession.fullName || currentUserSession.username),
-                  senderUsername: isAnon ? 'anonymous' : currentUserSession.username,
-                  snippet: text.substring(0, 80),
-                  timestamp: Date.now(),
-                  read: false
-                });
-              }
-            }
-          } catch (notifErr) {
-            console.warn('Notification dispatch:', notifErr);
           }
+        } catch (notifErr) {
+          console.warn('Notification dispatch:', notifErr);
         }
       }
 
@@ -588,9 +659,6 @@
         }
       }
 
-      if (isCommentQuarantined) {
-        alert(`🛡️ Reply Held for Moderator Review:\n\nYour comment triggered safety guidelines under: [${safetyCheck.category}].\n\nReason: ${safetyCheck.reason}\n\nTo safeguard the batch, it has been submitted to the Moderator Review Queue and will appear once approved by a moderator.`);
-      }
       renderThreadDetail(postId);
     }
 
@@ -834,7 +902,7 @@
         const hasReacted = Boolean(uid && reactions[emoji]?.[uid]);
         return `
           <button type="button" onclick="event.stopPropagation(); togglePostReaction('${post.id}', '${escapeHtml(emoji)}')" 
-            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs transition select-none ${hasReacted ? 'bg-cyan-500/15 border border-cyan-500/50 text-cyan-700 dark:text-cyan-300 font-bold shadow-xs ring-1 ring-cyan-500/20' : 'bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'}"
+            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs transition select-none ${hasReacted ? 'bg-cyan-500/15 border border-cyan-500/50 text-cyan-700 dark:text-cyan-300 font-bold shadow-xs ring-1 ring-cyan-500/20' : 'bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'}"
             title="${escapeHtml(emoji)} (${count})">
             <span class="text-sm leading-none">${escapeHtml(emoji)}</span>
             <span class="text-[11px] font-mono">${count}</span>
@@ -846,10 +914,10 @@
         <div class="flex items-center gap-1.5 flex-wrap pt-2" onclick="event.stopPropagation()">
           ${chipsHtml}
           <div class="relative inline-block">
-            <button type="button" onclick="event.stopPropagation(); toggleReactionPicker('${post.id}')" class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-700 transition" title="React with emoji">
+            <button type="button" onclick="event.stopPropagation(); toggleReactionPicker('${post.id}')" class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-700 transition" title="React with emoji">
               <i data-lucide="smile-plus" class="w-3.5 h-3.5"></i>
             </button>
-            <div id="reaction-picker-${post.id}" class="hidden absolute left-0 bottom-full mb-1.5 z-30 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xl items-center gap-1 backdrop-blur-md">
+            <div id="reaction-picker-${post.id}" class="hidden absolute left-0 bottom-full mb-1.5 z-30 p-1.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xl items-center gap-1 backdrop-blur-md">
               <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '👍')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Thumbs Up">👍</button>
               <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '❤️')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Heart">❤️</button>
               <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '😂')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Joy">😂</button>
@@ -857,7 +925,7 @@
               <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '🩺')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Stethoscope">🩺</button>
               <button type="button" onclick="event.stopPropagation(); addQuickReaction('${post.id}', '🙏')" class="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform" title="Namaste / Thanks">🙏</button>
               <div class="relative ml-0.5 border-l border-slate-200 dark:border-slate-700 pl-1 flex items-center">
-                <input type="text" id="custom-emoji-input-${post.id}" oninput="handleCustomEmojiInput('${post.id}', this)" placeholder="➕" maxlength="4" class="w-8 h-8 text-center text-sm font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-dashed border-slate-300 dark:border-slate-600 rounded-xl cursor-pointer text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-orange" title="Tap to choose any emoji from your keyboard">
+                <input type="text" id="custom-emoji-input-${post.id}" oninput="handleCustomEmojiInput('${post.id}', this)" placeholder="➕" maxlength="4" class="w-8 h-8 text-center text-sm font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-dashed border-slate-300 dark:border-slate-600 rounded cursor-pointer text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-orange" title="Tap to choose any emoji from your keyboard">
               </div>
             </div>
           </div>

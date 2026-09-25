@@ -51,8 +51,8 @@
         const iconColor = n.type === 'mention' ? 'text-blue-500 bg-blue-500/10' : 'text-brand-orange bg-orange-500/10';
 
         return `
-          <div onclick="handleNotificationClick('${n.id}', '${n.postId}')" class="p-3 rounded-xl border transition cursor-pointer flex items-start gap-2.5 ${isUnread ? 'bg-orange-50/70 dark:bg-orange-950/20 border-orange-200/80 dark:border-orange-900/50' : 'bg-white dark:bg-slate-900/80 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50'}">
-            <div class="w-7 h-7 rounded-lg ${iconColor} flex items-center justify-center shrink-0 mt-0.5">
+          <div onclick="handleNotificationClick('${n.id}', '${n.postId}')" class="p-3 rounded-md border transition cursor-pointer flex items-start gap-2.5 ${isUnread ? 'bg-orange-50/70 dark:bg-orange-950/20 border-orange-200/80 dark:border-orange-900/50' : 'bg-white dark:bg-slate-900/80 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50'}">
+            <div class="w-7 h-7 rounded ${iconColor} flex items-center justify-center shrink-0 mt-0.5">
               <i data-lucide="${iconName}" class="w-3.5 h-3.5"></i>
             </div>
             <div class="flex-1 min-w-0 space-y-0.5">
@@ -72,6 +72,12 @@
       if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     }
 
+    let currentNotifListenerUid = null;
+
+    function resetNotificationListenerUid() {
+      currentNotifListenerUid = null;
+    }
+
     async function handleNotificationClick(notifId, postId) {
       if (db && currentUserSession && notifId) {
         db.ref(`notifications/${currentUserSession.uid}/${notifId}/read`).set(true).catch(() => {});
@@ -81,23 +87,38 @@
       }
       updateNotificationBadge();
       closeNotificationsModal();
-      if (postId) {
-        openThread(postId);
+
+      const cleanPostId = (postId || '').replace(/^#?thread\//, '').replace(/^#?post\//, '').split('?')[0].trim();
+      if (cleanPostId) {
+        openThread(cleanPostId);
       }
     }
 
     async function markAllNotificationsAsRead() {
       if (!currentUserSession || !db) return;
-      const updates = {};
-      Object.keys(allNotifications || {}).forEach(k => {
-        updates[`notifications/${currentUserSession.uid}/${k}/read`] = true;
+      const unreadKeys = Object.keys(allNotifications || {}).filter(k => !allNotifications[k].read);
+      if (unreadKeys.length === 0) return;
+
+      unreadKeys.forEach(k => {
         allNotifications[k].read = true;
       });
-      if (Object.keys(updates).length > 0) {
-        await db.ref().update(updates).catch(() => {});
-      }
       updateNotificationBadge();
       renderNotificationsList();
+
+      try {
+        if (typeof sb !== 'undefined' && sb) {
+          await sb.from('notifications').update({ is_read: true }).eq('user_id', currentUserSession.uid).eq('is_read', false);
+          triggerTableChange('notifications');
+        } else {
+          const updates = {};
+          unreadKeys.forEach(k => {
+            updates[`notifications/${currentUserSession.uid}/${k}/read`] = true;
+          });
+          await db.ref().update(updates).catch(() => {});
+        }
+      } catch (err) {
+        console.warn('markAllNotificationsAsRead error:', err);
+      }
     }
 
     function updateNotificationBadge() {
@@ -116,6 +137,13 @@
 
     function initNotificationsListener() {
       if (!db || !currentUserSession) return;
+      if (currentNotifListenerUid === currentUserSession.uid) return;
+
+      if (currentNotifListenerUid) {
+        db.ref('notifications/' + currentNotifListenerUid).off();
+      }
+      currentNotifListenerUid = currentUserSession.uid;
+
       db.ref('notifications/' + currentUserSession.uid).on('value', snapshot => {
         allNotifications = snapshot.val() || {};
         updateNotificationBadge();

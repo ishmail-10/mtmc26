@@ -2,7 +2,7 @@
   "name": "MTMC 26 — Student Community & Forum",
   "short_name": "MTMC 26",
   "description": "Unofficial Student Community & Forum for MBBS Batch 2026",
-  "start_url": "./index.html",
+  "start_url": "/mtmc26/index.html",
   "display": "standalone",
   "background_color": "#090d16",
   "theme_color": "#0b1b3d",

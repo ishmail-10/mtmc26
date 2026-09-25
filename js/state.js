@@ -19,6 +19,7 @@ let allPublicModerators = {};
 let allDeletionRequests = {};
 let allNotifications = {};
 let allCommunityFeedback = {};
+let allQuarantinedContent = {};
 let batchEvents = [];
 let cachedMessSchedule = null;
 let selectedMessDayIndex = null;

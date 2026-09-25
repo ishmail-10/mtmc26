@@ -306,10 +306,17 @@ function handleLogout() {
     db.ref('users').off();
     db.ref('userPrivate').off();
     db.ref('deletionRequests').off();
+    db.ref('quarantinedContent').off();
     db.ref('feedback').off();
     if (currentUserSession) {
       db.ref('notifications/' + currentUserSession.uid).off();
     }
+  }
+  if (typeof resetFirebaseListenersActive === 'function') {
+    resetFirebaseListenersActive();
+  }
+  if (typeof resetNotificationListenerUid === 'function') {
+    resetNotificationListenerUid();
   }
   currentUserSession = null;
   allCommunityFeedback = {};
@@ -348,7 +355,7 @@ function renderForgotModeratorsList() {
       <div class="p-2.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="font-semibold text-slate-900 dark:text-white text-xs truncate">${displayName}</span>
+            <span class="font-semibold text-slate-900 dark:text-white text-xs truncate">${escapeHtml(displayName)}</span>
             ${isSuperMod
               ? `<span class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30">🛡️ Super Mod</span>`
               : `<span class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-600 dark:text-purple-400">Mod</span>`
@@ -573,10 +580,10 @@ function updateGateState() {
         adminShieldBtn.classList.add('flex');
         const icon = adminShieldBtn.querySelector('i');
         if (currentUserSession.role === 'supermod') {
-          adminShieldBtn.className = 'items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 text-xs font-bold transition shadow-sm flex';
+          adminShieldBtn.className = 'items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 text-xs font-bold transition shadow-sm flex';
           if (icon) icon.className = 'w-4 h-4 text-amber-500';
         } else {
-          adminShieldBtn.className = 'items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 text-xs font-bold transition shadow-sm flex';
+          adminShieldBtn.className = 'items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded bg-purple-500/10 border border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 text-xs font-bold transition shadow-sm flex';
           if (icon) icon.className = 'w-4 h-4 text-purple-500';
         }
       }
