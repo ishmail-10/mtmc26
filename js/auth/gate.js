@@ -19,8 +19,8 @@ function switchGateTab(tab) {
   if (errBox)  errBox.classList.add('hidden');
   if (succBox) succBox.classList.add('hidden');
 
-  const activeClass   = 'py-2 rounded-lg transition bg-brand-orange text-white shadow-sm font-bold';
-  const inactiveClass = 'py-2 rounded-lg transition text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium';
+  const activeClass   = 'py-1.5 rounded transition bg-brand-orange text-white font-semibold text-xs';
+  const inactiveClass = 'py-1.5 rounded transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium text-xs';
 
   if (tab === 'register') {
     tabReg.className   = activeClass;
@@ -330,7 +330,7 @@ function renderForgotModeratorsList() {
 
   if (mods.length === 0) {
     container.innerHTML = `
-      <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+      <div class="p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
         <p class="font-semibold text-slate-700 dark:text-slate-300">No batch moderators currently on duty.</p>
         <p class="text-[11px]">Please reach out to your Class Representative (CR) on WhatsApp for account recovery.</p>
       </div>
@@ -345,10 +345,10 @@ function renderForgotModeratorsList() {
     const escapedName   = displayName.replace(/'/g, "\\'");
     const isSuperMod    = m.role && (m.role.toLowerCase().includes('super') || m.role.toLowerCase().includes('head'));
     return `
-      <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 shadow-sm">
+      <div class="p-2.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="font-bold text-slate-900 dark:text-white text-xs truncate">${displayName}</span>
+            <span class="font-semibold text-slate-900 dark:text-white text-xs truncate">${displayName}</span>
             ${isSuperMod
               ? `<span class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30">🛡️ Super Mod</span>`
               : `<span class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-600 dark:text-purple-400">Mod</span>`
@@ -356,7 +356,7 @@ function renderForgotModeratorsList() {
           </div>
           <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">${formattedPhone}</div>
         </div>
-        <button type="button" onclick="contactSpecificModerator('${escapedName}', '${phone}')" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-sm flex items-center gap-1 text-xs">
+        <button type="button" onclick="contactSpecificModerator('${escapedName}', '${phone}')" class="shrink-0 px-2.5 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition flex items-center gap-1 text-xs">
           <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
           <span>Message</span>
         </button>
@@ -391,7 +391,7 @@ function renderPendingModeratorsList() {
 
   if (mods.length === 0) {
     container.innerHTML = `
-      <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+      <div class="p-3 rounded-md bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
         <p class="font-semibold text-slate-700 dark:text-slate-300">No batch moderators currently listed.</p>
         <p class="text-[11px]">Please reach out to your Class Representative (CR) on WhatsApp to verify your account.</p>
       </div>
@@ -405,10 +405,10 @@ function renderPendingModeratorsList() {
     const formattedPhone = phone.length === 10 ? `+91 ${phone.slice(0, 5)} ${phone.slice(5)}` : `+91 ${phone}`;
     const isSuperMod     = m.role && (m.role.toLowerCase().includes('super') || m.role.toLowerCase().includes('head'));
     return `
-      <div class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-2 shadow-sm">
+      <div class="p-2.5 rounded-md bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-2">
         <div class="min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="font-bold text-slate-900 dark:text-white text-xs truncate">${escapeHtml(displayName)}</span>
+            <span class="font-semibold text-slate-900 dark:text-white text-xs truncate">${escapeHtml(displayName)}</span>
             ${isSuperMod
               ? `<span class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30">🛡️ Super Mod</span>`
               : `<span class="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-600 dark:text-purple-400">Mod</span>`
@@ -416,7 +416,7 @@ function renderPendingModeratorsList() {
           </div>
           <div class="text-[10px] font-mono text-slate-500 dark:text-slate-400">${formattedPhone}</div>
         </div>
-        <a href="https://wa.me/91${phone}" target="_blank" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-sm flex items-center gap-1 text-xs">
+        <a href="https://wa.me/91${phone}" target="_blank" class="shrink-0 px-2.5 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition flex items-center gap-1 text-xs">
           <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
           <span>Message</span>
         </a>
