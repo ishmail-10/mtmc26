@@ -429,12 +429,8 @@
         }
       }
 
-      const newHash = await hashPassword(newPass);
-      if (db && currentUserSession.uid) {
-        await db.ref('userPrivate/' + currentUserSession.uid + '/passwordHash').set(newHash).catch(() => {});
-      }
-
-      currentUserSession.passwordHash = newHash;
+      // Password securely updated in Supabase Auth (bcrypt)
+      delete currentUserSession.passwordHash;
       localStorage.setItem('mtmc_session_v2', JSON.stringify(currentUserSession));
 
       curInput.value = '';

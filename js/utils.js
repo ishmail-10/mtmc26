@@ -24,14 +24,9 @@ function countActiveSuperMods() {
 
 // ─── Cryptography ─────────────────────────────────────────────────────────────
 
-/** SHA-256 salted password hash using the Web Crypto API (SubtleCrypto) */
+/** @deprecated Password hashing is handled server-side by Supabase Auth (bcrypt). Retained as stub for legacy compatibility. */
 async function hashPassword(password) {
-  const salt = "mtmc26_salt_mbbs_";
-  const encoder = new TextEncoder();
-  const data = encoder.encode(salt + password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return '';
 }
 
 // ─── String / HTML Utilities ──────────────────────────────────────────────────

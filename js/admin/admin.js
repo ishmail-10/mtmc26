@@ -1272,9 +1272,7 @@ ${escapeHtml(c.text || '')}
         return;
       }
 
-      const passHash = await hashPassword(tempPass.trim());
       await db.ref('users/' + uid).update({
-        passwordHash: passHash,
         tempPasswordActive: true,
         passwordResetBy: currentUserSession.username,
         passwordResetAt: Date.now()

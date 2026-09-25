@@ -167,9 +167,7 @@ const db = {
               return {
                 val: () => ({
                   phone: data.phone || '',
-                  token: data.token || '',
-                  passwordHash: data.password_hash || '',
-                  password_hash: data.password_hash || ''
+                  token: data.token || ''
                 }),
                 exists: () => true
               };
@@ -219,7 +217,7 @@ const db = {
             const { data } = await sb.from('profile_private').select('*');
             const privMap = {};
             (data || []).forEach(p => {
-              privMap[p.id] = { phone: p.phone, token: p.token, passwordHash: p.password_hash };
+              privMap[p.id] = { phone: p.phone, token: p.token };
             });
             callback({ val: () => privMap, exists: () => Object.keys(privMap).length > 0 });
           });
@@ -467,18 +465,20 @@ const db = {
           if (root === 'userPrivate') {
             if (parts.length === 2) {
               const uid = parts[1];
-              await sb.from('profile_private').upsert({
+              const { error } = await sb.from('profile_private').upsert({
                 id: uid,
                 phone: val.phone || '',
-                token: val.token || '',
-                password_hash: val.password_hash || val.passwordHash || null
+                token: val.token || ''
               });
+              if (error) {
+                console.error('profile_private upsert error:', error);
+                throw new Error(error.message || 'Failed to save private student data');
+              }
               triggerTableChange('profile_private');
               return;
             }
             if (parts.length === 3 && (parts[2] === 'passwordHash' || parts[2] === 'password_hash')) {
-              await sb.from('profile_private').update({ password_hash: val }).eq('id', parts[1]);
-              triggerTableChange('profile_private');
+              // Obsolete: Password hashing is managed exclusively by Supabase Auth (bcrypt)
               return;
             }
           }

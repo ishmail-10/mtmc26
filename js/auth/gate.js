@@ -74,15 +74,6 @@ async function handleGateLogin(e) {
       const cred = await auth.signInWithEmailAndPassword(authEmail, pass);
       authUser = cred.user;
     } catch (authErr) {
-      // If Ghost Admin 'admin' has not been provisioned in Auth yet, auto-bootstrap:
-      if (uname.toLowerCase() === 'admin') {
-        try {
-          const cred = await auth.createUserWithEmailAndPassword(authEmail, pass);
-          authUser = cred.user;
-        } catch (createErr) {
-          console.warn("Auto-provision Ghost Admin:", createErr);
-        }
-      }
 
       if (!authUser) {
         const msg = (authErr.message || '').toLowerCase();
@@ -170,8 +161,7 @@ async function handleGateLogin(e) {
       userData.token = priv.token || userData.token || ('#MTMC-' + Math.floor(1000 + Math.random() * 9000));
     }
 
-    const passHash = await hashPassword(pass);
-    userData.passwordHash = passHash;
+    delete userData.passwordHash;
 
     currentUserSession = userData;
     localStorage.setItem('mtmc_session_v2', JSON.stringify(userData));
@@ -280,8 +270,21 @@ async function handleGateRegister(e) {
   };
 
   if (db) {
-    await db.ref('users/' + uid).set(newUser);
-    await db.ref('userPrivate/' + uid).set(privateData);
+    try {
+      await db.ref('users/' + uid).set(newUser);
+      await db.ref('userPrivate/' + uid).set(privateData);
+    } catch (dbErr) {
+      console.error("Registration database error:", dbErr);
+      if (auth) await auth.signOut().catch(() => {});
+      const msg = (dbErr.message || '').toLowerCase();
+      if (msg.includes('profile_private_phone_unique') || msg.includes('unique') || msg.includes('phone') || msg.includes('23505')) {
+        errBox.textContent = 'This mobile number is already registered with another account. Please use your own mobile number or contact a Batch Moderator.';
+      } else {
+        errBox.textContent = dbErr.message || 'Registration database setup failed. Please try again.';
+      }
+      errBox.classList.remove('hidden');
+      return;
+    }
   }
 
   newUser.phone = cleanPhone;
