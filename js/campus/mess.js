@@ -4,6 +4,57 @@
 
     // ================= LOCAL REPOSITORY & FIREBASE MESS MENU SYNC =================
     const LOCAL_MESS_MENU_URL = './mess_menu.json';
+    const DEFAULT_MESS_SCHEDULE = [
+      {
+        "day": "MONDAY",
+        "breakfast": ["Suji chilla (onion+chilli+carrots)", "Orange chutney", "Bread Butter/Jam", "Tea/Coffee", "Banana", "Boiled egg / Paneer Bhurji"],
+        "lunch": ["Jeera rice / Plain rice", "Roti", "Masoor Dal", "Dhokar Dalna", "Aloo Pyaz Bhujiya", "Boondi Raita", "Salad / Papad / Pickle"],
+        "hitea": ["Tea / Coffee", "Vada Pav + Green Fried Chilli", "Green Chutney"],
+        "dinner": ["Plain Rice / Roti", "Moong Dal", "Kala Chana Masala", "Crispy Alu Bhaja with Kadhi Patta", "Curd", "Salad / Papad / Pickle"]
+      },
+      {
+        "day": "TUESDAY",
+        "breakfast": ["Sattu Kachori", "Aloo Sabzi", "Bread Butter/Jam", "Tea / Coffee", "Guava"],
+        "lunch": ["Plain Rice", "Roti", "Chana Dal Tadka", "Punjabi Chhole", "Fried Crispy Aloo", "Onion Raita", "Salad / Papad / Pickle"],
+        "hitea": ["Tea / Coffee", "Masala Black Chana Ghugni"],
+        "dinner": ["Plain Rice / Roti", "Yellow Dal", "Rajma Masala", "Veg Jalfrezi", "Curd", "Salad / Papad / Pickle", "Mihi Dana"]
+      },
+      {
+        "day": "WEDNESDAY",
+        "breakfast": ["Idli / Uttapam", "Coconut Chutney + Sambar", "Bread Butter/Jam", "Tea / Coffee", "Papaya"],
+        "lunch": ["Veg Rice / Plain Rice", "Roti", "Yellow Masoor Dal", "Aloo Parwal Masala", "Mix Veg Bhujiya", "Boondi Raita", "Salad / Papad / Pickle"],
+        "hitea": ["Tea / Coffee", "Chilli Potato"],
+        "dinner": ["Plain Rice / Roti", "Lasooni Dal", "Dhaba Egg Curry", "Paneer Handi", "Curd", "Salad / Papad / Pickle"]
+      },
+      {
+        "day": "THURSDAY",
+        "breakfast": ["Aloo Paratha", "Green Chutney + Curd", "Bread Butter/Jam", "Tea / Coffee", "Banana"],
+        "lunch": ["Plain Rice / Fried Rice", "Roti", "Dal Fry", "Veg Manchurian Gravy", "Kundru Bhujiya", "Cucumber Raita", "Salad / Papad / Pickle"],
+        "hitea": ["Tea / Coffee", "Fried Idli + Green Chutney"],
+        "dinner": ["Rice / Ajwain Puri (less oily)", "Moong Dal Fry", "Chhole Masala", "Aloo Bhindi Masala", "Curd", "Salad / Papad / Pickle", "Gud (Jaggery) Kheer"]
+      },
+      {
+        "day": "FRIDAY",
+        "breakfast": ["Poha", "Orange Chutney", "Bread Butter/Jam", "Tea / Coffee", "Banana", "Masala Omelette / Paneer Bhurji"],
+        "lunch": ["Tomato Rice / Plain Rice", "Roti", "Dal Fry", "Kadhi Badi", "Black Chana Masala Dry", "Masala Raita", "Salad / Papad / Pickle"],
+        "hitea": ["Tea / Coffee", "Pani Puri (6+2)", "Aloo + Chutney + Imli Water"],
+        "dinner": ["Roti", "Toor Dal Fry", "Chicken Biryani with Salan", "Paneer Hyderabadi Biryani", "Onion Raita", "Salad / Papad / Pickle"]
+      },
+      {
+        "day": "SATURDAY",
+        "breakfast": ["Dal Paratha", "Aloo Mirch Sabji", "Bread Butter/Jam", "Tea / Coffee", "Papaya"],
+        "lunch": ["Veg Khichdi / Plain Rice", "Roti", "Dal Fry", "Rajma Masala", "Aloo Chokha", "Raita + Lijjat Papad", "Salad / Pickle"],
+        "hitea": ["Tea / Coffee", "Papdi Chaat"],
+        "dinner": ["Plain Rice", "Dal Panchmel", "Lauki Chana Dal", "Aloo Kasuri Methi", "Curd", "Salad / Papad / Pickle"]
+      },
+      {
+        "day": "SUNDAY",
+        "breakfast": ["Chole Bhature", "Onions + Lemon", "Bread Butter/Jam", "Tea / Coffee", "Guava"],
+        "lunch": ["Plain Rice", "Roti", "Lasooni Dal", "Masala Chole", "Dry Sarso Aloo Bhindi", "Salad / Papad / Pickle, Curd", "Gulab Jamun (1)"],
+        "hitea": ["Tea / Coffee", "Chura Badam Fry", "Chopped Onions and Chilli"],
+        "dinner": ["Veg Pulao / Plain Rice", "Arhar Dal", "Kadhai Paneer / Malai Kofta", "Kadhai Chicken", "Curd", "Salad / Papad / Pickle"]
+      }
+    ];
     let activeWidgetDayIndex = (new Date().getDay() + 6) % 7; // 0=Mon, 6=Sun
     let messTimetableActiveDay = (new Date().getDay() + 6) % 7; // 0=Mon, 6=Sun, or 'all'
 
@@ -50,7 +101,7 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
-                ${(cachedMessSchedule || []).map((row, idx) => `
+                ${((cachedMessSchedule && cachedMessSchedule.length > 0) ? cachedMessSchedule : DEFAULT_MESS_SCHEDULE).map((row, idx) => `
                   <tr class="${idx === realTodayIdx ? 'bg-orange-500/5 dark:bg-orange-500/10 font-medium' : 'hover:bg-slate-50/80 dark:hover:bg-slate-900/50'}">
                     <td class="p-3 font-bold text-slate-900 dark:text-white whitespace-nowrap">
                       ${row.day} ${idx === realTodayIdx ? '<span class="ml-1 text-[9px] px-1.5 py-0.5 rounded-full bg-brand-orange text-white font-black">TODAY</span>' : ''}
@@ -66,8 +117,9 @@
           </div>
         `;
       } else {
+        const activeSched = (cachedMessSchedule && cachedMessSchedule.length > 0) ? cachedMessSchedule : DEFAULT_MESS_SCHEDULE;
         const dayIdx = typeof messTimetableActiveDay === 'number' ? messTimetableActiveDay : 0;
-        const dayData = (cachedMessSchedule && cachedMessSchedule[dayIdx]) ? cachedMessSchedule[dayIdx] : {
+        const dayData = (activeSched && activeSched[dayIdx]) ? activeSched[dayIdx] : {
           day: days[dayIdx].toUpperCase(), breakfast: [], lunch: [], hitea: [], dinner: []
         };
 
@@ -288,6 +340,10 @@
           const btn = document.getElementById(btnId);
           if (btn) btn.className = chipCls;
         });
+      }
+
+      if (!cachedMessSchedule || !cachedMessSchedule[activeWidgetDayIndex]) {
+        cachedMessSchedule = DEFAULT_MESS_SCHEDULE;
       }
 
       if (!cachedMessSchedule || !cachedMessSchedule[activeWidgetDayIndex]) {
@@ -614,4 +670,9 @@
     window.selectWidgetDay = selectWidgetDay;
     window.submitMessRating = submitMessRating;
     window.initMessRatingListener = initMessRatingListener;
+    window.initMessMenu = initMessMenu;
+    window.initMessSchedule = initMessMenu;
+    window.renderMessTimetableThreadHTML = renderMessTimetableThreadHTML;
+    window.setMessTimetableDay = setMessTimetableDay;
+    window.syncLiveMessMenu = syncLiveMessMenu;
 

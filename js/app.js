@@ -168,7 +168,8 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
-      initMessSchedule();
+      if (typeof initMessMenu === 'function') initMessMenu();
+      else if (typeof initMessSchedule === 'function') initMessSchedule();
       lucide.createIcons();
       initPublicModeratorsListener();
       loadBatchEvents();

@@ -376,7 +376,7 @@ function renderHostelRulesThreadHTML() {
         <i data-lucide="info" class="w-4 h-4 text-indigo-500 shrink-0 mt-0.5"></i>
         <div>
           <span class="font-semibold text-slate-700 dark:text-slate-300">Batch Resident Note:</span>
-          All 250 residents of Batch 2026 are required to comply with these rules. Violations leading to formal notices or hostel debarment impact campus residency in subsequent academic terms. Contact your Class Representative (CR) or Batch Moderator for hostel grievances.
+          Shared for batch awareness and resident reference. For hostel queries or room assistance, contact your Class Representative (CR) or Batch Moderator.
         </div>
       </div>
 

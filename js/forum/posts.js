@@ -809,9 +809,24 @@
     // WHATSAPP-STYLE EMOJI REACTIONS (ZERO NAME EXPOSURE)
     // =============================================================
     function renderReactionsHtml(post) {
-      const reactions = post.reactions || {};
-      const emojiKeys = Object.keys(reactions);
+      const reactions = { ...(post.reactions || {}) };
       const uid = currentUserSession?.uid;
+
+      // Merge local user reactions for rock-solid zero-flicker UX
+      try {
+        const localReactions = JSON.parse(localStorage.getItem('mtmc26_local_reactions') || '{}');
+        const userPostReactions = localReactions[post.id] || {};
+        if (uid) {
+          Object.keys(userPostReactions).forEach(em => {
+            if (userPostReactions[em]) {
+              if (!reactions[em]) reactions[em] = {};
+              reactions[em][uid] = true;
+            }
+          });
+        }
+      } catch (e) {}
+
+      const emojiKeys = Object.keys(reactions);
 
       const chipsHtml = emojiKeys.map(emoji => {
         const count = Object.keys(reactions[emoji] || {}).length;
@@ -862,6 +877,18 @@
 
       const uid = currentUserSession.uid;
       const alreadyReacted = Boolean(post.reactions[emoji][uid]);
+
+      // Update local storage cache
+      try {
+        const localReactions = JSON.parse(localStorage.getItem('mtmc26_local_reactions') || '{}');
+        if (!localReactions[postId]) localReactions[postId] = {};
+        if (alreadyReacted && !forceAdd) {
+          delete localReactions[postId][emoji];
+        } else {
+          localReactions[postId][emoji] = true;
+        }
+        localStorage.setItem('mtmc26_local_reactions', JSON.stringify(localReactions));
+      } catch (e) {}
 
       if (alreadyReacted && !forceAdd) {
         delete post.reactions[emoji][uid];

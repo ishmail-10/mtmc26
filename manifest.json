@@ -1,7 +1,7 @@
 {
-  "name": "MTMC 26 — Student BBS & Tree Hole",
+  "name": "MTMC 26 — Student Community & Forum",
   "short_name": "MTMC 26",
-  "description": "Unofficial Student Forum & Tree Hole Community for MTMC Batch 2026",
+  "description": "Unofficial Student Community & Forum for MBBS Batch 2026",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#090d16",

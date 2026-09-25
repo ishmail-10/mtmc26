@@ -160,7 +160,15 @@ const db = {
           }
 
           if (root === 'userPrivate') {
-            if (parts.length === 2) {
+            if (parts.length === 1) {
+              const { data, error } = await sb.from('profile_private').select('*');
+              if (error || !data) return { val: () => ({}), exists: () => false };
+              const privMap = {};
+              data.forEach(p => {
+                privMap[p.id] = { phone: p.phone || '', token: p.token || '' };
+              });
+              return { val: () => privMap, exists: () => Object.keys(privMap).length > 0 };
+            } else if (parts.length === 2) {
               const uid = parts[1];
               const { data, error } = await sb.from('profile_private').select('*').eq('id', uid).maybeSingle();
               if (error || !data) return { val: () => ({}), exists: () => false };
@@ -221,6 +229,7 @@ const db = {
             });
             callback({ val: () => privMap, exists: () => Object.keys(privMap).length > 0 });
           });
+          db.ref('userPrivate').once('value').then(callback);
         } else if (root === 'publicModerators') {
           registerRealtimeListener('public_moderators', async () => {
             const snap = await db.ref('publicModerators').once('value');
@@ -417,14 +426,25 @@ const db = {
               const emoji = parts[3];
               const userId = parts[4];
               try {
+                // Try RPC first for clean atomic update without RLS conflicts
+                const { error: rpcErr } = await sb.rpc('toggle_reaction', { p_post_id: postId, p_emoji: emoji });
+                if (!rpcErr) {
+                  triggerTableChange('posts');
+                  return;
+                }
+
                 const { data } = await sb.from('posts').select('reactions').eq('id', postId).maybeSingle();
                 const reactions = data?.reactions || {};
                 if (!reactions[emoji]) reactions[emoji] = {};
                 reactions[emoji][userId] = true;
-                await sb.from('posts').update({ reactions }).eq('id', postId);
-                triggerTableChange('posts');
+                const { error: updErr } = await sb.from('posts').update({ reactions }).eq('id', postId);
+                if (updErr) {
+                  console.warn('Reactions set warning (RLS or column):', updErr);
+                } else {
+                  triggerTableChange('posts');
+                }
               } catch (err) {
-                console.warn('Reactions set warning:', err);
+                console.warn('Reactions set error:', err);
               }
               return;
             }
@@ -653,6 +673,13 @@ const db = {
               const emoji = parts[3];
               const userId = parts[4];
               try {
+                // Try RPC first for clean atomic update without RLS conflicts
+                const { error: rpcErr } = await sb.rpc('toggle_reaction', { p_post_id: postId, p_emoji: emoji });
+                if (!rpcErr) {
+                  triggerTableChange('posts');
+                  return;
+                }
+
                 const { data } = await sb.from('posts').select('reactions').eq('id', postId).maybeSingle();
                 const reactions = data?.reactions || {};
                 if (reactions[emoji] && reactions[emoji][userId]) {
@@ -660,8 +687,12 @@ const db = {
                   if (Object.keys(reactions[emoji]).length === 0) {
                     delete reactions[emoji];
                   }
-                  await sb.from('posts').update({ reactions }).eq('id', postId);
-                  triggerTableChange('posts');
+                  const { error: updErr } = await sb.from('posts').update({ reactions }).eq('id', postId);
+                  if (updErr) {
+                    console.warn('Reactions remove warning (RLS or column):', updErr);
+                  } else {
+                    triggerTableChange('posts');
+                  }
                 }
               } catch (err) {
                 console.warn('Reactions remove warning:', err);

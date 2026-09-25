@@ -826,6 +826,9 @@ ${escapeHtml(c.text || '')}
       if (post.isAnon) {
         return `<span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold"><i data-lucide="eye-off" class="w-3.5 h-3.5 inline"></i> ${escapeHtml(post.author || 'Anonymous')}</span>`;
       }
+      if (post.id === 'post-mtmc-mess' || post.id === 'post-mtmc-foundation-course' || post.id === 'post-mtmc-hostel-rules' || post.author === 'Batch Resource') {
+        return `<span class="font-bold text-slate-800 dark:text-slate-100">Batch Resource</span>`;
+      }
       if (post.authorUid && allUsers[post.authorUid]) {
         const u = allUsers[post.authorUid];
         if (u.fullName && u.username) {
@@ -964,16 +967,20 @@ ${escapeHtml(c.text || '')}
                 u.role === 'supermod' ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30' :
                 u.role === 'moderator' ? 'bg-purple-500/20 text-purple-600 dark:text-purple-400' :
                 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-              }">${u.role === 'admin' ? 'moderator' : (u.role === 'supermod' ? '🛡️ super mod' : u.role)}</span>
+              }">${u.username === 'admin' ? 'admin' : (u.role === 'supermod' ? '🛡️ super mod' : u.role)}</span>
               <span class="text-[9px] font-bold px-1.5 py-0.2 rounded ${u.status === 'verified' ? 'text-emerald-500' : (u.status === 'rejected' ? 'text-rose-500' : 'text-amber-500')}">• ${u.status}</span>
             </div>
             <p class="text-[11px] text-slate-500 font-mono mt-0.5"><span class="text-slate-400">Mobile:</span> +91 ${phone} ${token ? `· <span class="text-slate-400">Token:</span> ${token}` : ''}</p>
           </div>
-          ${isModOrAbove(currentUserSession?.role) && u.role !== 'admin' ? `
+          ${isModOrAbove(currentUserSession?.role) && (currentUserSession?.username === 'admin' || u.role !== 'admin') && u.username !== currentUserSession?.username ? `
             <div class="flex items-center gap-1 shrink-0 flex-wrap justify-end">
               <!-- Admin Controls: Make/Demote Mod, Make/Demote Super Mod -->
               ${currentUserSession?.role === 'admin' ? `
-                ${u.role === 'supermod' ? `
+                ${u.role === 'admin' ? `
+                  <button onclick="handleAdminDemoteMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-rose-500/30 text-rose-500 hover:bg-rose-500/10">
+                    Demote to Student
+                  </button>
+                ` : (u.role === 'supermod' ? `
                   <button onclick="handleAdminDemoteSuperMod('${u.uid}', '${u.username}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10">
                     Demote Super Mod
                   </button>
@@ -997,7 +1004,7 @@ ${escapeHtml(c.text || '')}
                       </button>
                     ` : ''}
                   `}
-                `}
+                `)}
               ` : (currentUserSession?.role === 'supermod' ? `
                 ${u.role === 'student' ? `
                   <button onclick="handleMakeMod('${u.uid}')" class="px-2 py-1 rounded-lg text-[10px] font-bold border border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10">

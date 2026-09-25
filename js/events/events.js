@@ -733,22 +733,12 @@
       let cardsHtml = '';
       if (filtered.length === 0) {
         cardsHtml = `
-          <div class="bg-gradient-to-br from-slate-900 via-[#0a0f1d] to-slate-950 border border-slate-800/80 rounded-3xl p-8 sm:p-12 text-center space-y-4 shadow-2xl">
-            <div class="w-16 h-16 rounded-3xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 mx-auto flex items-center justify-center shadow-lg">
-              <i data-lucide="camera" class="w-8 h-8"></i>
-            </div>
-            <div class="space-y-1.5 max-w-md mx-auto">
-              <h3 class="font-black text-lg sm:text-xl text-white">No Batch Events Published Yet</h3>
-              <p class="text-xs text-slate-400 leading-relaxed">
-                Capture and preserve our milestone ceremonies, fests, sports tournaments, and batch trips in full 4K clarity. Add a Google Drive album link and banner to publish the first event.
-              </p>
-            </div>
-            <div class="pt-2">
-              <button onclick="openEventModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-bold transition shadow-xl inline-flex items-center gap-2">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                <span>Create First Batch Event</span>
-              </button>
-            </div>
+          <div class="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-6 text-center space-y-2.5">
+            <p class="text-xs text-slate-500 dark:text-slate-400">No batch events published yet. Events will appear here once published.</p>
+            <button onclick="openEventModal()" class="px-3.5 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold transition inline-flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Create Event</span>
+            </button>
           </div>
         `;
       } else {
@@ -786,20 +776,13 @@
                       </span>
                     </div>
 
-                    <div class="absolute top-3 right-3 pointer-events-none">
-                      <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 backdrop-blur-md flex items-center gap-1 font-mono">
-                        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-                        <span>4K Ultra-HD</span>
-                      </span>
-                    </div>
-
                     <!-- Bottom Banner Overlay on Hover -->
                     <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs pointer-events-none">
                       <span class="font-bold flex items-center gap-1 text-[11px] drop-shadow-md text-amber-300">
                         <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i> ${ev.date}
                       </span>
                       <span class="text-[10px] px-2 py-0.5 rounded-lg bg-black/60 text-slate-200 border border-white/20 backdrop-blur-sm flex items-center gap-1">
-                        <span>Tap to View 4K Album</span>
+                        <span>Tap to View Album</span>
                         <i data-lucide="arrow-right" class="w-3 h-3 text-cyan-400"></i>
                       </span>
                     </div>
@@ -827,7 +810,7 @@
 
                       <div class="flex items-center gap-1 text-cyan-400 font-semibold text-[11px]">
                         <i data-lucide="folder-symlink" class="w-3.5 h-3.5"></i>
-                        <span>Google Drive 4K</span>
+                        <span>Drive Album</span>
                       </div>
                     </div>
 
@@ -841,49 +824,31 @@
       }
 
       container.innerHTML = `
-        <!-- DEVCLUB-INSPIRED OBSIDIAN GLASS HERO BANNER -->
-        <div class="bg-gradient-to-br from-slate-900 via-[#0a0f1d] to-slate-950 border border-slate-800/80 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-2xl text-white">
+        <!-- BATCH EVENTS HERO BANNER -->
+        <div class="bg-gradient-to-br from-slate-900 via-[#0a0f1d] to-slate-950 border border-slate-800/80 rounded-2xl p-5 sm:p-6 relative overflow-hidden shadow-xl text-white">
           <div class="absolute -top-20 -right-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
           <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-          <div class="relative z-10 space-y-4">
+          <div class="relative z-10 space-y-3">
             <div class="flex items-center justify-between flex-wrap gap-3">
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-                  <span>Batch Moments & Events</span>
-                </span>
-                <span class="text-xs text-slate-400">MBBS Batch 2026</span>
-              </div>
+              <span class="px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                <span>Batch Moments & Events</span>
+              </span>
 
-              <button onclick="openEventModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-bold transition shadow-lg inline-flex items-center gap-1.5">
-                <i data-lucide="plus" class="w-4 h-4"></i>
+              <button onclick="openEventModal()" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-semibold transition shadow-md inline-flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Create Batch Event</span>
               </button>
             </div>
 
             <div>
-              <h2 class="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-200 bg-clip-text text-transparent">
+              <h2 class="text-lg sm:text-xl font-black tracking-tight text-white">
                 MTMC 2026 Batch Memories & Milestone Gallery
               </h2>
-              <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed pt-1">
-                Preserve our milestone ceremonies, fests, sports championships, campus celebrations, and road trips. All albums stream in 4K resolution via Google Drive with zero storage cost.
+              <p class="text-xs text-slate-300 max-w-2xl leading-relaxed pt-1">
+                Preserve our milestone ceremonies, fests, sports championships, campus celebrations, and road trips.
               </p>
-            </div>
-
-            <div class="flex items-center gap-2 flex-wrap text-xs pt-1">
-              <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-slate-300 flex items-center gap-1.5">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
-                <span>Zero Database Storage Used</span>
-              </span>
-              <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-slate-300 flex items-center gap-1.5">
-                <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-blue-400"></i>
-                <span>Google Drive 4K Albums</span>
-              </span>
-              <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-slate-300 flex items-center gap-1.5">
-                <i data-lucide="lock" class="w-3.5 h-3.5 text-purple-400"></i>
-                <span>Exclusive to Batch 2026</span>
-              </span>
             </div>
           </div>
         </div>
