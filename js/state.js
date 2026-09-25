@@ -56,6 +56,19 @@ const DEFAULT_POSTS = [
     createdAt: 'Batch Guide',
     timestamp: 1727100000000,
     comments: []
+  },
+  {
+    id: 'post-mtmc-hostel-rules',
+    board: 'resources',
+    title: '📋 Hostel Rules & Regulations (Biometric, Curfew & Campus Guidelines)',
+    content: `16-point hostel code of conduct for Batch 2026 residents. Essential guidelines covering 11:00 PM gate closure, 11:30 PM biometric punching attendance, silence hours, banned vehicles, fire safety, and campus norms. View the high-yield summary, full 16-point text, and 300 DPI clean document below.`,
+    imageUrl: './hostel_rules_clean.png',
+    author: 'Batch Resource',
+    isAnon: false,
+    upvotes: 0,
+    createdAt: 'Batch Guide',
+    timestamp: 1727150000000,
+    comments: []
   }
 ];
 

@@ -586,7 +586,7 @@
 
           <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">${post.title}</h2>
           
-          ${post.id === 'post-mtmc-mess' ? renderMessTimetableThreadHTML() : post.id === 'post-mtmc-foundation-course' ? renderFoundationCourseThreadHTML() : `
+          ${post.id === 'post-mtmc-mess' ? renderMessTimetableThreadHTML() : post.id === 'post-mtmc-foundation-course' ? renderFoundationCourseThreadHTML() : post.id === 'post-mtmc-hostel-rules' ? renderHostelRulesThreadHTML() : `
             <div id="thread-content-body" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line border-b border-slate-100 dark:border-slate-800/80 pb-4">
               ${post.content}
             </div>

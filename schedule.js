@@ -230,29 +230,43 @@
           </div>
         `;
       } else {
-        const nonBreakSessions = currentDay.sessions.filter(s => s.slot !== 'Break');
-        const previewSessions = nonBreakSessions.slice(0, 3);
-        const remainingCount = nonBreakSessions.length - previewSessions.length;
-
-        let sessionsHtml = previewSessions.map(s => `
-          <div class="bg-slate-50 dark:bg-slate-950/70 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60 space-y-0.5">
-            <div class="flex items-center justify-between text-[10px]">
-              <span class="font-bold text-indigo-600 dark:text-indigo-400">${esc(s.time.split('-')[0].trim())}</span>
-              <span class="text-slate-400 text-[9px] truncate max-w-[110px]">${esc(s.slot)}</span>
-            </div>
-            <p class="text-slate-900 dark:text-slate-100 font-semibold text-[11px] leading-snug line-clamp-1">${esc(s.topic)}</p>
-            <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${esc(s.faculty)}</p>
-          </div>
-        `).join('');
-
-        if (remainingCount > 0) {
-          sessionsHtml += `
-            <div class="text-center pt-0.5">
-              <span class="text-[10px] font-semibold text-slate-400">+ ${remainingCount} more sessions ${autoIdx >= 0 && curDayIdx === autoIdx ? 'today' : 'on this date'}</span>
+        const allSessions = currentDay.sessions || [];
+        let sessionsListHtml = allSessions.map(s => {
+          if (s.slot === 'Break') {
+            return `
+              <div class="bg-amber-500/10 dark:bg-amber-950/30 p-1.5 rounded-xl border border-amber-500/20 flex items-center justify-between text-[10px] text-amber-700 dark:text-amber-300 font-bold px-2.5">
+                <span class="flex items-center gap-1.5"><i data-lucide="coffee" class="w-3 h-3 text-amber-500"></i> ${esc(s.topic || 'LUNCH BREAK')}</span>
+                <span class="font-mono text-[9px] text-amber-600 dark:text-amber-400">${esc(s.time)}</span>
+              </div>
+            `;
+          }
+          return `
+            <div class="bg-slate-50 dark:bg-slate-950/70 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60 space-y-0.5 hover:border-indigo-500/30 transition">
+              <div class="flex items-center justify-between text-[10px]">
+                <span class="font-bold text-indigo-600 dark:text-indigo-400">${esc(s.time.split('-')[0].trim())}</span>
+                <span class="text-slate-400 text-[9px] truncate max-w-[120px] font-medium">${esc(s.slot)}</span>
+              </div>
+              <p class="text-slate-900 dark:text-slate-100 font-semibold text-[11px] leading-snug">${esc(s.topic)}</p>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${esc(s.faculty)}</p>
             </div>
           `;
-        }
-        contentHtml = preCommenceHtml + sessionsHtml;
+        }).join('');
+
+        const scrollHintHtml = allSessions.length > 3 ? `
+          <div class="flex items-center justify-between text-[9px] text-slate-400 px-1 pt-0.5">
+            <span>${allSessions.length} sessions</span>
+            <span class="flex items-center gap-0.5"><i data-lucide="chevrons-up-down" class="w-3 h-3"></i> Touch & scroll up</span>
+          </div>
+        ` : '';
+
+        const scrollContainerHtml = `
+          <div class="max-h-60 sm:max-h-64 overflow-y-auto pr-1 space-y-1.5 overscroll-contain" style="scrollbar-width: thin; -webkit-overflow-scrolling: touch;">
+            ${sessionsListHtml}
+          </div>
+          ${scrollHintHtml}
+        `;
+
+        contentHtml = preCommenceHtml + scrollContainerHtml;
       }
 
       ['fc-widget-content', 'mobile-fc-widget-content'].forEach(id => {

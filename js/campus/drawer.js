@@ -2,7 +2,10 @@
  * MTMC26 — Mobile Campus Hub Drawer
  */
 
-    function toggleMobileCampusDrawer() {
+var isMobileCampusDrawerOpen = false;
+var activeMobileDrawerTab = 'mess';
+
+function toggleMobileCampusDrawer() {
       const drawerBody = document.getElementById('mobile-campus-drawer-body');
       const chevron = document.getElementById('mobile-drawer-chevron');
       const btnLabel = document.getElementById('mobile-drawer-btn-label');
@@ -31,38 +34,31 @@
       activeMobileDrawerTab = tab;
       const tabMess = document.getElementById('mobile-tab-mess-btn');
       const tabSchedule = document.getElementById('mobile-tab-schedule-btn');
-      const tabInfo = document.getElementById('mobile-tab-info-btn');
 
       const secMess = document.getElementById('mobile-drawer-section-mess');
       const secSchedule = document.getElementById('mobile-drawer-section-schedule');
-      const secInfo = document.getElementById('mobile-drawer-section-info');
 
-      // Reset all buttons
-      [tabMess, tabSchedule, tabInfo].forEach(btn => {
+      // Reset buttons
+      [tabMess, tabSchedule].forEach(btn => {
         if (btn) {
-          btn.className = 'py-1.5 rounded-lg transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1';
+          btn.className = 'py-1.5 rounded-lg transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5';
         }
       });
 
       // Hide all sections
       if (secMess) secMess.classList.add('hidden');
       if (secSchedule) secSchedule.classList.add('hidden');
-      if (secInfo) secInfo.classList.add('hidden');
 
       if (tab === 'mess') {
-        if (tabMess) tabMess.className = 'py-1.5 rounded-lg transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1 font-bold';
+        if (tabMess) tabMess.className = 'py-1.5 rounded-lg transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1.5 font-bold';
         if (secMess) secMess.classList.remove('hidden');
         renderMessWidget();
       } else if (tab === 'schedule') {
-        if (tabSchedule) tabSchedule.className = 'py-1.5 rounded-lg transition bg-indigo-600 text-white shadow-sm flex items-center justify-center gap-1 font-bold';
+        if (tabSchedule) tabSchedule.className = 'py-1.5 rounded-lg transition bg-indigo-600 text-white shadow-sm flex items-center justify-center gap-1.5 font-bold';
         if (secSchedule) secSchedule.classList.remove('hidden');
         if (typeof window.renderFoundationCourseWidget === 'function') {
           window.renderFoundationCourseWidget();
         }
-      } else if (tab === 'info') {
-        if (tabInfo) tabInfo.className = 'py-1.5 rounded-lg transition bg-slate-800 dark:bg-slate-700 text-white shadow-sm flex items-center justify-center gap-1 font-bold';
-        if (secInfo) secInfo.classList.remove('hidden');
-        updateStats();
       }
 
       if (window.lucide && typeof window.lucide.createIcons === 'function') {

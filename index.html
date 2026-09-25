@@ -578,7 +578,7 @@
         <!-- Daily Mess Food Rating Bar -->
         <div id="mess-rating-container" class="pt-2.5 border-t border-slate-100 dark:border-slate-800/80 space-y-1.5">
           <div class="flex items-center justify-between text-[11px]">
-            <span class="font-semibold text-slate-700 dark:text-slate-300">Rate Today's Food:</span>
+            <span id="mess-rating-prompt" class="font-semibold text-slate-700 dark:text-slate-300">Rate Today's Food:</span>
             <span id="mess-rating-total" class="text-[10px] text-slate-400 font-mono">0 votes</span>
           </div>
           <div class="grid grid-cols-3 gap-1.5" id="mess-rating-buttons">
@@ -636,19 +636,15 @@
         <!-- DRAWER BODY (EXPANDS / COLLAPSES) -->
         <div id="mobile-campus-drawer-body" class="hidden border-t border-slate-100 dark:border-slate-800 p-3.5 space-y-3 bg-slate-50/50 dark:bg-slate-950/40">
           
-          <!-- QUICK TAB SWITCHER INSIDE DRAWER -->
-          <div class="grid grid-cols-3 gap-1 bg-slate-200/70 dark:bg-slate-900 p-1 rounded-xl text-center text-xs font-bold">
-            <button type="button" onclick="switchMobileDrawerTab('mess')" id="mobile-tab-mess-btn" class="py-1.5 rounded-lg transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1">
+          <!-- QUICK TAB SWITCHER INSIDE DRAWER (2 CLEAN TABS) -->
+          <div class="grid grid-cols-2 gap-1.5 bg-slate-200/70 dark:bg-slate-900 p-1 rounded-xl text-center text-xs font-bold">
+            <button type="button" onclick="switchMobileDrawerTab('mess')" id="mobile-tab-mess-btn" class="py-1.5 rounded-lg transition bg-brand-orange text-white shadow-sm flex items-center justify-center gap-1.5">
               <i data-lucide="utensils" class="w-3.5 h-3.5"></i>
               <span>Mess Menu</span>
             </button>
-            <button type="button" onclick="switchMobileDrawerTab('schedule')" id="mobile-tab-schedule-btn" class="py-1.5 rounded-lg transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1">
+            <button type="button" onclick="switchMobileDrawerTab('schedule')" id="mobile-tab-schedule-btn" class="py-1.5 rounded-lg transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5">
               <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
               <span>Schedule</span>
-            </button>
-            <button type="button" onclick="switchMobileDrawerTab('info')" id="mobile-tab-info-btn" class="py-1.5 rounded-lg transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1">
-              <i data-lucide="info" class="w-3.5 h-3.5"></i>
-              <span>Batch Info</span>
             </button>
           </div>
 
@@ -682,7 +678,7 @@
               <!-- Daily Mess Food Rating Bar -->
               <div id="mobile-mess-rating-container" class="pt-2.5 border-t border-slate-100 dark:border-slate-800/80 space-y-1.5">
                 <div class="flex items-center justify-between text-[11px]">
-                  <span class="font-semibold text-slate-700 dark:text-slate-300">Rate Today's Food:</span>
+                  <span id="mobile-mess-rating-prompt" class="font-semibold text-slate-700 dark:text-slate-300">Rate Today's Food:</span>
                   <span id="mobile-mess-rating-total" class="text-[10px] text-slate-400 font-mono">0 votes</span>
                 </div>
                 <div class="grid grid-cols-3 gap-1.5">
@@ -750,39 +746,6 @@
                   <span>PDF</span>
                 </a>
               </div>
-            </div>
-          </div>
-
-          <!-- TAB 3: BATCH INFO & ANONYMOUS WALL GUIDELINES -->
-          <div id="mobile-drawer-section-info" class="hidden space-y-3">
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-3">
-              <div class="flex items-center gap-2.5">
-                <img src="./logo/logo.png" alt="Logo" class="w-8 h-8 object-contain rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-0.5">
-                <div>
-                  <h3 class="font-extrabold text-xs text-slate-900 dark:text-white">MTMC Batch 2026</h3>
-                  <p class="text-[10px] text-slate-500 dark:text-slate-400">MBBS Batch 2026 Student Forum</p>
-                </div>
-              </div>
-              <div class="grid grid-cols-2 gap-2 text-center text-xs">
-                <div class="bg-slate-50 dark:bg-slate-950/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60">
-                  <div id="mobile-stat-post-count" class="font-bold text-slate-900 dark:text-white text-sm">0</div>
-                  <div class="text-[9px] text-slate-500 uppercase">Threads</div>
-                </div>
-                <div class="bg-slate-50 dark:bg-slate-950/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800/60">
-                  <div class="font-bold text-brand-orange text-sm">250</div>
-                  <div class="text-[9px] text-slate-500 uppercase">Batch Size</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 text-xs space-y-1.5 shadow-sm">
-              <h4 class="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 text-xs">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                Anonymous Wall Guidelines
-              </h4>
-              <p class="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
-                Posts on the Anonymous Wall hide your identity completely. Perfect for asking questions you feel shy to ask in official groups or sharing genuine exam worries.
-              </p>
             </div>
           </div>
 
@@ -1817,6 +1780,42 @@
     </div>
   </div>
 
+  <!-- MEAL DETAIL MODAL (TAP-TO-VIEW COMPLETE MEAL DISHES) -->
+  <div id="meal-detail-modal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs hidden items-center justify-center p-4" onclick="handleMealModalBackdropClick(event)">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden transition-all duration-300 transform scale-95 opacity-0 space-y-0" id="meal-detail-modal-box">
+      <!-- Header -->
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div id="meal-modal-icon-wrap" class="w-9 h-9 rounded-xl flex items-center justify-center text-lg shadow-xs bg-amber-500/10">
+            <span id="meal-modal-icon">🍳</span>
+          </div>
+          <div>
+            <h3 id="meal-modal-title" class="font-extrabold text-sm text-slate-900 dark:text-white">Friday Lunch</h3>
+            <p id="meal-modal-subtitle" class="text-[10px] text-slate-400">Hostel Mess Menu</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeMealDetailModal()" class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Meal items list -->
+      <div class="p-4 space-y-2 max-h-72 overflow-y-auto" id="meal-modal-items">
+        <!-- Injected list -->
+      </div>
+
+      <!-- Footer with rating sentiment & close -->
+      <div class="p-3 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
+        <div id="meal-modal-rating-badge" class="text-[11px] font-semibold text-slate-500">
+          <!-- Sentiment e.g. 😋 85% Good -->
+        </div>
+        <button type="button" onclick="closeMealDetailModal()" class="px-3 py-1.5 rounded-xl bg-brand-orange text-white font-bold hover:bg-brand-orangeHover transition shadow-xs">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT LOGIC -->
   <!-- MODULAR JAVASCRIPT ARCHITECTURE -->
   <script src="./js/theme.js"></script>
@@ -1833,6 +1832,7 @@
   <script src="./js/forum/feed.js"></script>
   <script src="./js/events/events.js"></script>
   <script src="./js/campus/mess.js"></script>
+  <script src="./js/campus/rules.js"></script>
   <script src="./js/campus/drawer.js"></script>
   <script src="./js/app.js"></script>
 </body>
