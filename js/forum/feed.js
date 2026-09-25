@@ -10,6 +10,8 @@
       
       if (activeThreadId) {
         if (eventsContainer) eventsContainer.classList.add('hidden');
+        const vivaContainer = document.getElementById('daily-viva-container');
+        if (vivaContainer) vivaContainer.classList.add('hidden');
         renderThreadDetail(activeThreadId);
         return;
       }
@@ -18,6 +20,8 @@
         container.classList.add('hidden');
         detailContainer.classList.add('hidden');
         if (feedHeader) feedHeader.classList.add('hidden');
+        const vivaContainer = document.getElementById('daily-viva-container');
+        if (vivaContainer) vivaContainer.classList.add('hidden');
         if (eventsContainer) {
           eventsContainer.classList.remove('hidden');
           renderEventsGallery();
@@ -30,6 +34,9 @@
 
       container.classList.remove('hidden');
       detailContainer.classList.add('hidden');
+      if (typeof renderDailyVivaWidget === 'function') {
+        renderDailyVivaWidget();
+      }
 
       let filtered = (activeBoard === 'all' ? allPosts : allPosts.filter(p => p.board === activeBoard)).filter(p => !p.isDeleted && p.status !== 'quarantined');
 
@@ -132,7 +139,7 @@
                     ${meta.name}
                   </span>
                   ${getTagBadge(post)}
-                  ${post.price ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${post.price}</span>` : ''}
+                  ${post.price ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${escapeHtml(post.price)}</span>` : ''}
                   ${post.approvedBy ? `<span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 px-2 py-0.5 rounded inline-flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i> Approved by @${escapeHtml(post.approvedBy)}</span>` : ''}
                   <div class="inline-flex items-center gap-1.5 text-xs">
                     ${getPostAuthorDisplay(post)}
@@ -141,11 +148,13 @@
                   </div>
                 </div>
                 <h3 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-brand-orange transition line-clamp-2">
-                  ${post.title}
+                  ${escapeHtml(post.title)}
                 </h3>
                 <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                  ${post.content}
+                  ${escapeHtml(post.content)}
                 </p>
+
+                ${renderPollHtml(post)}
 
                 ${post.imageUrl ? `
                   <div class="mt-2.5 max-w-sm rounded-md overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
@@ -573,7 +582,7 @@
             ${post.isPinned ? '<span class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 flex items-center gap-1">📌 Pinned</span>' : ''}
             <span class="text-xs font-bold px-2.5 py-0.5 rounded border ${meta.color}">${meta.name}</span>
             ${getTagBadge(post)}
-            ${post.price ? `<span class="text-xs font-bold px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${post.price}</span>` : ''}
+            ${post.price ? `<span class="text-xs font-bold px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">${escapeHtml(post.price)}</span>` : ''}
             ${post.approvedBy ? `<span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-2.5 py-0.5 rounded inline-flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> Approved by @${escapeHtml(post.approvedBy)}</span>` : ''}
             <div class="inline-flex items-center gap-1.5 text-xs">
               ${getPostAuthorDisplay(post)}
@@ -584,12 +593,14 @@
             </div>
           </div>
 
-          <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">${post.title}</h2>
+          <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-snug">${escapeHtml(post.title)}</h2>
           
           ${post.id === 'post-mtmc-mess' ? renderMessTimetableThreadHTML() : post.id === 'post-mtmc-foundation-course' ? renderFoundationCourseThreadHTML() : post.id === 'post-mtmc-hostel-rules' ? renderHostelRulesThreadHTML() : `
             <div id="thread-content-body" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line border-b border-slate-100 dark:border-slate-800/80 pb-4">
-              ${post.content}
+              ${escapeHtml(post.content)}
             </div>
+
+            ${renderPollHtml(post)}
 
             ${post.imageUrl ? `
               <div class="mt-3 max-w-lg rounded-md overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm bg-slate-50 dark:bg-slate-950">

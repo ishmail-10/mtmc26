@@ -74,6 +74,9 @@
         if (!document.getElementById('profile-modal').classList.contains('hidden') && currentProfileTab === 'trash') {
           renderProfileTrashList();
         }
+        if (document.getElementById('karma-leaderboard-modal') && !document.getElementById('karma-leaderboard-modal').classList.contains('hidden')) {
+          renderKarmaLeaderboard();
+        }
         if (!document.getElementById('admin-modal').classList.contains('hidden')) {
           if (currentAdminTab === 'deletions') renderDeletionRequestsList();
           if (currentAdminTab === 'review-queue') renderReviewQueueList();
@@ -135,6 +138,9 @@
 
         updateGateState();
         updateAdminBadges();
+        if (document.getElementById('karma-leaderboard-modal') && !document.getElementById('karma-leaderboard-modal').classList.contains('hidden')) {
+          renderKarmaLeaderboard();
+        }
         if (!document.getElementById('admin-modal').classList.contains('hidden')) {
           if (currentAdminTab === 'pending') renderPendingList();
           else if (currentAdminTab === 'profile-requests') renderProfileRequestsList();

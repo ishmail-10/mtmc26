@@ -1457,7 +1457,7 @@ ${escapeHtml(c.text || c.content || '')}
       const deletionsBadge = document.getElementById('admin-tab-deletions-badge');
       if (deletionsBadge) {
         if (deletionReqCount > 0) {
-          deletionReqCount > 0 ? deletionsBadge.textContent = deletionReqCount : null;
+          deletionsBadge.textContent = deletionReqCount;
           deletionsBadge.classList.remove('hidden');
         } else {
           deletionsBadge.classList.add('hidden');

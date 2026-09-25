@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mtmc26-bbs-v28';
+const CACHE_NAME = 'mtmc26-bbs-v30';
 const ASSETS = [
   './',
   './index.html',
@@ -20,6 +20,7 @@ const ASSETS = [
   './js/campus/mess.js',
   './js/campus/rules.js',
   './js/campus/drawer.js',
+  './js/campus/viva.js',
   './js/app.js',
   './hostel_rules_clean.png',
   './events.json',

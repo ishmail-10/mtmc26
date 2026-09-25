@@ -206,3 +206,165 @@
       }
     }
 
+    // ================= BATCH KARMA LEADERBOARD =================
+    function openKarmaLeaderboard() {
+      const modal = document.getElementById('karma-leaderboard-modal');
+      if (!modal) return;
+      renderKarmaLeaderboard();
+      modal.classList.remove('hidden');
+      if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    function closeKarmaLeaderboard() {
+      const modal = document.getElementById('karma-leaderboard-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleKarmaLeaderboardBackdropClick(e) {
+      if (e.target.id === 'karma-leaderboard-modal') {
+        closeKarmaLeaderboard();
+      }
+    }
+
+    function renderKarmaLeaderboard() {
+      const container = document.getElementById('karma-leaderboard-list');
+      if (!container) return;
+
+      const userStats = {};
+
+      // 1. Initialize roster excluding ghost admin, suspended or deleted members
+      Object.keys(allUsers || {}).forEach(uid => {
+        const u = allUsers[uid];
+        if (!u) return;
+        if (u.role === 'admin' || (u.username || '').toLowerCase() === 'admin') return;
+        if (u.status === 'suspended' || u.isDeleted) return;
+
+        userStats[uid] = {
+          uid,
+          fullName: u.fullName || u.username || 'Student',
+          username: u.username || 'batchmate',
+          role: u.role || 'student',
+          postKarma: 0,
+          commentKarma: 0,
+          postsCount: 0,
+          commentsCount: 0
+        };
+      });
+
+      // 2. Tally karma strictly from non-anonymous, non-deleted posts & replies
+      (allPosts || []).forEach(p => {
+        if (p.isDeleted || p.isAnon || p.board === 'anonymous') return;
+
+        if (p.authorUid && userStats[p.authorUid]) {
+          userStats[p.authorUid].postsCount += 1;
+          userStats[p.authorUid].postKarma += (p.upvotes || 0);
+        }
+
+        if (p.comments) {
+          const cList = Array.isArray(p.comments) ? p.comments : Object.values(p.comments || {});
+          cList.forEach(c => {
+            if (!c.isAnon && c.authorUid && userStats[c.authorUid]) {
+              userStats[c.authorUid].commentsCount += 1;
+              userStats[c.authorUid].commentKarma += (c.upvotes || 0);
+            }
+          });
+        }
+      });
+
+      // 3. Compute total score and sort descending
+      const leaderboard = Object.values(userStats).map(u => ({
+        ...u,
+        karmaScore: u.postKarma + u.commentKarma
+      }));
+
+      leaderboard.sort((a, b) => {
+        if (b.karmaScore !== a.karmaScore) return b.karmaScore - a.karmaScore;
+        const bActivity = b.postsCount + b.commentsCount;
+        const aActivity = a.postsCount + a.commentsCount;
+        if (bActivity !== aActivity) return bActivity - aActivity;
+        return (a.fullName || '').localeCompare(b.fullName || '');
+      });
+
+      // Filter active contributors (or show up to top 25)
+      const displayList = leaderboard.filter(u => u.karmaScore > 0 || u.postsCount > 0 || u.commentsCount > 0).slice(0, 25);
+
+      if (displayList.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center text-slate-400 space-y-2.5">
+            <div class="w-12 h-12 rounded-md bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl">
+              🏆
+            </div>
+            <p class="font-bold text-slate-700 dark:text-slate-300 text-xs">No public batch karma recorded yet.</p>
+            <p class="text-[11px] text-slate-500 max-w-xs mx-auto leading-relaxed">
+              Post high-yield viva tips, share textbook advice, and upvote helpful answers to climb the batch leaderboard!
+            </p>
+          </div>
+        `;
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = displayList.map((item, index) => {
+        const rank = index + 1;
+        let rankBadgeClass = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700';
+        let rankIcon = `#${rank}`;
+        if (rank === 1) {
+          rankBadgeClass = 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40 font-black';
+          rankIcon = '🥇 1';
+        } else if (rank === 2) {
+          rankBadgeClass = 'bg-slate-300/40 text-slate-700 dark:text-slate-200 border border-slate-400/40 font-black';
+          rankIcon = '🥈 2';
+        } else if (rank === 3) {
+          rankBadgeClass = 'bg-amber-700/20 text-amber-700 dark:text-amber-500 border border-amber-700/40 font-black';
+          rankIcon = '🥉 3';
+        }
+
+        const initials = (item.fullName || item.username || 'ST')
+          .split(' ')
+          .filter(Boolean)
+          .map(n => n[0])
+          .slice(0, 2)
+          .join('')
+          .toUpperCase();
+
+        let roleBadge = '';
+        if (item.role === 'supermod') {
+          roleBadge = '<span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30">CR</span>';
+        } else if (item.role === 'moderator') {
+          roleBadge = '<span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">Mod</span>';
+        }
+
+        return `
+          <div onclick="closeKarmaLeaderboard(); openPublicProfile('${item.uid}')" class="flex items-center justify-between p-2.5 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 hover:border-amber-500/50 hover:bg-amber-500/5 transition cursor-pointer group shadow-xs">
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div class="w-9 h-7 rounded flex items-center justify-center font-bold text-[11px] shrink-0 ${rankBadgeClass}">
+                ${rankIcon}
+              </div>
+              <div class="w-8 h-8 rounded-md bg-orange-500/15 border border-brand-orange/30 text-brand-orange font-bold text-xs flex items-center justify-center shrink-0">
+                ${initials}
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5 truncate">
+                  <span class="font-bold text-slate-900 dark:text-white text-xs group-hover:text-brand-orange transition truncate">${escapeHtml(item.fullName)}</span>
+                  ${roleBadge}
+                </div>
+                <div class="text-[10px] text-slate-400 font-mono truncate">@${escapeHtml(item.username)} · ${item.postsCount} ${item.postsCount === 1 ? 'post' : 'posts'} · ${item.commentsCount} ${item.commentsCount === 1 ? 'reply' : 'replies'}</div>
+              </div>
+            </div>
+            <div class="shrink-0 text-right pl-2">
+              <div class="font-extrabold text-xs text-amber-600 dark:text-amber-400 font-mono">⭐ ${item.karmaScore}</div>
+              <div class="text-[9px] text-slate-400 uppercase tracking-wider font-semibold">Karma</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    // Expose Karma Leaderboard helpers to window
+    window.openKarmaLeaderboard = openKarmaLeaderboard;
+    window.closeKarmaLeaderboard = closeKarmaLeaderboard;
+    window.handleKarmaLeaderboardBackdropClick = handleKarmaLeaderboardBackdropClick;
+    window.renderKarmaLeaderboard = renderKarmaLeaderboard;
+

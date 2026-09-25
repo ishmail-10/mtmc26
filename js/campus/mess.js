@@ -249,6 +249,8 @@
       }
 
       renderMessWidget();
+      initMessRatingListener();
+      initMessCheckinListener();
       setTimeout(() => syncLiveMessMenu(false), 1500);
     }
 
@@ -418,6 +420,7 @@
         ${renderMealCard('lunch', '🍛', 'Lunch', dayData.lunch || [], 'text-emerald-600 dark:text-emerald-400', 'border-emerald-200 dark:border-emerald-500/20')}
         ${renderMealCard('hitea', '☕', 'Hi-Tea', dayData.hitea || [], 'text-rose-600 dark:text-rose-400', 'border-rose-200 dark:border-rose-500/20')}
         ${renderMealCard('dinner', '🍲', 'Dinner', dayData.dinner || [], 'text-indigo-600 dark:text-indigo-400', 'border-indigo-200 dark:border-indigo-500/20')}
+        ${renderWhoIsEatingNowHtml()}
       `;
 
       ['mess-widget-content', 'mobile-mess-widget-content'].forEach(id => {
@@ -426,6 +429,114 @@
       });
 
       if (window.lucide && typeof window.lucide.createIcons === 'function') lucide.createIcons();
+    }
+
+    // ================= WHO'S EATING NOW (HOSTEL MESS PULSE) =================
+    let currentMessCheckins = {}; // { [uid]: { name, username, time } }
+
+    function renderWhoIsEatingNowHtml() {
+      const realTodayIdx = (new Date().getDay() + 6) % 7;
+      if (activeWidgetDayIndex !== realTodayIdx) return '';
+
+      const activeMeal = getCurrentActiveMeal();
+      const checkinUsers = Object.entries(currentMessCheckins || {});
+      const isCheckedIn = currentUserSession && currentMessCheckins && Boolean(currentMessCheckins[currentUserSession.uid]);
+
+      let usersListHtml = '';
+      if (checkinUsers.length === 0) {
+        usersListHtml = `<p class="text-[11px] text-slate-400 dark:text-slate-500 italic">No batchmates checked in yet. Tap "I'm Here 🍽️" to let friends know!</p>`;
+      } else {
+        const chips = checkinUsers.map(([uid, u]) => {
+          const displayName = escapeHtml(u.name || u.username || 'Student');
+          const isSelf = currentUserSession && uid === currentUserSession.uid;
+          return `
+            <button type="button" onclick="event.stopPropagation(); openPublicProfile('${uid}')" class="px-2 py-0.5 rounded border text-[10px] font-semibold inline-flex items-center gap-1 transition ${isSelf ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 font-bold' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-brand-orange'}">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>${displayName}</span>
+            </button>
+          `;
+        }).join('');
+        usersListHtml = `<div class="flex flex-wrap gap-1.5 pt-0.5">${chips}</div>`;
+      }
+
+      return `
+        <div class="mt-2.5 p-2.5 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/70 space-y-2">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span>Who's Eating Now</span>
+              <span class="text-[10px] text-slate-400 font-normal">(${activeMeal.name} · ${checkinUsers.length})</span>
+            </span>
+            <button type="button" onclick="toggleMessCheckin()" class="px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1 ${isCheckedIn ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs' : 'bg-brand-orange hover:bg-brand-orangeHover text-white shadow-xs'}">
+              ${isCheckedIn ? 'Checked in ✅ (Leave)' : 'I\'m Here 🍽️'}
+            </button>
+          </div>
+          ${usersListHtml}
+        </div>
+      `;
+    }
+
+    async function toggleMessCheckin() {
+      if (!currentUserSession) {
+        openAuthModal('login');
+        return;
+      }
+      if (currentUserSession.status !== 'verified') {
+        openVerificationModal();
+        return;
+      }
+
+      const activeMeal = getCurrentActiveMeal();
+      const dateKey = getMealRatingDateKey(activeMeal.key);
+      const uid = currentUserSession.uid;
+
+      const isCheckedIn = Boolean(currentMessCheckins[uid]);
+      if (isCheckedIn) {
+        delete currentMessCheckins[uid];
+      } else {
+        currentMessCheckins[uid] = {
+          name: currentUserSession.fullName || currentUserSession.username,
+          username: currentUserSession.username,
+          time: Date.now()
+        };
+      }
+
+      // Local storage cache
+      try {
+        const local = JSON.parse(localStorage.getItem('mtmc26_local_mess_checkins') || '{}');
+        local[dateKey] = currentMessCheckins;
+        localStorage.setItem('mtmc26_local_mess_checkins', JSON.stringify(local));
+      } catch (e) {}
+
+      if (db) {
+        if (isCheckedIn) {
+          db.ref(`messCheckins/${dateKey}/${uid}`).remove().catch(console.error);
+        } else {
+          db.ref(`messCheckins/${dateKey}/${uid}`).set(currentMessCheckins[uid]).catch(console.error);
+        }
+      }
+
+      renderMessWidget();
+    }
+
+    function initMessCheckinListener() {
+      if (!db) return;
+      const activeMeal = getCurrentActiveMeal();
+      const dateKey = getMealRatingDateKey(activeMeal.key);
+
+      try {
+        const local = JSON.parse(localStorage.getItem('mtmc26_local_mess_checkins') || '{}');
+        if (local[dateKey]) currentMessCheckins = local[dateKey];
+      } catch (e) {}
+
+      db.ref('messCheckins/' + dateKey).on('value', snap => {
+        const data = snap.val() || {};
+        currentMessCheckins = data;
+        renderMessWidget();
+      });
     }
 
     function initMessRatingListener() {
@@ -679,4 +790,6 @@
     window.renderMessTimetableThreadHTML = renderMessTimetableThreadHTML;
     window.setMessTimetableDay = setMessTimetableDay;
     window.syncLiveMessMenu = syncLiveMessMenu;
+    window.toggleMessCheckin = toggleMessCheckin;
+    window.initMessCheckinListener = initMessCheckinListener;
 

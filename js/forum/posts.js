@@ -93,7 +93,8 @@
         tag.includes('SOS') ? 'modal-tag-sos' :
         tag.includes('Cab') ? 'modal-tag-cab' :
         tag.includes('Viva') ? 'modal-tag-viva' :
-        tag.includes('Free') ? 'modal-tag-free' : null;
+        tag.includes('Free') ? 'modal-tag-free' :
+        tag.includes('Compliment') ? 'modal-tag-compliment' : null;
 
       if (activeBtnId) {
         const el = document.getElementById(activeBtnId);
@@ -116,8 +117,10 @@
         colorClass = 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30';
       } else if (post.tag.includes('Free')) {
         colorClass = 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30';
+      } else if (post.tag.includes('Compliment')) {
+        colorClass = 'bg-pink-500/15 text-pink-600 dark:text-pink-400 border border-pink-500/30';
       }
-      return `<span class="text-[10px] font-bold px-2 py-0.5 rounded ${colorClass}">${post.tag}</span>`;
+      return `<span class="text-[10px] font-bold px-2 py-0.5 rounded ${colorClass}">${escapeHtml(post.tag)}</span>`;
     }
 
     async function toggleResolvePost(postId) {
@@ -189,20 +192,199 @@
       openNewPostModal();
     }
 
+    // ================= BATCH POLL CREATOR & VOTING =================
+    let isPollActive = false;
+
+    function togglePollCreator() {
+      const container = document.getElementById('modal-poll-container');
+      const label = document.getElementById('btn-toggle-poll-label');
+      const hint = document.getElementById('poll-hint');
+      if (!container) return;
+
+      isPollActive = !isPollActive;
+      if (isPollActive) {
+        container.classList.remove('hidden');
+        if (label) label.textContent = 'Poll Choices:';
+        if (hint) hint.classList.remove('hidden');
+        const opt1 = document.getElementById('poll-opt-1');
+        if (opt1) opt1.focus();
+      } else {
+        clearPollCreator();
+      }
+    }
+
+    function toggleExtraPollOptions() {
+      const extra = document.getElementById('poll-extra-opts');
+      const btn = document.getElementById('btn-more-options');
+      if (!extra) return;
+      if (extra.classList.contains('hidden')) {
+        extra.classList.remove('hidden');
+        if (btn) btn.textContent = 'Fewer choices';
+      } else {
+        extra.classList.add('hidden');
+        if (btn) btn.textContent = '+ Add more choices';
+        const opt3 = document.getElementById('poll-opt-3');
+        const opt4 = document.getElementById('poll-opt-4');
+        if (opt3) opt3.value = '';
+        if (opt4) opt4.value = '';
+      }
+    }
+
+    function clearPollCreator() {
+      isPollActive = false;
+      const container = document.getElementById('modal-poll-container');
+      const label = document.getElementById('btn-toggle-poll-label');
+      const hint = document.getElementById('poll-hint');
+      const extra = document.getElementById('poll-extra-opts');
+      const btnMore = document.getElementById('btn-more-options');
+      if (container) container.classList.add('hidden');
+      if (label) label.textContent = '+ Add a Batch Poll';
+      if (hint) hint.classList.add('hidden');
+      if (extra) extra.classList.add('hidden');
+      if (btnMore) btnMore.textContent = '+ Add more choices';
+      ['poll-opt-1', 'poll-opt-2', 'poll-opt-3', 'poll-opt-4'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+    }
+
+    async function votePoll(postId, optionIndex) {
+      if (!currentUserSession) {
+        openAuthModal('login');
+        return;
+      }
+      const post = allPosts.find(p => p.id === postId);
+      if (!post || !post.poll) return;
+
+      if (!post.poll.votes) post.poll.votes = {};
+      const currentVote = post.poll.votes[currentUserSession.uid];
+      if (currentVote === optionIndex) {
+        // Toggle vote off if tapping same option
+        delete post.poll.votes[currentUserSession.uid];
+      } else {
+        post.poll.votes[currentUserSession.uid] = optionIndex;
+      }
+
+      // Persist in local poll cache for instant zero-latency UI
+      try {
+        const localPolls = JSON.parse(localStorage.getItem('mtmc26_local_polls') || '{}');
+        localPolls[postId] = post.poll.votes;
+        localStorage.setItem('mtmc26_local_polls', JSON.stringify(localPolls));
+      } catch (e) {}
+
+      if (db) {
+        const voteVal = post.poll.votes[currentUserSession.uid] !== undefined ? post.poll.votes[currentUserSession.uid] : null;
+        db.ref(`posts/${postId}/poll/votes/${currentUserSession.uid}`).set(voteVal).catch(console.error);
+      }
+
+      if (activeThreadId === postId) {
+        renderThreadDetail(postId);
+      } else {
+        renderFeed();
+      }
+    }
+
+    function renderPollHtml(post) {
+      if (!post || !post.poll || !Array.isArray(post.poll.options) || post.poll.options.length < 2) return '';
+
+      let votes = { ...(post.poll.votes || {}) };
+      try {
+        const localPolls = JSON.parse(localStorage.getItem('mtmc26_local_polls') || '{}');
+        if (localPolls[post.id]) {
+          votes = { ...votes, ...localPolls[post.id] };
+        }
+      } catch (e) {}
+
+      const totalVotes = Object.keys(votes).length;
+      const myVote = currentUserSession ? votes[currentUserSession.uid] : null;
+
+      let optionsHtml = '';
+      post.poll.options.forEach((opt, idx) => {
+        let count = 0;
+        Object.values(votes).forEach(v => {
+          if (Number(v) === idx) count++;
+        });
+        const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
+        const isMyChoice = myVote !== null && myVote !== undefined && Number(myVote) === idx;
+
+        optionsHtml += `
+          <button type="button" onclick="event.stopPropagation(); votePoll('${post.id}', ${idx})" class="w-full text-left relative overflow-hidden rounded border transition-all p-2 text-xs flex items-center justify-between group/opt ${isMyChoice ? 'border-brand-orange bg-brand-orange/10 font-bold text-slate-900 dark:text-white' : 'border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 hover:border-brand-orange/50 text-slate-800 dark:text-slate-200'}">
+            <div class="absolute inset-y-0 left-0 ${isMyChoice ? 'bg-brand-orange/20' : 'bg-slate-200/50 dark:bg-slate-800/60'} transition-all duration-500 rounded" style="width: ${pct}%"></div>
+            <span class="relative z-10 flex items-center gap-1.5 truncate">
+              ${isMyChoice ? '<span class="text-brand-orange font-black">✓</span>' : ''}
+              <span>${escapeHtml(opt)}</span>
+            </span>
+            <span class="relative z-10 text-[11px] font-mono shrink-0 ml-2 ${isMyChoice ? 'text-brand-orange font-bold' : 'text-slate-500 dark:text-slate-400'}">
+              ${pct}% <span class="text-[10px] font-normal text-slate-400">(${count})</span>
+            </span>
+          </button>
+        `;
+      });
+
+      return `
+        <div class="mt-2.5 p-3 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-950/40 space-y-2">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+              <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-brand-orange"></i>
+              <span>Batch Poll</span>
+            </span>
+            <span class="text-slate-400 font-medium">
+              ${totalVotes} ${totalVotes === 1 ? 'vote' : 'votes'} ${myVote !== null && myVote !== undefined ? '· You voted' : ''}
+            </span>
+          </div>
+          <div class="space-y-1.5">
+            ${optionsHtml}
+          </div>
+        </div>
+      `;
+    }
+
     function openNewPostModal() {
       document.getElementById('modal-post-title').value = '';
       document.getElementById('modal-post-content').value = '';
       document.getElementById('modal-market-price').value = '';
       document.getElementById('modal-board-select').value = activeBoard === 'all' ? 'anonymous' : activeBoard;
       selectModalTag('');
+      clearPollCreator();
       removeSelectedImage();
       toggleBoardExtraFields();
       document.getElementById('post-modal').classList.remove('hidden');
     }
 
+    function openNewPostWithPrefill(opts = {}) {
+      if (!currentUserSession) {
+        openAuthModal('login');
+        return;
+      }
+      if (currentUserSession.status === 'pending') {
+        openVerificationModal();
+        return;
+      }
+      openNewPostModal();
+      if (opts.board) {
+        const boardSelect = document.getElementById('modal-board-select');
+        if (boardSelect) {
+          boardSelect.value = opts.board;
+          toggleBoardExtraFields();
+        }
+      }
+      if (opts.tag) {
+        selectModalTag(opts.tag);
+      }
+      if (opts.title) {
+        const titleEl = document.getElementById('modal-post-title');
+        if (titleEl) titleEl.value = opts.title;
+      }
+      if (opts.content) {
+        const contentEl = document.getElementById('modal-post-content');
+        if (contentEl) contentEl.value = opts.content;
+      }
+    }
+
     function closeNewPostModal() {
       removeSelectedImage();
       selectModalTag('');
+      clearPollCreator();
       document.getElementById('post-modal').classList.add('hidden');
     }
 
@@ -263,6 +445,24 @@
       const isQuarantined = !safetyCheck.safe;
       const postStatus = isQuarantined ? 'quarantined' : 'published';
 
+      // Check for attached Batch Poll
+      let pollData = null;
+      if (isPollActive) {
+        const opt1 = (document.getElementById('poll-opt-1')?.value || '').trim();
+        const opt2 = (document.getElementById('poll-opt-2')?.value || '').trim();
+        const opt3 = (document.getElementById('poll-opt-3')?.value || '').trim();
+        const opt4 = (document.getElementById('poll-opt-4')?.value || '').trim();
+        if (opt1 && opt2) {
+          const options = [opt1, opt2];
+          if (opt3) options.push(opt3);
+          if (opt4) options.push(opt4);
+          pollData = {
+            options: options,
+            votes: {}
+          };
+        }
+      }
+
       const postId = 'post-' + Date.now();
       const authorName = isAnon ? `Anonymous #${Math.floor(Math.random() * 899 + 100)}` : currentUserSession.username;
       const newPost = {
@@ -272,6 +472,7 @@
         content: content,
         price: board === 'bazaar' ? price : null,
         tag: selectedModalTag || null,
+        poll: pollData,
         isResolved: false,
         imageUrl: selectedPostImageBase64 || null,
         isPinned: false,
@@ -284,8 +485,8 @@
         quarantinedAt: isQuarantined ? Date.now() : null,
         approvedBy: null,
         approvedAt: null,
-        upvotes: 1,
-        upvotedBy: { [currentUserSession.uid]: true },
+        upvotes: 0,
+        upvotedBy: {},
         createdAt: 'Just now',
         timestamp: Date.now(),
         reportsCount: 0,
@@ -302,6 +503,7 @@
           content: content,
           price: board === 'bazaar' ? price : null,
           tag: selectedModalTag || null,
+          poll: pollData,
           imageUrl: selectedPostImageBase64 || null,
           author: authorName,
           authorUid: currentUserSession.uid,
@@ -747,14 +949,12 @@
         comment.upvotes = Math.max(0, (comment.upvotes || 1) - 1);
         if (db && targetKey) {
           db.ref(`posts/${postId}/comments/${targetKey}/upvotedBy/${currentUserSession.uid}`).remove().catch(console.error);
-          db.ref(`posts/${postId}/comments/${targetKey}/upvotes`).transaction(c => Math.max(0, (c || 1) - 1)).catch(console.error);
         }
       } else {
         comment.upvotedBy[currentUserSession.uid] = true;
         comment.upvotes = (comment.upvotes || 0) + 1;
         if (db && targetKey) {
           db.ref(`posts/${postId}/comments/${targetKey}/upvotedBy/${currentUserSession.uid}`).set(true).catch(console.error);
-          db.ref(`posts/${postId}/comments/${targetKey}/upvotes`).transaction(c => (c || 0) + 1).catch(console.error);
         }
       }
 
@@ -853,7 +1053,6 @@
 
         if (db) {
           db.ref('posts/' + postId + '/upvotedBy/' + currentUserSession.uid).remove().catch(console.error);
-          db.ref('posts/' + postId + '/upvotes').transaction(c => Math.max(0, (c || 1) - 1)).catch(console.error);
         }
       } else {
         // Add upvote
@@ -862,7 +1061,6 @@
 
         if (db) {
           db.ref('posts/' + postId + '/upvotedBy/' + currentUserSession.uid).set(true).catch(console.error);
-          db.ref('posts/' + postId + '/upvotes').transaction(c => (c || 0) + 1).catch(console.error);
         }
       }
 
@@ -1174,18 +1372,28 @@
         openAuthModal('login');
         return;
       }
-      if (!confirm('Flag this post for moderator review (violating Community Code of Conduct)?')) return;
-      if (db) {
-        await db.ref('posts/' + postId + '/reportsCount').transaction(c => (c || 0) + 1);
-      }
       const post = allPosts.find(p => p.id === postId);
-      if (post) {
-        post.reportsCount = (post.reportsCount || 0) + 1;
-        if (post.reportsCount >= 3) {
-          alert('⚠️ Reporting Threshold Reached:\nThis discussion has received multiple community flags and has been automatically quarantined from the public feed pending moderator review.');
-          renderFeed();
-          return;
-        }
+      if (!post) return;
+
+      if (!post.reportedBy) post.reportedBy = {};
+      if (post.reportedBy[currentUserSession.uid]) {
+        alert('You have already flagged this post for moderator review.');
+        return;
+      }
+
+      if (!confirm('Flag this post for moderator review (violating Community Code of Conduct)?')) return;
+
+      post.reportedBy[currentUserSession.uid] = true;
+      post.reportsCount = Math.max((post.reportsCount || 0) + 1, Object.keys(post.reportedBy).length);
+
+      if (db) {
+        await db.ref('posts/' + postId + '/reportedBy/' + currentUserSession.uid).set(true);
+      }
+
+      if (post.reportsCount >= 3) {
+        alert('⚠️ Reporting Threshold Reached:\nThis discussion has received flags from multiple batchmates and has been automatically quarantined from the public feed pending moderator review.');
+        renderFeed();
+        return;
       }
       alert('Thank you. This post has been flagged for batch moderator review.');
     }
@@ -1196,11 +1404,15 @@
         return;
       }
       if (!confirm('Dismiss community flags and restore this discussion to active status?')) return;
+      const post = allPosts.find(p => p.id === postId);
+      if (post) {
+        post.reportsCount = 0;
+        post.reportedBy = {};
+      }
       if (db) {
+        await db.ref('posts/' + postId + '/reportedBy').remove();
         await db.ref('posts/' + postId + '/reportsCount').set(0);
       }
-      const post = allPosts.find(p => p.id === postId);
-      if (post) post.reportsCount = 0;
       if (activeThreadId === postId) {
         renderThreadDetail(postId);
       } else {

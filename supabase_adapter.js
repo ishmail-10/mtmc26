@@ -120,9 +120,20 @@ const db = {
                 .order('created_at', { ascending: false });
               if (error || !data) return { val: () => null, exists: () => false };
 
+              let reportsMap = {};
+              try {
+                const { data: repData } = await sb.from('post_reports').select('post_id, user_id');
+                if (repData) {
+                  repData.forEach(r => {
+                    if (!reportsMap[r.post_id]) reportsMap[r.post_id] = {};
+                    reportsMap[r.post_id][r.user_id] = true;
+                  });
+                }
+              } catch (_) {}
+
               const postsMap = {};
               data.forEach(p => {
-                postsMap[p.id] = transformPostRow(p);
+                postsMap[p.id] = transformPostRow(p, reportsMap[p.id]);
               });
               return { val: () => postsMap, exists: () => Object.keys(postsMap).length > 0 };
             } else if (parts.length === 2) {
@@ -138,7 +149,16 @@ const db = {
                 .eq('id', postId)
                 .maybeSingle();
               if (error || !data) return { val: () => null, exists: () => false };
-              return { val: () => transformPostRow(data), exists: () => true };
+
+              let reportedBy = {};
+              try {
+                const { data: repData } = await sb.from('post_reports').select('user_id').eq('post_id', postId);
+                if (repData) {
+                  repData.forEach(r => { reportedBy[r.user_id] = true; });
+                }
+              } catch (_) {}
+
+              return { val: () => transformPostRow(data, reportedBy), exists: () => true };
             }
           }
 
@@ -387,6 +407,25 @@ const db = {
             (data || []).forEach(r => { votesMap[r.user_id] = r.vote; });
             callback({ val: () => ({ votes: votesMap }), exists: () => (data || []).length > 0 });
           });
+        } else if (root === 'messCheckins' && parts.length === 2) {
+          const dateKey = parts[1];
+          const fetchCheckins = async () => {
+            let checkinsMap = {};
+            try {
+              const { data } = await sb.from('mess_checkins').select('*').eq('date_key', dateKey);
+              (data || []).forEach(r => {
+                checkinsMap[r.user_id] = { name: r.user_name, username: r.username, time: new Date(r.created_at).getTime() };
+              });
+            } catch (e) {
+              try {
+                const local = JSON.parse(localStorage.getItem('mtmc26_local_mess_checkins') || '{}');
+                checkinsMap = local[dateKey] || {};
+              } catch (_) {}
+            }
+            callback({ val: () => checkinsMap, exists: () => Object.keys(checkinsMap).length > 0 });
+          };
+          registerRealtimeListener('mess_checkins', fetchCheckins, cleanPath);
+          fetchCheckins();
         } else if (root === 'feedback' && parts.length === 1) {
           registerRealtimeListener('community_feedback', async () => {
             try {
@@ -497,7 +536,8 @@ const db = {
                 is_resolved: Boolean(val.isResolved),
                 is_deleted: Boolean(val.isDeleted),
                 image_url: val.imageUrl || null,
-                price: val.price || null
+                price: val.price || null,
+                poll: val.poll || null
               });
               triggerTableChange('posts');
               return;
@@ -517,6 +557,30 @@ const db = {
               triggerTableChange('posts');
               return;
             }
+            if (parts.length === 4 && parts[2] === 'reportedBy') {
+              const postId = parts[1];
+              const userId = parts[3];
+              try {
+                const { error: repErr } = await sb.from('post_reports').upsert({ post_id: postId, user_id: userId });
+                if (!repErr) {
+                  const { count } = await sb.from('post_reports').select('user_id', { count: 'exact', head: true }).eq('post_id', postId);
+                  if (typeof count === 'number') {
+                    await sb.from('posts').update({ reports_count: count }).eq('id', postId);
+                  }
+                } else {
+                  const { data } = await sb.from('posts').select('reports_count').eq('id', postId).maybeSingle();
+                  const curr = data?.reports_count || 0;
+                  await sb.from('posts').update({ reports_count: curr + 1 }).eq('id', postId);
+                }
+              } catch (e) {
+                console.warn('[DB] post_reports upsert fallback:', e);
+                const { data } = await sb.from('posts').select('reports_count').eq('id', postId).maybeSingle();
+                const curr = data?.reports_count || 0;
+                await sb.from('posts').update({ reports_count: curr + 1 }).eq('id', postId);
+              }
+              triggerTableChange('posts');
+              return;
+            }
             if (parts.length === 4 && parts[2] === 'upvotedBy') {
               const postId = parts[1];
               const userId = parts[3];
@@ -528,6 +592,25 @@ const db = {
               const postId = parts[1];
               const userId = parts[3];
               await sb.from('post_views').upsert({ post_id: postId, user_id: userId });
+              return;
+            }
+            if (parts.length === 5 && parts[2] === 'poll' && parts[3] === 'votes') {
+              const postId = parts[1];
+              const userId = parts[4];
+              try {
+                const { data } = await sb.from('posts').select('poll').eq('id', postId).maybeSingle();
+                const currPoll = data?.poll || {};
+                currPoll.votes = currPoll.votes || {};
+                if (val === null || val === undefined) {
+                  delete currPoll.votes[userId];
+                } else {
+                  currPoll.votes[userId] = val;
+                }
+                await sb.from('posts').update({ poll: currPoll }).eq('id', postId);
+                triggerTableChange('posts');
+              } catch (e) {
+                console.warn('[DB] poll vote update warning:', e);
+              }
               return;
             }
             if (parts.length === 5 && parts[2] === 'reactions') {
@@ -690,6 +773,24 @@ const db = {
             return;
           }
 
+          // 6b. Mess check-ins (Who's Eating Now)
+          if (root === 'messCheckins' && parts.length === 3) {
+            const dateKey = parts[1];
+            const uid = parts[2];
+            try {
+              await sb.from('mess_checkins').upsert({
+                date_key: dateKey,
+                user_id: uid,
+                user_name: val.name || val.username || 'Student',
+                username: val.username || 'student'
+              });
+              triggerTableChange('mess_checkins');
+            } catch (e) {
+              console.warn('[DB] mess_checkins upsert fallback:', e);
+            }
+            return;
+          }
+
           // 7. Community Feedback writes
           if (root === 'feedback' && parts.length === 2) {
             const feedbackId = parts[1];
@@ -822,6 +923,9 @@ const db = {
             if ('approvedBy' in obj) sqlUpdate.approved_by = obj.approvedBy;
             if ('approvedAt' in obj) sqlUpdate.approved_at = obj.approvedAt ? new Date(obj.approvedAt).toISOString() : null;
             if ('restoreDeadline' in obj) sqlUpdate.restore_deadline = obj.restoreDeadline ? new Date(obj.restoreDeadline).toISOString() : null;
+            if ('deletedAt' in obj) sqlUpdate.deleted_at = obj.deletedAt ? new Date(obj.deletedAt).toISOString() : null;
+            if ('deletedBy' in obj) sqlUpdate.deleted_by = obj.deletedBy;
+            if ('deletionReason' in obj) sqlUpdate.deletion_reason = obj.deletionReason;
             if ('pendingProfileUpdate' in obj) sqlUpdate.pending_profile_update = obj.pendingProfileUpdate;
 
             const { error } = await sb.from('profiles').update(sqlUpdate).eq('id', uid);
@@ -899,6 +1003,17 @@ const db = {
             }
             if (parts.length === 4 && parts[2] === 'upvotedBy') {
               await sb.from('post_upvotes').delete().match({ post_id: parts[1], user_id: parts[3] });
+              triggerTableChange('posts');
+              return;
+            }
+            if (parts.length === 3 && parts[2] === 'reportedBy') {
+              const postId = parts[1];
+              try {
+                await sb.from('post_reports').delete().eq('post_id', postId);
+              } catch (e) {
+                console.warn('[DB] post_reports delete error:', e);
+              }
+              await sb.from('posts').update({ reports_count: 0 }).eq('id', postId);
               triggerTableChange('posts');
               return;
             }
@@ -985,6 +1100,18 @@ const db = {
           if (root === 'feedback' && parts.length === 2) {
             await sb.from('community_feedback').delete().eq('id', parts[1]);
             triggerTableChange('community_feedback');
+            return;
+          }
+
+          if (root === 'messCheckins' && parts.length === 3) {
+            const dateKey = parts[1];
+            const uid = parts[2];
+            try {
+              await sb.from('mess_checkins').delete().match({ date_key: dateKey, user_id: uid });
+              triggerTableChange('mess_checkins');
+            } catch (e) {
+              console.warn('[DB] mess_checkins delete fallback:', e);
+            }
             return;
           }
 
@@ -1156,12 +1283,17 @@ function triggerTableChange(table) {
   }, 100);
 }
 
-function transformPostRow(row) {
+function transformPostRow(row, reportedByMap = null) {
   const upvotedByMap = {};
   (row.post_upvotes || []).forEach(u => { upvotedByMap[u.user_id] = true; });
 
   const viewedByMap = {};
   (row.post_views || []).forEach(v => { viewedByMap[v.user_id] = true; });
+
+  const repMap = { ...(reportedByMap || {}) };
+  if (row.post_reports && Array.isArray(row.post_reports)) {
+    row.post_reports.forEach(r => { repMap[r.user_id] = true; });
+  }
 
   const commentsArr = (row.comments || []).map(c => {
     const commentUpvotedByMap = {};
@@ -1201,10 +1333,12 @@ function transformPostRow(row) {
     deletedAt: row.deleted_at ? new Date(row.deleted_at).getTime() : null,
     deletedByUsername: row.deleted_by,
     restoreDeadline: row.restore_deadline ? new Date(row.restore_deadline).getTime() : null,
-    reportsCount: row.reports_count || 0,
+    reportsCount: Object.keys(repMap).length > 0 ? Object.keys(repMap).length : (row.reports_count || 0),
+    reportedBy: repMap,
     isQuarantined: Boolean(row.is_quarantined),
     status: row.is_quarantined ? 'quarantined' : 'published',
     price: row.price,
+    poll: row.poll || null,
     imageUrl: row.image_url,
     createdAt: row.is_pinned ? 'Pinned Guide' : (typeof formatTimeAgo === 'function' ? formatTimeAgo(new Date(row.created_at).getTime()) : 'Just now'),
     timestamp: new Date(row.created_at).getTime(),
@@ -1230,6 +1364,9 @@ function transformProfileRow(p) {
     approvedAt: p.approved_at ? new Date(p.approved_at).getTime() : null,
     pendingProfileUpdate: p.pending_profile_update,
     restoreDeadline: p.restore_deadline ? new Date(p.restore_deadline).getTime() : null,
+    deletedAt: p.deleted_at ? new Date(p.deleted_at).getTime() : null,
+    deletedBy: p.deleted_by || null,
+    deletionReason: p.deletion_reason || null,
     termsAccepted: p.terms_accepted,
     phone: '',
     token: ''
