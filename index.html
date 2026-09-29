@@ -610,6 +610,29 @@
         </div>
       </div>
 
+      <!-- 1ST MBBS ANKI FLASHCARD RECALL CARD -->
+      <div id="anki-sidebar-card" class="bg-gradient-to-br from-indigo-50/50 to-white dark:from-indigo-950/20 dark:to-slate-900/60 border border-indigo-200/60 dark:border-indigo-800/40 rounded-md p-4 text-xs space-y-2.5 transition-colors duration-200 shadow-xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs">
+              🗂️
+            </span>
+            <div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-xs">Anki Flashcard Deck</h4>
+              <p class="text-[10px] text-slate-400">1st MBBS Spaced Recall</p>
+            </div>
+          </div>
+          <span id="anki-sidebar-mastered-chip" class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">30 Cards</span>
+        </div>
+        <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+          Master high-yield viva topics with active recall (Again, Hard, Good, Easy).
+        </p>
+        <button type="button" onclick="openAnkiModal()" class="w-full py-2 px-3 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition shadow-xs flex items-center justify-center gap-1.5">
+          <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+          <span>Open Study Deck (30 Cards)</span>
+        </button>
+      </div>
+
     </aside>
 
     <!-- CENTER COLUMN: FEED & POSTS -->
@@ -1892,6 +1915,97 @@
     </div>
   </div>
 
+  <!-- 1ST MBBS ANKI FLASHCARD RECALL MODAL -->
+  <div id="anki-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs hidden items-center justify-center p-3 sm:p-4" onclick="handleAnkiModalBackdropClick(event)">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] sm:max-h-[85vh] transition-all" id="anki-modal-box">
+      <!-- Modal Header -->
+      <div class="p-3.5 sm:p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-md bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm shadow-xs">
+            🗂️
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h3 class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">1st MBBS Anki Deck</h3>
+              <span class="text-[9px] font-black px-1.5 py-0.2 rounded bg-indigo-600 text-white uppercase tracking-wider">Spaced Recall</span>
+            </div>
+            <p class="text-[10px] text-slate-400">Active Recall & High-Yield Viva Flashcards</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="toggleShuffleDeck()" class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px] font-bold transition flex items-center gap-1" title="Shuffle Deck">
+            <i data-lucide="shuffle" class="w-3 h-3"></i>
+            <span class="hidden sm:inline">Shuffle</span>
+          </button>
+          <button type="button" onclick="resetDeckProgress()" class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px] font-bold transition flex items-center gap-1" title="Reset Progress">
+            <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+          </button>
+          <button type="button" onclick="closeAnkiModal()" class="w-7 h-7 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition" title="Close (Esc)">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Subject Tabs & Progress Bar -->
+      <div class="px-3.5 sm:px-4 pt-2.5 pb-2 bg-slate-50/70 dark:bg-slate-950/50 border-b border-slate-100 dark:border-slate-800/80 space-y-2">
+        <!-- Filter Tabs -->
+        <div class="flex items-center justify-between gap-1 flex-wrap">
+          <div class="flex items-center gap-1 overflow-x-auto py-0.5">
+            <button type="button" id="anki-tab-all" onclick="setAnkiSubjectFilter('all')" class="px-2.5 py-1 rounded text-xs font-bold transition bg-indigo-600 text-white shadow-xs">
+              All (<span id="anki-tab-all-count">30</span>)
+            </button>
+            <button type="button" id="anki-tab-anatomy" onclick="setAnkiSubjectFilter('Anatomy')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+              Anatomy (<span id="anki-tab-anat-count">10</span>)
+            </button>
+            <button type="button" id="anki-tab-physiology" onclick="setAnkiSubjectFilter('Physiology')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+              Physiology (<span id="anki-tab-phys-count">10</span>)
+            </button>
+            <button type="button" id="anki-tab-biochemistry" onclick="setAnkiSubjectFilter('Biochemistry')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+              Biochem (<span id="anki-tab-bio-count">10</span>)
+            </button>
+            <button type="button" id="anki-tab-custom" onclick="setAnkiSubjectFilter('custom')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+              Custom
+            </button>
+          </div>
+
+          <button type="button" onclick="openAddCustomCardPrompt()" class="px-2 py-0.5 rounded border border-indigo-300 dark:border-indigo-700/60 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-[11px] font-bold hover:bg-indigo-100 transition flex items-center gap-1">
+            <i data-lucide="plus" class="w-3 h-3"></i>
+            <span>Add Card</span>
+          </button>
+        </div>
+
+        <!-- Mastery Counts & Progress Bar -->
+        <div class="space-y-1.5 pt-0.5">
+          <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400">
+                <span>🟢 Mastered:</span> <span id="anki-stat-mastered">0</span>
+              </span>
+              <span>·</span>
+              <span class="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
+                <span>🔴 Learning:</span> <span id="anki-stat-learning">0</span>
+              </span>
+              <span>·</span>
+              <span class="inline-flex items-center gap-1 text-slate-400">
+                <span>Unseen:</span> <span id="anki-stat-unseen">30</span>
+              </span>
+            </div>
+            <span class="text-[10px] font-mono opacity-80 hidden sm:inline">Space: Flip · 1-4: Rate</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded overflow-hidden">
+            <div id="anki-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 rounded transition-all duration-300" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Card Viewport -->
+      <div class="p-3.5 sm:p-5 overflow-y-auto" id="anki-card-viewport">
+        <!-- Injected dynamically via renderAnkiCard() -->
+      </div>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT LOGIC -->
   <!-- MODULAR JAVASCRIPT ARCHITECTURE -->
   <script src="./js/theme.js"></script>
@@ -1911,6 +2025,7 @@
   <script src="./js/campus/rules.js"></script>
   <script src="./js/campus/drawer.js"></script>
   <script src="./js/campus/viva.js"></script>
+  <script src="./js/campus/anki.js"></script>
   <script src="./js/app.js"></script>
 </body>
 </html>

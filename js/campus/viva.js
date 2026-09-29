@@ -626,6 +626,23 @@
     }
   }
 
+  function rateDailyVivaAnki(rating, questionId) {
+    const cardId = 'builtin_' + questionId;
+    try {
+      const data = localStorage.getItem('mtmc26_anki_ratings_v1');
+      const ratings = data ? JSON.parse(data) : {};
+      ratings[cardId] = {
+        rating,
+        reviewedAt: Date.now(),
+        reviewCount: ((ratings[cardId] && ratings[cardId].reviewCount) || 0) + 1,
+        intervalDays: rating === 'again' ? 0 : rating === 'hard' ? 1 : rating === 'good' ? 2 : 4
+      };
+      localStorage.setItem('mtmc26_anki_ratings_v1', JSON.stringify(ratings));
+      if (typeof window.updateSidebarAnkiBadge === 'function') window.updateSidebarAnkiBadge();
+      alert(`Recorded rating: ${rating.toUpperCase()}! Saved in your Anki deck.`);
+    } catch (e) {}
+  }
+
   // Render the widget in the DOM
   function renderDailyVivaWidget() {
     const container = document.getElementById('daily-viva-container');
@@ -668,10 +685,16 @@
             <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${subjectBadgeClass} shrink-0">${question.subject}</span>
             <span class="text-slate-600 dark:text-slate-400 truncate hidden sm:inline">${escapeHtml(question.topic)}</span>
           </div>
-          <button type="button" onclick="toggleVivaWidgetMinimize()" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-[11px] transition shrink-0 flex items-center gap-1">
-            <span>Expand</span>
-            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
-          </button>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="openAnkiModal()" class="px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-bold text-[10px] border border-indigo-200 dark:border-indigo-800 transition flex items-center gap-1">
+              <i data-lucide="layers" class="w-3 h-3"></i>
+              <span>Deck</span>
+            </button>
+            <button type="button" onclick="toggleVivaWidgetMinimize()" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-[11px] transition shrink-0 flex items-center gap-1">
+              <span>Expand</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
         </div>
       `;
       if (window.lucide && window.lucide.createIcons) lucide.createIcons();
@@ -697,6 +720,10 @@
           </div>
 
           <div class="flex items-center gap-1.5">
+            <button type="button" onclick="openAnkiModal('${question.subject}')" class="px-2 py-0.5 rounded bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-[10px] transition border border-indigo-500/20 flex items-center gap-1 shadow-2xs" title="Open in Anki Flashcard Deck">
+              <i data-lucide="layers" class="w-3 h-3"></i>
+              <span>🗂️ Anki Deck</span>
+            </button>
             <span class="text-[10px] font-bold px-2 py-0.5 rounded ${subjectBadgeClass}">
               ${question.subject}
             </span>
@@ -717,7 +744,7 @@
         </div>
 
         <!-- Collapsible Pearl / Answer Box -->
-        <div id="viva-pearl-box" class="${isAnswerVisible ? '' : 'hidden'} p-3.5 rounded-md bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/25 space-y-2 text-xs text-slate-700 dark:text-slate-300 transition-all">
+        <div id="viva-pearl-box" class="${isAnswerVisible ? '' : 'hidden'} p-3.5 rounded-md bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/25 space-y-2.5 text-xs text-slate-700 dark:text-slate-300 transition-all">
           <div class="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold text-xs">
             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
             <span>Examiner's Preferred Pearl:</span>
@@ -731,14 +758,32 @@
               <span>${escapeHtml(question.vivaTip)}</span>
             </div>
           ` : ''}
+
+          <!-- In-Widget Anki Rating Bar -->
+          <div class="pt-2.5 border-t border-amber-500/20 flex items-center justify-between gap-1 flex-wrap text-[11px]">
+            <span class="font-bold text-slate-700 dark:text-slate-300">Rate Anki Recall:</span>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="rateDailyVivaAnki('again', ${question.id})" class="px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800 text-[10px] font-bold hover:bg-rose-100 transition shadow-2xs">🔴 Again</button>
+              <button type="button" onclick="rateDailyVivaAnki('hard', ${question.id})" class="px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800 text-[10px] font-bold hover:bg-amber-100 transition shadow-2xs">🟠 Hard</button>
+              <button type="button" onclick="rateDailyVivaAnki('good', ${question.id})" class="px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 text-[10px] font-bold hover:bg-emerald-100 transition shadow-2xs">🟢 Good</button>
+              <button type="button" onclick="rateDailyVivaAnki('easy', ${question.id})" class="px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800 text-[10px] font-bold hover:bg-blue-100 transition shadow-2xs">🔵 Easy</button>
+            </div>
+          </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="flex items-center justify-between pt-1 gap-2 flex-wrap text-xs">
-          <button type="button" id="viva-toggle-btn" onclick="toggleVivaAnswer()" class="px-3 py-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition flex items-center gap-1.5">
-            <i data-lucide="${isAnswerVisible ? 'eye-off' : 'lightbulb'}" class="w-3.5 h-3.5"></i>
-            <span>${isAnswerVisible ? 'Hide High-Yield Pearl' : 'Show High-Yield Viva Pearl'}</span>
-          </button>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="viva-toggle-btn" onclick="toggleVivaAnswer()" class="px-3 py-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition flex items-center gap-1.5">
+              <i data-lucide="${isAnswerVisible ? 'eye-off' : 'lightbulb'}" class="w-3.5 h-3.5"></i>
+              <span>${isAnswerVisible ? 'Hide High-Yield Pearl' : 'Show High-Yield Viva Pearl'}</span>
+            </button>
+
+            <button type="button" onclick="openAnkiModal()" class="px-2.5 py-1.5 rounded bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 font-bold text-xs transition flex items-center gap-1.5 shadow-2xs">
+              <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+              <span>All Flashcards (30)</span>
+            </button>
+          </div>
 
           <button type="button" onclick="discussDailyViva()" class="px-3 py-1.5 rounded bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs transition flex items-center gap-1.5 shadow-xs">
             <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
@@ -757,4 +802,5 @@
   window.toggleVivaAnswer = toggleVivaAnswer;
   window.toggleVivaWidgetMinimize = toggleVivaWidgetMinimize;
   window.discussDailyViva = discussDailyViva;
+  window.rateDailyVivaAnki = rateDailyVivaAnki;
 })();
