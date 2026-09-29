@@ -32,7 +32,7 @@
         }
 
         // Clean out legacy demo placeholder posts and deprecated starter posts if present
-        const legacyPosts = ['post-1', 'post-2', 'post-3', 'post-4', 'post-5', 'post-mtmc-attendance', 'post-mtmc-freshers-kit', 'post-mtmc-research-praise', 'post-mtmc-clubs'];
+        const legacyPosts = ['post-1', 'post-2', 'post-3', 'post-4', 'post-5', 'post-mtmc-attendance', 'post-mtmc-freshers-kit', 'post-mtmc-research-praise', 'post-mtmc-clubs', 'post-mtmc-hostel-rules'];
         legacyPosts.forEach(oldId => {
           if (val[oldId]) {
             db.ref('posts/' + oldId).remove();
